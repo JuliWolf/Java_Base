@@ -9,13 +9,12 @@ public class Main {
   public static void main(String[] args) {
     System.out.println("Ваша задача ушадать число.");
 
-    int range = 10;
+    for (int i = 10; i <= 30; i += 10) playLevel(i);
 
-    // конструкция (int) отрезает дробную часть
-    int number = (int) (Math.random() * range);
+    System.out.println("Вы выиграли!");
+//      // Вызов метода
+//      playLevel(i);
 
-    // Вызов метода
-    playLevel(range, number);
 
     scanner.close();
   }
@@ -25,7 +24,10 @@ public class Main {
   // static - указывает на то, что сущность находится в классе, а не в объекте
   // void - означает, что метод ничего не возвращает
   // в круглых скобках указаны параметры, которые метод ожидает
-  private static void playLevel (int range, int number) {
+  private static void playLevel (int range) {
+    // конструкция (int) отрезает дробную часть
+    int number = (int) (Math.random() * range);
+
     // Бесконечный цикл
     while (true) {
       System.out.println("Угадайте число от 0 до " + range);
