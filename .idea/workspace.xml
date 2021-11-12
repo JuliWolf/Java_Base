@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="cd07bfcf-a29d-4fd3-9575-c20dc507d9b8" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/1. Base/2. Типы данных/2. Типы данных.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/1. Base/3. Игра угадай число/3. Игра угадай число.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/1. Base/catch_the_drop/catch_the_drop.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/2. Java Head/1. Base/src/java_head/base/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/2. Java Head/1. Base/src/java_head/base/Main.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="20p2MF1Zu9NCdfl3vsrxTQz0WLf" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/2. Java Head" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="cd07bfcf-a29d-4fd3-9575-c20dc507d9b8" name="Changes" comment="" />
+      <created>1636727159592</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1636727159592</updated>
+    </task>
+    <servers />
+  </component>
+</project>
