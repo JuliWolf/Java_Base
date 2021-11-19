@@ -676,43 +676,120 @@ import java.util.ArrayList;
 
 
 // ------------------- Test page 224
- class TestBoats {
-  public static void main (String[] args) {
-    Boat b1 = new Boat();
-    Sailboat b2 = new Sailboat();
-    Rowboat b3 = new Rowboat();
-    b2.setLength(32);
-    b1.move();
-    b3.move();
-    b2.move();
-  }
-}
+// class TestBoats {
+//  public static void main (String[] args) {
+//    Boat b1 = new Boat();
+//    Sailboat b2 = new Sailboat();
+//    Rowboat b3 = new Rowboat();
+//    b2.setLength(32);
+//    b1.move();
+//    b3.move();
+//    b2.move();
+//  }
+//}
+//
+//class Boat {
+//  private int length;
+//
+//  private int getLength(){
+//    return length;
+//  }
+//
+//  public void setLength (int len) {
+//    length = len;
+//  }
+//
+//  public void move(){
+//    System.out.print("Дрейф");
+//  }
+//}
+//
+//class Sailboat extends Boat {
+//   public void rowTheBoat () {
+//     System.out.print("Дава, Наташа!");
+//   }
+//}
+//
+//class Rowboat extends Boat {
+//   public void move() {
+//     System.out.print("Поднять паруса!");
+//   }
+//}
 
-class Boat {
-  private int length;
 
-  private int getLength(){
-    return length;
-  }
+// ------------------- Test page 262
+//class Of76 extends Clowns {
+//  public static void main (String[] args) {
+//    Nose[] i = new Nose[3];
+//    i[0] = new Acts();
+//    i[1] = new Clowns();
+//    i[2] = new Of76();
+//
+//    for(int x = 0; x < 3; x++) {
+//      System.out.println(i[x].iMethod() + " " + i[x].getClass());
+//    }
+//  }
+//}
+//
+//interface Nose {
+//  public int iMethod();
+//}
+//
+//class Clowns extends Picasso {}
+//
+//abstract class Picasso implements Nose {
+//  public int iMethod() {
+//    return 7;
+//  }
+//}
+//
+//class Acts extends Picasso {
+//  public int iMethod() {
+//    return 5;
+//  }
+//}
 
-  public void setLength (int len) {
-    length = len;
-  }
 
-  public void move(){
-    System.out.print("Дрейф");
-  }
-}
+// ------------------- Test page 282
+//class Animal {
+//  public Animal () {
+//    System.out.println("Создание Animal");
+//  }
+//}
+//
+//class Hippo extends Animal {
+//  public Hippo (){
+//    System.out.println("Создание Hippo");
+//  }
+//}
+//
+//class TestHippo {
+//  public static void main(String[] args) {
+//    System.out.println("Начало...");
+//    Hippo p = new Hippo();
+//  }
+//}
 
-class Sailboat extends Boat {
-   public void rowTheBoat () {
-     System.out.print("Дава, Наташа!");
-   }
-}
 
-class Rowboat extends Boat {
-   public void move() {
-     System.out.print("Поднять паруса!");
-   }
-}
+// ------------------- Test page 342
+//import java.util.*;
+//import static java.lang.System.out;
+//
+//class FullMoons {
+//  static int DAY_IM = 1000 * 60 * 60 * 24;
+//
+//  public static void main(String[] args) {
+//    Calendar c = Calendar.getInstance();
+//    c.set(2004, 0, 7, 15, 40);
+//
+//    long day1 = c.getTimeInMillis();
+//
+//    for(int x = 0; x < 60; x++) {
+//      day1 += (DAY_IM * 29.52);
+//      c.getTimeInMillis(day1);
+//      out.println(String.format("Полнолуние было в %tc", c));
+//    }
+//  }
+//}
+
 
