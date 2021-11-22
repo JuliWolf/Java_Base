@@ -339,11 +339,12 @@ package java_head.base;
 
 
 // ------------------- Игра морско бой -------------------
-import javax.crypto.AEADBadTagException;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
+//import javax.crypto.AEADBadTagException;
+//import java.awt.*;
+//import java.io.BufferedReader;
+//import java.io.IOException;
+//import java.io.InputStreamReader;
+//import java.util.ArrayList;
 
 
 // ------------------- Версия 1
@@ -793,3 +794,41 @@ import java.util.ArrayList;
 //}
 
 
+// ------------------- GUI
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+class SimpleGui1 implements ActionListener {
+  JButton button;
+
+  public static void main (String[] args) {
+    SimpleGui1 gui = new SimpleGui1();
+    gui.go();
+  }
+
+  public void go () {
+//  Создаем фрейм и кнопку
+    JFrame frame = new JFrame();
+    button = new JButton("click me");
+
+    button.addActionListener(this);
+
+//  Настраиваем закрытие программы при закрытии окна
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+//  Добавляем кнопку в панель фрейма
+    frame.getContentPane().add(button);
+
+//  Присваиваем фрейму размер
+    frame.setSize(300, 300);
+
+    frame.setVisible(true);
+  }
+
+  @Override
+  public void actionPerformed(ActionEvent actionEvent) {
+    button.setText("I've been clicked!");
+  }
+}
