@@ -796,39 +796,103 @@ package java_head.base;
 
 // ------------------- GUI
 
+//import javax.swing.*;
+//import java.awt.event.ActionEvent;
+//import java.awt.event.ActionListener;
+//
+//class SimpleGui1 implements ActionListener {
+//  JButton button;
+//
+//  public static void main (String[] args) {
+//    SimpleGui1 gui = new SimpleGui1();
+//    gui.go();
+//  }
+//
+//  public void go () {
+////  Создаем фрейм и кнопку
+//    JFrame frame = new JFrame();
+//    button = new JButton("click me");
+//
+//    button.addActionListener(this);
+//
+////  Настраиваем закрытие программы при закрытии окна
+//    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//
+////  Добавляем кнопку в панель фрейма
+//    frame.getContentPane().add(button);
+//
+////  Присваиваем фрейму размер
+//    frame.setSize(300, 300);
+//
+//    frame.setVisible(true);
+//  }
+//
+//  @Override
+//  public void actionPerformed(ActionEvent actionEvent) {
+//    button.setText("I've been clicked!");
+//  }
+//}
+
+
+// ------------------- Change oval color on button click
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-class SimpleGui1 implements ActionListener {
-  JButton button;
+class SimpleGui3C {
+  JFrame frame;
+  JLabel label;
 
   public static void main (String[] args) {
-    SimpleGui1 gui = new SimpleGui1();
+    SimpleGui3C gui = new SimpleGui3C();
     gui.go();
   }
 
   public void go () {
-//  Создаем фрейм и кнопку
-    JFrame frame = new JFrame();
-    button = new JButton("click me");
-
-    button.addActionListener(this);
-
-//  Настраиваем закрытие программы при закрытии окна
+    frame = new JFrame();
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-//  Добавляем кнопку в панель фрейма
-    frame.getContentPane().add(button);
+    JButton labelButton = new JButton("Change Label");
+    labelButton.addActionListener(new LabelListener());
 
-//  Присваиваем фрейму размер
+    JButton colorButton = new JButton("Change circle");
+    colorButton.addActionListener(new ColorListener());
+
+    label = new JLabel("I'm a Label");
+    MyDrawPanel drawPanel = new MyDrawPanel();
+
+    frame.getContentPane().add(BorderLayout.SOUTH, colorButton);
+    frame.getContentPane().add(BorderLayout.CENTER, drawPanel);
+    frame.getContentPane().add(BorderLayout.EAST, labelButton);
+    frame.getContentPane().add(BorderLayout.WEST, label);
     frame.setSize(300, 300);
-
     frame.setVisible(true);
   }
 
-  @Override
-  public void actionPerformed(ActionEvent actionEvent) {
-    button.setText("I've been clicked!");
+  class LabelListener implements ActionListener {
+    public void actionPerformed (ActionEvent event) {
+      label.setText("Ouch!");
+    }
+  }
+
+  class ColorListener implements ActionListener {
+    public void actionPerformed (ActionEvent event) {
+      frame.repaint();
+    }
+  }
+}
+
+class MyDrawPanel extends JPanel {
+  public void paintComponent(Graphics g) {
+    g.fillRect(0,0,this.getWidth(), this.getHeight());
+
+    int red = (int) (Math.random() * 255);
+    int green = (int) (Math.random() * 255);
+    int blue = (int) (Math.random() * 255);
+
+    Color randomColor = new Color(red, green, blue);
+    g.setColor(randomColor);
+    g.fillOval(70, 70, 100, 100);
   }
 }
