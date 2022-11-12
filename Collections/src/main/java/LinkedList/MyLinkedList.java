@@ -41,11 +41,17 @@ public class MyLinkedList {
   }
 
   public void remove (int index) {
+    if (index == 0) {
+      head = head.getNext();
+      size--;
+      return;
+    }
+
     int currentIndex = 0;
     Node temp = head;
 
     while (temp != null) {
-      if ((currentIndex +1) == index) {
+      if (currentIndex == index - 1) {
         temp.setNext(temp.getNext().getNext());
 
         size--;
