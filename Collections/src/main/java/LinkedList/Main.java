@@ -17,13 +17,28 @@ public class Main {
 //    measureAddToEndTime(linkedList); // ~102
 //    measureAddToEndTime(arrayList); // ~78
 
-    // Method add to start
-    measureAddToStartTime(linkedList); // ~26
-    measureAddToStartTime(arrayList); // ~549
+//    // Method add to start
+//    measureAddToStartTime(linkedList); // ~26
+//    measureAddToStartTime(arrayList); // ~549
 
 //    // Method get
 //    measureShowTime(linkedList); // ~4836
 //    measureShowTime(arrayList); // ~2
+
+    MyLinkedList myLinkedList = new MyLinkedList();
+    myLinkedList.add(1);
+    myLinkedList.add(2);
+    myLinkedList.add(10);
+
+    System.out.println(myLinkedList);
+
+    System.out.println(myLinkedList.get(2));
+    System.out.println(myLinkedList.get(1));
+
+    myLinkedList.remove(1);
+    System.out.println(myLinkedList);
+    myLinkedList.remove(1);
+    System.out.println(myLinkedList);
   }
 
   private static void measureAddToEndTime(List<Integer> list) {
