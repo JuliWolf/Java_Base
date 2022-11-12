@@ -835,64 +835,264 @@ package java_head.base;
 
 
 // ------------------- Change oval color on button click
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+//import javax.swing.*;
+//import java.awt.*;
+//import java.awt.event.ActionEvent;
+//import java.awt.event.ActionListener;
+//
+//class SimpleGui3C {
+//  JFrame frame;
+//  JLabel label;
+//
+//  public static void main (String[] args) {
+//    SimpleGui3C gui = new SimpleGui3C();
+//    gui.go();
+//  }
+//
+//  public void go () {
+//    frame = new JFrame();
+//    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//
+//    JButton labelButton = new JButton("Change Label");
+//    labelButton.addActionListener(new LabelListener());
+//
+//    JButton colorButton = new JButton("Change circle");
+//    colorButton.addActionListener(new ColorListener());
+//
+//    label = new JLabel("I'm a Label");
+//    MyDrawPanel drawPanel = new MyDrawPanel();
+//
+//    frame.getContentPane().add(BorderLayout.SOUTH, colorButton);
+//    frame.getContentPane().add(BorderLayout.CENTER, drawPanel);
+//    frame.getContentPane().add(BorderLayout.EAST, labelButton);
+//    frame.getContentPane().add(BorderLayout.WEST, label);
+//    frame.setSize(300, 300);
+//    frame.setVisible(true);
+//  }
+//
+//  class LabelListener implements ActionListener {
+//    public void actionPerformed (ActionEvent event) {
+//      label.setText("Ouch!");
+//    }
+//  }
+//
+//  class ColorListener implements ActionListener {
+//    public void actionPerformed (ActionEvent event) {
+//      frame.repaint();
+//    }
+//  }
+//}
+//
+//class MyDrawPanel extends JPanel {
+//  public void paintComponent(Graphics g) {
+//    g.fillRect(0,0,this.getWidth(), this.getHeight());
+//
+//    int red = (int) (Math.random() * 255);
+//    int green = (int) (Math.random() * 255);
+//    int blue = (int) (Math.random() * 255);
+//
+//    Color randomColor = new Color(red, green, blue);
+//    g.setColor(randomColor);
+//    g.fillOval(70, 70, 100, 100);
+//  }
+//}
 
-class SimpleGui3C {
-  JFrame frame;
-  JLabel label;
 
-  public static void main (String[] args) {
-    SimpleGui3C gui = new SimpleGui3C();
-    gui.go();
-  }
+// ------------------- Serialize and Deserialize objects
 
-  public void go () {
-    frame = new JFrame();
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//import java.io.*;
+//
+//class GameSaverTest {
+//  public static void main (String[] args) {
+//    GameCharacter one = new GameCharacter(50, "Эльф", new String[] {"лук", "меч", "кастет"});
+//    GameCharacter two = new GameCharacter(200, "Тролль", new String[] {"голые руки", "большой топор"});
+//    GameCharacter three = new GameCharacter(120, "Маг", new String[] {"заклинания", "невидимость"});
+//
+//    try {
+//      ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("Game.ser"));
+//      os.writeObject(one);
+//      os.writeObject(two);
+//      os.writeObject(three);
+//      os.close();
+//    } catch (IOException ex) {
+//      ex.printStackTrace();
+//    }
+//
+//    one = null;
+//    two = null;
+//    three = null;
+//
+//    try {
+//      ObjectInputStream is = new ObjectInputStream(new FileInputStream("Game.ser"));
+//      GameCharacter oneRestore = (GameCharacter) is.readObject();
+//      GameCharacter twoRestore = (GameCharacter) is.readObject();
+//      GameCharacter threeRestore = (GameCharacter) is.readObject();
+//
+//      System.out.println("Тип первого:" + oneRestore.getType());
+//      System.out.println("Тип второго:" + twoRestore.getType());
+//      System.out.println("Тип третьего:" + threeRestore.getType());
+//    } catch (Exception ex) {
+//      ex.printStackTrace();
+//    }
+//  }
+//}
+//
+//class GameCharacter implements Serializable {
+//  int power;
+//  String type;
+//  String[] weapons;
+//
+//  public GameCharacter (int p, String t, String[] w) {
+//    power = p;
+//    type = t;
+//    weapons = w;
+//  }
+//
+//  public int getPower () {
+//    return power;
+//  }
+//
+//  public String getType () {
+//    return type;
+//  }
+//
+//  public String getWeapons () {
+//    String weaponList = "";
+//
+//    for (int i = 0; i < weapons.length; i++) {
+//      weaponList += weapons[i] + " ";
+//    }
+//
+//    return weaponList;
+//  }
+//}
 
-    JButton labelButton = new JButton("Change Label");
-    labelButton.addActionListener(new LabelListener());
 
-    JButton colorButton = new JButton("Change circle");
-    colorButton.addActionListener(new ColorListener());
-
-    label = new JLabel("I'm a Label");
-    MyDrawPanel drawPanel = new MyDrawPanel();
-
-    frame.getContentPane().add(BorderLayout.SOUTH, colorButton);
-    frame.getContentPane().add(BorderLayout.CENTER, drawPanel);
-    frame.getContentPane().add(BorderLayout.EAST, labelButton);
-    frame.getContentPane().add(BorderLayout.WEST, label);
-    frame.setSize(300, 300);
-    frame.setVisible(true);
-  }
-
-  class LabelListener implements ActionListener {
-    public void actionPerformed (ActionEvent event) {
-      label.setText("Ouch!");
-    }
-  }
-
-  class ColorListener implements ActionListener {
-    public void actionPerformed (ActionEvent event) {
-      frame.repaint();
-    }
-  }
-}
-
-class MyDrawPanel extends JPanel {
-  public void paintComponent(Graphics g) {
-    g.fillRect(0,0,this.getWidth(), this.getHeight());
-
-    int red = (int) (Math.random() * 255);
-    int green = (int) (Math.random() * 255);
-    int blue = (int) (Math.random() * 255);
-
-    Color randomColor = new Color(red, green, blue);
-    g.setColor(randomColor);
-    g.fillOval(70, 70, 100, 100);
-  }
-}
+// ------------------- QuizCardGame
+//import javax.swing.*;
+//import java.awt.*;
+//import java.awt.event.ActionEvent;
+//import java.awt.event.ActionListener;
+//import java.io.*;
+//import java.util.ArrayList;
+//
+//class QuizCardBuilder {
+//  private JTextArea display;
+//  private JTextArea answer;
+//  private ArrayList<QuizCard> cardList;
+//  private QuizCard currentCard;
+//  private int currentCardIndex;
+//  private JFrame frame;
+//  private JButton nextButton;
+//  private boolean isShowAnswer;
+//
+//  public static void main (String[] args) {
+//    QuizCardBuilder builder = new QuizCardBuilder();
+//    builder.go();
+//  }
+//
+//  public void go () {
+////    Фомируем Gui
+//    frame = new JFrame("Quiz Card Builder");
+//    JPanel mainPanel = new JPanel();
+//    Font bigFont = new Font("sanserif", Font.BOLD, 24);
+//
+//    display = new JTextArea(10, 20);
+//    display.setLineWrap(true);
+//    display.setWrapStyleWord(true);
+//    display.setFont(bigFont);
+//
+//    JScrollPane qScroller = new JScrollPane(display);
+//    qScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+//    qScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+//
+//    JButton nextButton = new JButton("Next Card");
+//    mainPanel.add(qScroller);
+//    mainPanel.add(nextButton);
+//    nextButton.addActionListener(new NextCardListener());
+//
+//    JMenuBar menuBar = new JMenuBar();
+//    JMenu fileMenu = new JMenu("File");
+//    JMenuItem loadMenuItem = new JMenuItem("Load card set");
+//    loadMenuItem.addActionListener(new OpenMenuListener());
+//    fileMenu.add(loadMenuItem);
+//    menuBar.add(fileMenu);
+//
+//    frame.setJMenuBar(menuBar);
+//    frame.getContentPane().add(BorderLayout.CENTER, mainPanel);
+//    frame.setSize(640, 600);
+//    frame.setVisible(true);
+//  }
+//
+//  public class NextCardListener implements ActionListener {
+//    public void actionPerformed(ActionEvent ev) {
+//      if (isShowAnswer) {
+//        display.setText(currentCard.getAnswer());
+//        nextButton.setText("Next Card");
+//        isShowAnswer = false;
+//      } else {
+//        if (currentCardIndex < cardList.size()) {
+//          showNextCard();
+//        }else {
+//          display.setText("That was last card");
+//          nextButton.setEnabled(false);
+//        }
+//      }
+//    }
+//  }
+//
+//  public class OpenMenuListener implements ActionListener {
+//    public void actionPerformed(ActionEvent ev) {
+//      JFileChooser fileSave = new JFileChooser();
+//      fileSave.showSaveDialog(frame);
+//      saveFile(fileSave.getSelectedFile());
+//    }
+//  }
+//
+//  private void loadFile (File file) {
+//    cardList = new ArrayList<QuizCard>();
+//
+//    try {
+//      BufferedReader reader = new BufferedReader(new FileReader(file));
+//      String line = null;
+//      while((line = reader.readLine()) != null) {
+//        makeCard(line);
+//      }
+//
+//      reader.close();
+//    }catch (Exception ex) {
+//      System.out.println("couldn't red the cardList file");
+//      ex.printStackTrace();
+//    }
+//  }
+//
+//  private void makeCard (String lineToParse) {
+//    String[] result = lineToParse.split("/");
+//    QuizCard card = new QuizCard(result[0], result[1]);
+//    cardList.add(card);
+//    System.out.println("made a card");
+//  }
+//
+//  private void showNextCard() {
+//    currentCard = cardList.get(currentCardIndex);
+//    currentCardIndex++;
+//    display.setText(currentCard.getQuestion());
+//    nextButton.setText("Show Answer");
+//    isShowAnswer = true;
+//  }
+//
+//  private void saveFile(File file) {
+//    try {
+//      BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+//
+//      for (QuiCard card:cardList) {
+//        writer.write(card.getQuestion() + "/");
+//        writer.write(card.getAnswer() + "\n");
+//      }
+//
+//      writer.close();
+//    }catch(IOException ex) {
+//      System.out.println("couldn't write the cardList out");
+//    }
+//  }
+//}
