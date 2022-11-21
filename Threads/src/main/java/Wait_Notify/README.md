@@ -79,3 +79,97 @@ class WaitAndNotify {
   }
 }
 ```
+
+## Producer Consumer с использованием wait и notify
+
+1. Создаем класс с двумя методами `consume` `produce`
+2. Создаем свойства 
+- `queue` для сохранения элементов
+- `LIMIT` для обозначения максимального количества элементов в очереди
+- `lock` для синхронизации
+3. Внутри метода `produce` создаем синхронизованный блок с локом на объект `lock`
+4. Когда размер очереди будет равно заданному лимиту поток должен переходить в режим ожидания
+5. После добавления элемента в очереди необходимо оповестить другой поток о том, что элемент был добавлен
+6. Внутри метода `consume` создаем синхронизованный блок с локом на объект `lock`
+7. Когда размер очереди равен 0, тогда потом должен переходить в режим ожидания
+8. Когда поток работает вытаскиваем элемент из очереди и выводим его на экран
+9. После вытаскивания элемента необходимо оповестить другой поток о том, что элемент был вытащен из очереди
+
+```
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class Producer_Consumer {
+
+  public static void main(String[] args) throws InterruptedException {
+    ProducerConsumer wn = new ProducerConsumer();
+
+    Thread thread1 = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          wn.produce();
+        } catch (InterruptedException e) {
+          throw new RuntimeException(e);
+        }
+      }
+    });
+    Thread thread2 = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          wn.consume();
+        } catch (InterruptedException e) {
+          throw new RuntimeException(e);
+        }
+      }
+    });
+
+    thread1.start();
+    thread2.start();
+
+    thread1.join();
+    thread2.join();
+
+  }
+}
+
+class ProducerConsumer {
+  private Queue<Integer> queue = new LinkedList<>();
+  private final int LIMIT = 10;
+  private final Object lock = new Object();
+
+  public void produce () throws InterruptedException {
+    int value = 0;
+
+    while (true) {
+      synchronized (lock) {
+        while (queue.size() == LIMIT) {
+          lock.wait();
+        }
+
+        queue.offer(value++);
+        lock.notify();
+      }
+    }
+  }
+
+  public void consume () throws InterruptedException {
+    while(true) {
+      synchronized (lock) {
+        while (queue.size() == 0) {
+          lock.wait();
+        }
+
+        int value = queue.poll();
+        System.out.println(value);
+        System.out.println("Queue size is " + queue.size());
+
+        lock.notify();
+      }
+
+      Thread.sleep(1000);
+    }
+  }
+}
+```
