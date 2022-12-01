@@ -6,7 +6,7 @@
 
 1. Для создания теста создается класс с названием соотвествующим названию класса, который будет в нем тестироваться + постфикс "Test", например `Vector2DTest`, который будет содержать тесты класса `Vector2D`
 2. Класс создается в папке `test/java`
-3. Для обозначения метода необходимо написать `@Test` 
+3. Для обозначения метода необходимо написать аннотацию `@Test` 
 4. Методы теста обязательно должны быть `public void`
 5. Для проверки результатов используются статические методы класса `Assert`
 
@@ -69,7 +69,7 @@ public class Vector2DTest {
 
 ## Expected
 
-Для проверки некоторого ожидаемого результата можно передать параметр expected 
+Для проверки некоторого ожидаемого результата можно передать параметр `expected` в аннотацию `@Test`
 
 ```
 public class MyMath {
@@ -82,7 +82,6 @@ public class MyMath {
   }
 }
 ```
-
 ```
 import org.junit.Test;
 
@@ -95,4 +94,34 @@ public class MyMathTest {
   }
 }
 
+```
+
+## Timeout
+
+Для проверки времени работы метода, можно передать параметр `timeout` в аннотацию `@Test`
+
+```
+public class NetworkUtils {
+  public static void getConnection () {
+    // получаем соединение с сервером
+    try {
+      Thread.sleep(1500);
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+    return;
+  }
+}
+
+```
+```
+import org.junit.Test;
+
+public class NetworkUtilsTest {
+
+  @Test(timeout = 1000)
+  public void getConnectionShouldReturnFasterThanOneSecond () {
+    NetworkUtils.getConnection();
+  }
+}
 ```
