@@ -35,5 +35,11 @@ public class Person {
     System.out.println("Person with id: " + id + " and name: " + name + " says hello!");
   }
 
-
+  @Override
+  public String toString() {
+    return "Person{" +
+        "id=" + id +
+        ", name='" + name + '\'' +
+        '}';
+  }
 }
