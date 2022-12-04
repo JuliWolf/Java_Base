@@ -19,5 +19,8 @@ public class TestReflection {
     m.invoke(o1, o2);
 
     System.out.println(o1);
+
+    // Example.Person java.lang.String setName -> Person{id=-1, name='String value'}
+    // java.lang.Thread java.lang.String setName -> Thread[String value,5,main]
   }
 }
