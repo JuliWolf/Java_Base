@@ -2,7 +2,7 @@ package Arrays;
 
 import java.util.Objects;
 
-public class Melon {
+public class Melon implements Comparable {
   private final String type;
   private final int weight;
 
@@ -33,4 +33,10 @@ public class Melon {
   }
 
 
+  @Override
+  public int compareTo(Object o) {
+    Melon m = (Melon) o;
+
+    return Integer.compare(this.getWeight(), m.getWeight());
+  }
 }
