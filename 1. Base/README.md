@@ -11,6 +11,7 @@ https://github.com/johnivo/job4j/blob/master/interview_questions/Core.md#4-%D0%9
 + [База данных](#база-данных)
 + [Concurrency](#concurrency)
 + [Spring](#spring)
++ [Kafka](#kafka)
 + [Stream](#stream)
 + [SOLID](#solid)
 + [Java 8](#java-8)
@@ -1726,6 +1727,9 @@ public class AsyncConfiguration extends AsyncConfigurerSupport {
 ## END ----------------- Spring -----------------
 
 ## Kafka
+
++ [1. Основной принцип работы kafka](#1-основной-принцип-работы-kafka)
++ [2. Если у нас есть несколько инстансов одного микросервиса сообщений, как отправить только одно сообщение](#2-если-у-нас-есть-несколько-инстансов-одного-микросервиса-сообщений-как-отправить-только-одно-сообщение)
 
 ### 1. Основной принцип работы kafka
 - Kafka использует pull (получатели сами достают из топика сообщения)
