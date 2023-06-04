@@ -397,3 +397,45 @@ public class Lecture04FluxFromStream {
   }
 }
 ```
+
+### From range
+```
+public class Lecture05FluxRange {
+  public static void main(String[] args) {
+    // Will create from 1 2 3 4 5 6 7 8 9 10 elements
+    Flux.range(1, 10)
+        .subscribe(
+            Util.onNext()
+        );
+
+    // 3 4 5 6 7 8 9 10 11 12
+    Flux.range(3, 10)
+        .subscribe(
+            Util.onNext()
+        );
+
+    // will receive 10 names
+    Flux.range(3, 10)
+        .map(i -> Util.faker().name().fullName())
+        .subscribe(
+            Util.onNext()
+        );
+  }
+}
+```
+
+### Logging
+- Для логирования можно использовать `log` метод
+```
+public class Lecture05FluxRange {
+  public static void main(String[] args) {
+    Flux.range(3, 10)
+        .log()
+        .map(i -> Util.faker().name().fullName())
+        .log()
+        .subscribe(
+            Util.onNext()
+        );
+  }
+}
+```
