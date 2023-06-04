@@ -170,7 +170,7 @@ public class Lecture04MonoEmptyOnError {
 }
 ```
 
-## Just vs supplier
+### Just vs supplier
 - Если данные уже есть то можно использовать just, так как он сразу выполняет метод, который был в него передан или записывает данные, которые получил
 ```
 public class Lecture05FromSupplier {
@@ -204,7 +204,7 @@ public class Lecture05FromSupplier {
 }
 ```
 
-## Supplier vs Callable
+### Supplier vs Callable
 
 | Supplier                                                                  | Callable                                                                  |
 |---------------------------------------------------------------------------|---------------------------------------------------------------------------|
@@ -230,7 +230,7 @@ public class Lecture05FromSupplier {
 }
 ```
 
-## Mono From Future
+### Mono From Future
 - Можно использовать `CompletableFuture` для получения данных из запроса
 
 ```
@@ -250,7 +250,7 @@ public class Lecture07MonoFromFuture {
 }
 ```
 
-## Mono from Runnable
+### Mono from Runnable
 - Когда нуэжно выполнить какой-то код после выполнения Runnable
 ```
 public class Lecture08MonoFromRunnable {
@@ -274,7 +274,7 @@ public class Lecture08MonoFromRunnable {
 }
 ```
 
-## Summary
+### Summary
 | Type                     | Condition                                                            | What to use                                                                    |
 |--------------------------|----------------------------------------------------------------------|--------------------------------------------------------------------------------|
 | Создать Mono             | Данные уже есть                                                      | `Mono.just(data)`                                                              |
@@ -284,3 +284,116 @@ public class Lecture08MonoFromRunnable {
 | Вернуть пустой результат | Ожидаем результат, но получаем ничего                                | `Mono.empty()`                                                                 |
 | Вернуть моно             | Вернуть моно                                                         | `Mono.error()`<br/>`Mono.empty()`                                              |
 
+## Flux examples
+
+1. Create flux
+```
+public class Lecture01FluxIntro {
+  public static void main(String[] args) {
+    // can have more than 1 item
+    Flux<Integer> flux = Flux.just(1, 2, 3,4);
+
+    flux.subscribe(Util.onNext());
+  }
+}
+```
+
+2. Return empty value
+```
+public class Lecture01FluxIntro {
+  public static void main(String[] args) {
+    // empty flux
+    Flux<Object> flux = Flux.empty();
+
+    // complete will be return once
+    flux.subscribe(
+        Util.onNext(),
+        Util.onError(),
+        Util.onComplete()
+    );
+  }
+}
+```
+
+### Multiple subscribers (will work with Mono)
+```
+public class Lecture02MultipleSubscribers {
+  public static void main(String[] args) {
+
+    Flux<Integer> integerFlux = Flux.just(1, 2, 3, 4);
+    Flux<Integer> evenFlux = integerFlux.filter(i -> i % 2 == 0);
+
+    integerFlux.subscribe( i -> System.out.println("Sub 1: " + i));
+    evenFlux.subscribe( i -> System.out.println("Sub 2: " + i));
+  }
+}
+```
+
+### Create Flux from Collection and array
+```
+public class Lecture03FluxFromArrayOrList {
+  public static void main(String[] args) {
+    List<String> strings = Arrays.asList("a", "b", "c");
+
+    // works like just
+    // Use when data is exists
+    Flux.fromIterable(strings)
+        .subscribe(Util.onNext());
+
+    Integer[] arr = {2,5,7,8};
+    Flux.fromArray(arr)
+        .subscribe(Util.onNext());
+  }
+}
+```
+
+### Create Flux from Stream
+- Так как после выполнения терминальной операции стрим больше нельзя использовать, при повторной подписке возникнет ошибка
+```
+public class Lecture04FluxFromStream {
+  public static void main(String[] args) {
+
+    List<Integer> list = List.of(1, 2, 3, 4, 5);
+    Stream<Integer> stream = list.stream();
+
+    Flux<Integer> integerFlux = Flux.fromStream(stream);
+    integerFlux.subscribe(
+        Util.onNext(),
+        Util.onError(),
+        Util.onComplete()
+    );
+
+    // Will get error
+    // Error: stream has already been operated upon or closed
+    integerFlux.subscribe(
+        Util.onNext(),
+        Util.onError(),
+        Util.onComplete()
+    );
+  }
+}
+```
+- Для множественной подписки на Flux от стрима необходимо вернуть лист стримов
+```
+public class Lecture04FluxFromStream {
+  public static void main(String[] args) {
+
+    List<Integer> list = List.of(1, 2, 3, 4, 5);
+
+    // In order to connect multiple subscribers we need to use Stream suppliers
+    Flux<Integer> supplierStream = Flux.fromStream(() -> list.stream());
+
+    supplierStream.subscribe(
+        Util.onNext(),
+        Util.onError(),
+        Util.onComplete()
+    );
+
+    supplierStream.subscribe(
+        Util.onNext(),
+        Util.onError(),
+        Util.onComplete()
+    );
+  }
+}
+```
