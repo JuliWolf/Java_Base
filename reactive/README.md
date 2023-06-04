@@ -557,3 +557,62 @@ public class Lecture07FluxVsList {
   }
 }
 ```
+
+### Flux with Interval
+- Похоже на создание flux with range
+- Как только элемент будет готов он будет передан в метод onNext
+- Происходит в отдельном не блокирующем потоке
+```
+public class Lecture08FluxInterval {
+  public static void main(String[] args) {
+    // like range
+    // will publish items periodically
+    // in non-blocking async way
+    Flux.interval(Duration.ofSeconds(1))
+        .subscribe(Util.onNext());
+
+    Util.sleepSeconds(5);
+
+  }
+}
+```
+
+### Convert mono to flux
+```
+public class Lecture09FluxFromMono {
+  public static void main(String[] args) {
+    Mono<String> mono = Mono.just("a");
+    Flux<String> flux = Flux.from(mono);
+    flux.subscribe(
+        Util.onNext()
+    );
+  }
+
+  private static void doSomething (Flux<String> flux) {
+
+  }
+}
+```
+
+### Convert flux to mono
+- Возвращаем первый элемент из flux
+```
+public class Lecture10MonoFromFlux {
+  public static void main(String[] args) {
+    Flux.range(1, 10)
+        .filter(i -> i > 3)
+        .next() // 4
+        .subscribe(
+            Util.onNext()
+        );
+  }
+}
+```
+
+### summary
+| Type                     | Condition       | What to use                                                                                                  |
+|--------------------------|-----------------|--------------------------------------------------------------------------------------------------------------|
+| Создать Flux             | Данные уже есть | `Flux.just(...)`<br/>`Flux.fromIterable(iterable)`<br/>`Flux.fromArray(array)`<br/>`Flux.fromStream(stream)` |
+| Создать Flux             | Range/Count     | `Flux.range(start, count)`                                                                                   |
+| Создать Flux             | Периодически    | `Flux.interval(duration)`                                                                                    |
+| Создать Flux             | Mono -> Flux    | `Flux.from(mono)`                                                                                            |
