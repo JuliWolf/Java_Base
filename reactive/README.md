@@ -439,3 +439,121 @@ public class Lecture05FluxRange {
   }
 }
 ```
+
+### Custom Subscribe
+- Так как мы используем кастомную реализацию Subscriber весь процесс получения элементов тоже лежит на нас
+```
+public class Lecture06Subscription {
+  public static void main(String[] args) {
+    AtomicReference<Subscription> atomicReference = new AtomicReference<>();
+
+    Flux.range(1, 20)
+        .log()
+        .subscribeWith(new Subscriber<Integer>() {
+          @Override
+          public void onSubscribe(Subscription subscription) {
+            System.out.println("Received Sub: " + subscription);
+            atomicReference.set(subscription);
+          }
+
+          @Override
+          public void onNext(Integer integer) {
+            System.out.println("onNext: " + integer);
+          }
+
+          @Override
+          public void onError(Throwable throwable) {
+            System.out.println("onError: " + throwable.getMessage());
+          }
+
+          @Override
+          public void onComplete() {
+            System.out.println("onComplete");
+          }
+        });
+  }
+}
+```
+- Для того чтобы запустить процесс передачи данных неоюходимо вызвать метод `request`
+* мы получим 3 элемента (1, 2, 3) и через 5 секунд еще 3 элемента (4, 5, 6)
+```
+Util.sleepSeconds(3);
+atomicReference.get().request(3);
+Util.sleepSeconds(5);
+atomicReference.get().request(3);
+Util.sleepSeconds(5);
+```
+- После чего можем отписаться
+```
+System.out.println("Going to cancel");
+atomicReference.get().cancel();
+Util.sleepSeconds(3);
+```
+- Полсе отписки мы снова можем попытаться получить оставшиеся 4 элемента, но так как мы уже отписались ничего не произойдет
+```
+atomicReference.get().request(4);
+Util.sleepSeconds(3); 
+```
+
+### List vs Flux
+- Задача:
+  - Сгенерировать список с именами
+  - Вывести все имена в консоль
+  - Генерация каждого имени занимает минимум 1 секунду
+  
+
+**List**
+```
+public class NameGenerator {
+  public static List<String> getNames (int count) {
+    List<String> list = new ArrayList<>(count);
+    for (int i = 0; i < count; i++) {
+      list.add(getName());
+    }
+
+    return list;
+  }
+
+  private static String getName () {
+    Util.sleepSeconds(1);
+    return Util.faker().name().fullName();
+  }
+}
+```
+- Ожидаем 5 секунд прежде чем вывести 5 имен
+```
+public class Lecture07FluxVsList {
+  public static void main(String[] args) {
+    List<String> names = NameGenerator.getNames(5);
+    // wait 5 seconds
+    System.out.println(names);
+  }
+}
+```
+
+**Flux**
+```
+public class NameGenerator {
+  public static Flux<String> getNames (int count) {
+    return Flux.range(0, count)
+        .map(i -> getName());
+  }
+
+  private static String getName () {
+    Util.sleepSeconds(1);
+    return Util.faker().name().fullName();
+  }
+}
+```
+- Выводим имя как только оно будет доступно
+```
+public class Lecture07FluxVsList {
+  public static void main(String[] args) {
+    // when item is ready publisher will give it
+    NameGenerator.getNames(5)
+        .subscribe(
+            Util.onNext()
+        );
+  }
+}
+```
