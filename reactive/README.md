@@ -169,3 +169,63 @@ public class Lecture04MonoEmptyOnError {
   }
 }
 ```
+
+## Just vs supplier
+- Если данные уже есть то можно использовать just, так как он сразу выполняет метод, который был в него передан или записывает данные, которые получил
+```
+public class Lecture05FromSupplier {
+  public static void main(String[] args) {
+    // use just only when you have data already
+    Mono<String> mono = Mono.just(getName()); // Generating name..
+  }
+
+  private static String getName () {
+    System.out.println("Generating name..");
+    return Util.faker().name().fullName();
+  }
+}
+```
+- Если для получения значений необходимо выполнить какие-то вычисления, то надо использовать fromSupplier
+- fromSupplier делаем метод lazy
+- Если не будет subscribers, то метод не вызовется
+```
+public class Lecture05FromSupplier {
+  public static void main(String[] args) {
+    Mono<String> mono = Mono.fromSupplier(() -> getName()); // nothing happen
+    mono.subscribe(
+        Util.onNext() // return name
+    );
+  }
+
+  private static String getName () {
+    System.out.println("Generating name..");
+    return Util.faker().name().fullName();
+  }
+}
+```
+
+## Supplier vs Callable
+
+| Supplier                                                                  | Callable                                                                  |
+|---------------------------------------------------------------------------|---------------------------------------------------------------------------|
+| Принимает функцию, которая не принимает аргументов и возвращает результат | Принимает функцию, которая не принимает аргументов и возвращает результат |
+| Не выбрасывает исключения                                                 | Выбрасывает исключение в случае ошибки                                    |
+| Используется для создания потокобезопасных функция генерации данных       | Используется для длительных асинхронных вычислений                        |                                                                           |                                                                           |
+
+```
+public class Lecture05FromSupplier {
+  public static void main(String[] args) {
+    Supplier<String> stringSupplier = () -> getName();
+    Callable<String> stringCallable = () -> getName();
+    Mono.fromCallable(stringCallable)
+        .subscribe(
+            Util.onNext() // Received: Mrs. Fanny Buckridge
+        );
+  }
+
+  private static String getName () {
+    System.out.println("Generating name..");
+    return Util.faker().name().fullName();
+  }
+}
+```
