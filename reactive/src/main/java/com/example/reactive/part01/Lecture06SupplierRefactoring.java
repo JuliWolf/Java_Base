@@ -2,6 +2,8 @@ package com.example.reactive.part01;
 
 import com.example.reactive.utils.Util;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 
 /**
  * @author JuliWolf
@@ -16,10 +18,12 @@ public class Lecture06SupplierRefactoring {
 
 
     // execute pipeline code
-    getName()
-        .subscribe(
-            Util.onNext()
-        );
+    String s = getName()
+        // make process async (will be canceled when main thread is closed)
+        .subscribeOn(Schedulers.boundedElastic())
+        // block main thread until the end of the process
+        .block();
+    System.out.println(s);
 
     getName();
   }

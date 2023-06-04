@@ -229,3 +229,47 @@ public class Lecture05FromSupplier {
   }
 }
 ```
+
+## Mono From Future
+- Можно использовать `CompletableFuture` для получения данных из запроса
+
+```
+public class Lecture07MonoFromFuture {
+  public static void main(String[] args) {
+    Mono.fromFuture(getName())
+        .subscribe(
+            Util.onNext()
+        );
+
+    Util.sleepSeconds(1);
+  }
+
+  private static CompletableFuture<String> getName () {
+    return CompletableFuture.supplyAsync(() -> Util.faker().name().fullName());
+  }
+}
+```
+
+## Mono from Runnable
+- Когда нуэжно выполнить какой-то код после выполнения Runnable
+```
+public class Lecture08MonoFromRunnable {
+  public static void main(String[] args) {
+    Mono.fromRunnable(timeConsumingProcess())
+        .subscribe(
+            Util.onNext(),
+            Util.onError(),
+            () -> {
+              System.out.println("process is done. Sending emails...");
+            }
+        );
+  }
+
+  private static Runnable timeConsumingProcess () {
+    return () -> {
+      Util.sleepSeconds(3);
+      System.out.println("Operation completed");
+    };
+  }
+}
+```
