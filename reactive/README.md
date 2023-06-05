@@ -8,6 +8,8 @@
 + [Flux examples](#flux-examples)
 + [Emitting](#emitting)
 + [Flux Take operator](#flux-take-operator)
++ [Stop emitting if process is cancelled](#stop-emitting-if-process-is-cancelled)
++ [Flux generate](#flux-generate)
 
 ## IO модели
 - sync + blocking - Дефолтная работа запросов
@@ -647,7 +649,10 @@ public class Lecture10MonoFromFlux {
 
 
 ## Emitting
-- С помощью метода Flux.create мы можем реализовать своего собственного Consumer для эмита данных
+
++ [Summary](#summary-2)
+
+- С помощью метода `Flux.create` мы можем реализовать своего собственного Consumer для эмита данных
 ```
 public class Lecture01FluxCreate {
   public static void main(String[] args) {
@@ -717,6 +722,11 @@ public class Lecture02FluxCreateRefactoring {
 
 ```
 
+### Summary
+- Flux.create предоставляет только 1 инстанс Flux
+- Позволяет задавать свою логику генерации значений, логику прекращений процесса и выброса ошибок
+- Дает возможность проверять был ли завершен процесс
+
 ## Flux Take operator
 - Создаем коллекцию из 10 чисел, которые должен получить подписчик
 - Оператор take получает значения и передает их дальше до тех пор, пока счетчик не будет достигнут указанного значения
@@ -733,4 +743,57 @@ public class Lecture03FluxTake {
         .subscribe(Util.subscriber());
   }
 }
+```
+
+## Stop emitting if process is cancelled
+- Проблема
+  - У нас есть логика, по которой процесс генерации значений может завершится
+  - Пользователь хочет получить лишь первые несколько значений, ему не важно какие
+  - После отписки, которую эмитит оператор take мы продолжаем эмитить значения
+- Решение
+  - Добавить проверки на `fluxSink.isCancelled`
+```
+public class Lecture04FluxCreateIssueFix {
+  public static void main(String[] args) {
+    Flux.create(fluxSink -> {
+      String country;
+      do {
+        country = Util.faker().country().name();
+        System.out.println("emitting : " + country);
+        fluxSink.next(country);
+      } while (!country.equalsIgnoreCase("canada") && !fluxSink.isCancelled());
+      fluxSink.complete();
+
+    })
+        .take(3)
+        .subscribe(Util.onNext());
+  }
+}
+```
+
+## Flux generate
+
++ [Summary](#summary-3)
+
+- Можно передавать только 1 значение
+- Запускает бесконечный цикл
+- Для каждой итерации будет передаваться отдельный инстанс `synchronousSink`
+- При использовании оператора `take`, generate сам проверит, что процесс уже был завершен
+- Процесс можно завершить вызвав метод `complete` или `error`
+```
+public class Lecture05FluxGenerate {
+  public static void main(String[] args) {
+    // Можно передавать только 1 значение
+    // Запускает бесконечный цикл
+    // Для каждой итерации будет передаваться отдельный инстанс synchronousSink
+    Flux.generate(synchronousSink -> {
+      System.out.println("emitting");
+      synchronousSink.next(Util.faker().country().name());
+      synchronousSink.complete();
+    })
+        .take(2)
+        .subscribe(Util.subscriber());
+  }
+}
+
 ```
