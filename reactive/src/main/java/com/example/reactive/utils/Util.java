@@ -1,7 +1,9 @@
 package com.example.reactive.utils;
 
 import com.github.javafaker.Faker;
+import org.reactivestreams.Subscriber;
 
+import java.util.concurrent.Flow;
 import java.util.function.Consumer;
 
 /**
@@ -34,5 +36,13 @@ public class Util {
     } catch (InterruptedException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public static Subscriber<Object> subscriber () {
+    return new DefaultSubscriber();
+  }
+
+  public static Subscriber<Object> subscriber (String name) {
+    return new DefaultSubscriber(name);
   }
 }

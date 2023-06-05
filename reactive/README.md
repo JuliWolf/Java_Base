@@ -1,5 +1,14 @@
 # Reactive
 
++ [IO модели](#io-модели)
++ [Задача reactive programming](#задача-reactive-programming)
++ [Publisher and Subscriber](#publisher-and-subscriber)
++ [Mono vs Flux Publishers](#mono-vs-flux-publishers)
++ [Mono example](#mono-example)
++ [Flux examples](#flux-examples)
++ [Emitting](#emitting)
++ [Flux Take operator](#flux-take-operator)
+
 ## IO модели
 - sync + blocking - Дефолтная работа запросов
   - запрос
@@ -52,6 +61,13 @@ public interface Subscriber<T> {
 | Возвращает Optional                                                                   | Возвращает Stream                                                              |
 
 ## Mono example
+
++ [Just vs supplier](#just-vs-supplier)
++ [Supplier vs Callable](#supplier-vs-callable)
++ [Mono From Future](#mono-from-future)
++ [Mono from Runnable](#mono-from-runnable)
++ [Summary](#summary)
+
 ```
 public class Lecture02MonoJust {
   public static void main(String[] args) {
@@ -219,7 +235,7 @@ public class Lecture05FromSupplier {
     Callable<String> stringCallable = () -> getName();
     Mono.fromCallable(stringCallable)
         .subscribe(
-            Util.onNext() // Received: Mrs. Fanny Buckridge
+`            Util.onNext() // Received: Mrs. Fanny Buckridge
         );
   }
 
@@ -285,6 +301,18 @@ public class Lecture08MonoFromRunnable {
 | Вернуть моно             | Вернуть моно                                                         | `Mono.error()`<br/>`Mono.empty()`                                              |
 
 ## Flux examples
+
++ [Multiple subscribers (will work with Mono)](#multiple-subscribers-will-work-with-mono)
++ [Create Flux from Collection and array](#create-flux-from-collection-and-array)
++ [Create Flux from Stream](#create-flux-from-stream)
++ [From range](#from-range)
++ [Logging](#logging)
++ [Custom Subscribe](#custom-subscribe)
++ [List vs Flux](#list-vs-flux)
++ [Flux with Interval](#flux-with-interval)
++ [Convert mono to flux](#convert-mono-to-flux)
++ [Convert flux to mono](#convert-flux-to-mono)
++ [summary](#summary-1)
 
 1. Create flux
 ```
@@ -616,3 +644,93 @@ public class Lecture10MonoFromFlux {
 | Создать Flux             | Range/Count     | `Flux.range(start, count)`                                                                                   |
 | Создать Flux             | Периодически    | `Flux.interval(duration)`                                                                                    |
 | Создать Flux             | Mono -> Flux    | `Flux.from(mono)`                                                                                            |
+
+
+## Emitting
+- С помощью метода Flux.create мы можем реализовать своего собственного Consumer для эмита данных
+```
+public class Lecture01FluxCreate {
+  public static void main(String[] args) {
+    // Полностью контролируем те данные, которые будут возвращаться
+    // Контролируем процесс, когда завершить процесс или выкинуть ошибку
+    Flux.create(fluxSink -> {
+          fluxSink.next(1);
+          fluxSink.next(2);
+          fluxSink.complete();
+      }).subscribe(Util.onNext());
+  }
+}
+```
+
+- Можно задать условия и определить до какого момента данные будут эмитится и когда процесс завершится
+```
+public class Lecture01FluxCreate {
+  public static void main(String[] args) {
+    Flux.create(fluxSink -> {
+      String country;
+      do {
+        country = Util.faker().country().name();
+        fluxSink.next(country);
+      } while (!country.toLowerCase().equals("canada"));
+      fluxSink.complete();
+
+    }).subscribe(Util.onNext());
+  }
+}
+
+```
+
+- Consumer это интерфейс, который можно использовать при создании своей реализации
+```
+public class NameProducer implements Consumer<FluxSink<String>> {
+  private FluxSink<String> fluxSink;
+
+  @Override
+  public void accept(FluxSink<String> stringFluxSink) {
+    this.fluxSink = stringFluxSink;
+  }
+
+
+  public void produce () {
+    String name = Util.faker().name().fullName();
+    this.fluxSink.next(name);
+  }
+}
+```
+- Использование
+  - Создаем инстанс класса, реализающего интерфейс Consumer
+  - Создаем Flux
+  - Подписываемся
+  - При вызове метода `NameProducer.produce` будет вызываться метод `fluxSink.next()`
+```
+public class Lecture02FluxCreateRefactoring {
+
+  public static void main(String[] args) {
+    NameProducer nameProducer = new NameProducer();
+
+    Flux.create(nameProducer)
+        .subscribe(Util.subscriber());
+
+    nameProducer.produce();
+  }
+}
+
+```
+
+## Flux Take operator
+- Создаем коллекцию из 10 чисел, которые должен получить подписчик
+- Оператор take получает значения и передает их дальше до тех пор, пока счетчик не будет достигнут указанного значения
+- Как только оператор take получает указанное значение + 1 он отписывается (вызывает cancel) и эмитит complete событие дальше, что приводит к завершению процесса
+```
+public class Lecture03FluxTake {
+  public static void main(String[] args) {
+    // map
+    // filter
+    Flux.range(1, 10)
+        .log()
+        .take(3)
+        .log()
+        .subscribe(Util.subscriber());
+  }
+}
+```
