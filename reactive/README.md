@@ -773,6 +773,8 @@ public class Lecture04FluxCreateIssueFix {
 
 ## Flux generate
 
++ [Flux Generate Flux](#flux-generate-flux)
++ [Flux push vs Flux create](#flux-push-vs-flux-create)
 + [Summary](#summary-3)
 
 - Можно передавать только 1 значение
@@ -797,3 +799,64 @@ public class Lecture05FluxGenerate {
 }
 
 ```
+
+### Flux Generate Flux
+- метод generate первым параметром может принимать метод, который будет возвращать state
+- В таком случае во второй параметр будет ожидаться метод, первым атрибутом которого будет state, а вторым будет sink
+```
+public class Lecture07FluxGenerateCounter {
+  public static void main(String[] args) {
+    // canada
+    // max = 10
+    Flux.generate(
+        () -> 1,
+        (counter, sink) -> {
+          String country = Util.faker().country().name();
+          sink.next(country);
+
+          if (country.equalsIgnoreCase("canada") || counter >= 10) {
+            sink.complete();
+          }
+          return counter + 1;
+        }
+    )
+        .subscribe(Util.subscriber());
+  }
+}
+```
+
+### Flux push vs Flux create
+- `Flux.create` 
+  - позволяет генерировать события асинхронно, используя поток события
+  - Предоставляет больше гибкости в настройке потока
+  - Для генерации события использует `Consumer<FluxSink<T>>`
+- `Flux.push`
+  - Ориентирован на динамическую генерацию события во время выполнения
+  - Возможность генерации событий предоставляет отдельным методам push и complete
+```
+public class Lecture08FluxPush {
+  public static void main(String[] args) {
+    NameProducer nameProducer = new NameProducer();
+
+    Flux.push(nameProducer)
+        .subscribe(Util.subscriber());
+
+    Runnable runnable = nameProducer::produce;
+
+    for (int i = 0; i < 10; i++) {
+      new Thread(runnable).start();
+    }
+  }
+}
+```
+
+### Summary
+| Create                                                                                                                          | Generate                                                                   |
+|---------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------|
+| Принимает `Consumer<FluxSink<T>>`                                                                                               | Принимает `Consumer<SynchronousSink<T>>`                                   |
+| Consumer вызывается единожды                                                                                                    | Consumer вызывается множество раз                                          |
+| Consumer может эмитить от 0 до N элементов                                                                                      | Consumer может эмитить только 1 элемент                                    |
+| Publisher может узнать о дальнейших процесса. Поэтому необходимо определить логику дальнейшего стрима дополнительным параметром | Publisher создает элементы в зависимости от потребности дальнейшего стрима |
+| Thread-safe                                                                                                                     | NA                                                                         |
+| `fluxSink.requestedFromDownstream()`<br/>`fluxSink.isCancelled()`                                                               |                                                                            |
+
