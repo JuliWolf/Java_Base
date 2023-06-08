@@ -866,6 +866,7 @@ public class Lecture08FluxPush {
 
 + [Handle](#handle)
 + [Do-events and lifecycle](#do-events-and-lifecycle)
++ [Limit Rate](#limit-rate)
 
 ### Handle
 - Работает как смесь методов `filter и map`
@@ -1011,3 +1012,21 @@ public class Lecture03DoCallbacks {
 ```
 
 * Если необходимо что-то сделать по окончанию всего процессе, то необходимо поместить `doFinally` прямо перед `.subscribe(...)`
+
+### Limit Rate
+- В случае когда мы хотим получать данные постепенно, догружать данные по мере получения
+- limitRate начально загружает указанное количество элементов
+- Как только 75% элементов получено, будет догружено еще 100
+- Вторым параметром можно указать процент от 0-99, по достижению которого будет загружаться следующая пачка элементов
+```
+public class Lecture04LimitRate {
+  public static void main(String[] args) {
+    Flux.range(1, 1000)
+        .log()
+        .limitRate(100)
+        .subscribe(Util.subscriber());
+    // 100
+    // 175
+  }
+}
+```
