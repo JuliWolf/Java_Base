@@ -15,8 +15,8 @@ public class Lecture03DoCallbacks {
         fluxSink.next(i);
       }
 
-      fluxSink.error(new RuntimeException("oops"));
-//      fluxSink.complete();
+//      fluxSink.error(new RuntimeException("oops"));
+      fluxSink.complete();
       System.out.println("--completed");
     })
         .doFirst(() -> System.out.println("doFirst 1")) // order 1
@@ -27,8 +27,10 @@ public class Lecture03DoCallbacks {
         .doOnError(err -> System.out.println("doOnError: " + err.getMessage()))
         .doOnTerminate(() -> System.out.println("doOnTerminate")) // order 6
         .doOnCancel(() -> System.out.println("doOnCancel"))
-        .doFinally(signal -> System.out.println("doFinally: " + signal)) // order 7
+        .doFinally(signal -> System.out.println("doFinally 1: " + signal)) // order 7
         .doOnDiscard(Object.class, o -> System.out.println("doOnDiscard: " + o))
+        .take(2)
+        .doFinally(signal -> System.out.println("doFinally 2: " + signal)) // order 7
         .subscribe(Util.subscriber());
 
     // Success way
@@ -57,5 +59,17 @@ public class Lecture03DoCallbacks {
     // doFinally
     // Выполняется код после fluxSink.error();
 
+    // Cancel way
+    // все события исполняются снизу вверх, начиная от subscribe и далше вверх
+    // doFirst - выполняются сверху вниз (subscriber -> publisher)
+    // doOnSubscribe - Выполняются сверху вниз (от publisher -> subscriber)
+    // doOnRequest - subscriber запрашивает данные (subscriber -> publisher)
+    // Запускается внутренняя часть fluxSink
+    // doOnNext
+    // doOnCancel - Когда желаемое количество элементов получено
+    // doFinally
+    // выполняется код, который реализован в подписчике в методе onComplete
+    // doOnDiscard - выполняется для всех элементов, который не были получены
+    // Выполняется код после fluxSink.complete();
   }
 }
