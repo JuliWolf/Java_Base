@@ -10,6 +10,7 @@
 + [Flux Take operator](#flux-take-operator)
 + [Stop emitting if process is cancelled](#stop-emitting-if-process-is-cancelled)
 + [Flux generate](#flux-generate)
++ [Operators](#operators)
 
 ## IO модели
 - sync + blocking - Дефолтная работа запросов
@@ -860,3 +861,111 @@ public class Lecture08FluxPush {
 | Thread-safe                                                                                                                     | NA                                                                         |
 | `fluxSink.requestedFromDownstream()`<br/>`fluxSink.isCancelled()`                                                               |                                                                            |
 
+
+## Operators
+
++ [Handle](#handle)
++ [Do-events and lifecycle](#do-events-and-lifecycle)
+
+### Handle
+- Работает как смесь методов `filter и map`
+```
+public class Lecture01Handle {
+  public static void main(String[] args) {
+    // handle = filter +map
+    Flux.range(1, 20)
+        .handle(((integer, synchronousSink) -> {
+          if (integer == 7) {
+            synchronousSink.complete();
+          }
+
+          if (integer % 2 == 0) {
+            synchronousSink.next(integer); // filter
+          } else {
+            synchronousSink.next(integer + "a"); // map
+          }
+        }))
+        .subscribe(Util.subscriber());
+  }
+}
+```
+
+### Do-events and lifecycle
+- Success way
+  - все события исполняются снизу вверх, начиная от subscribe и далше вверх
+  - doFirst - выполняются сверху вниз (subscriber -> publisher)
+  - doOnSubscribe - Выполняются сверху вниз (от publisher -> subscriber)
+  - doOnRequest - subscriber запрашивает данные (subscriber -> publisher)
+  - Запускается внутренняя часть fluxSink
+  - doOnNext
+  - doOnComplete - При завершении работы
+  - doOnTerminate
+  - выполняется код, который реализован в подписчике в методе onComplete
+  - doFinally
+  - Выполняется код после fluxSink.complete();
+```
+public class Lecture03DoCallbacks {
+  public static void main(String[] args) {
+    Flux.create(fluxSink -> {
+      System.out.println("inside create");
+      for (int i = 0; i < 5; i++) {
+        fluxSink.next(i);
+      }
+
+      fluxSink.complete();
+      System.out.println("--completed");
+    })
+        .doFirst(() -> System.out.println("doFirst 1")) // order 1
+        .doOnSubscribe(s -> System.out.println("doOnSubscribe 1: " + s)) // order 2
+        .doOnComplete(() -> System.out.println("doOnComplete")) // order 5
+        .doOnNext(o -> System.out.println("doOnNext: " + o)) // order 4
+        .doOnRequest(l -> System.out.println("doOnRequest: " + l)) // order 3
+        .doOnError(err -> System.out.println("doOnError: " + err.getMessage()))
+        .doOnTerminate(() -> System.out.println("doOnTerminate")) // order 6
+        .doOnCancel(() -> System.out.println("doOnCancel"))
+        .doFinally(signal -> System.out.println("doFinally: " + signal)) // order 7
+        .doOnDiscard(Object.class, o -> System.out.println("doOnDiscard: " + o))
+        .subscribe(Util.subscriber());
+  }
+}
+```
+
+- Error way
+  - Error way
+  - все события исполняются снизу вверх, начиная от subscribe и далше вверх
+  - doFirst - выполняются сверху вниз (subscriber -> publisher)
+  - doOnSubscribe - Выполняются сверху вниз (от publisher -> subscriber)
+  - doOnRequest - subscriber запрашивает данные (subscriber -> publisher)
+  - Запускается внутренняя часть fluxSink
+  - doOnNext
+  - doOnError - При получении ошибки
+  - doOnTerminate
+  - выполняется код, который реализован в подписчике в методе onError
+  - doFinally
+  - Выполняется код после fluxSink.error();
+```
+public class Lecture03DoCallbacks {
+  public static void main(String[] args) {
+    Flux.create(fluxSink -> {
+      System.out.println("inside create");
+      for (int i = 0; i < 5; i++) {
+        fluxSink.next(i);
+      }
+
+      fluxSink.error(new RuntimeException("oops"));
+      System.out.println("--completed");
+    })
+        .doFirst(() -> System.out.println("doFirst 1")) // order 1
+        .doOnSubscribe(s -> System.out.println("doOnSubscribe 1: " + s)) // order 2
+        .doOnComplete(() -> System.out.println("doOnComplete")) // order 5
+        .doOnNext(o -> System.out.println("doOnNext: " + o)) // order 4
+        .doOnRequest(l -> System.out.println("doOnRequest: " + l)) // order 3
+        .doOnError(err -> System.out.println("doOnError: " + err.getMessage()))
+        .doOnTerminate(() -> System.out.println("doOnTerminate")) // order 6
+        .doOnCancel(() -> System.out.println("doOnCancel"))
+        .doFinally(signal -> System.out.println("doFinally: " + signal)) // order 7
+        .doOnDiscard(Object.class, o -> System.out.println("doOnDiscard: " + o))
+        .subscribe(Util.subscriber());
+  }
+}
+```
