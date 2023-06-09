@@ -867,6 +867,9 @@ public class Lecture08FluxPush {
 + [Handle](#handle)
 + [Do-events and lifecycle](#do-events-and-lifecycle)
 + [Limit Rate](#limit-rate)
++ [Delay](#delay)
++ [OnError](#onerror)
++ [Timeout](#timeout)
 
 ### Handle
 - Работает как смесь методов `filter и map`
@@ -1027,6 +1030,112 @@ public class Lecture04LimitRate {
         .subscribe(Util.subscriber());
     // 100
     // 175
+  }
+}
+```
+
+### Delay
+- Отдает элементы с определенной задержкой
+- Изначально загружает 1
+```
+public class Lecture05Delay {
+  public static void main(String[] args) {
+
+    Flux.range(1, 100) // request 1
+        .log()
+        .delayElements(Duration.ofSeconds(1))
+        .subscribe(Util.subscriber());
+
+    Util.sleepSeconds(50);
+  }
+}
+```
+
+### OnError
+- В случае если происходит ошибка в Provider мы можем обработать ошибку разными способами
+
+1. Вернуть другое значени (программа завершится)
+```
+public class Lecture06OnError {
+  public static void main(String[] args) {
+    Flux.range(1, 10)
+        .log()
+        .map(i -> 10 / (5 - i))
+        .onErrorReturn(-1)
+        .subscribe(Util.subscriber());
+  }
+}
+```
+2. Выполнить какое-то действие (программа завершится)
+```
+public class Lecture06OnError {
+  public static void main(String[] args) {
+    Flux.range(1, 10)
+        .log()
+        .map(i -> 10 / (5 - i))
+        .onErrorResume(e -> fallback())
+        .subscribe(Util.subscriber());
+  }
+
+  private static Mono<Integer> fallback () {
+    return Mono.fromSupplier(() -> Util.faker().random().nextInt(100, 200));
+  }
+}
+```
+3. Выполнить какое-то действие и продолжить выполнение
+```
+public class Lecture06OnError {
+  public static void main(String[] args) {
+    Flux.range(1, 10)
+        .log()
+        .map(i -> 10 / (5 - i))
+        .onErrorContinue((err, obj) -> {
+          
+        })
+        .subscribe(Util.subscriber());
+  }
+}
+```
+
+### Timeout
+1. Используется для ограничения времени ожидания
+2. Если время ожидание прошло и ответ не был получен будет выброшена ошибка
+3. Если время ожидания прошло и вторым параметром была передана callback функция, то будет выполнена она
+```
+public class Lecture07Timeout {
+  public static void main(String[] args) {
+    getOrderNumbers()
+        .timeout(Duration.ofSeconds(2), fallback())
+        .subscribe(Util.subscriber());
+
+    Util.sleepSeconds(60);
+  }
+
+  private static Flux<Integer> getOrderNumbers () {
+    return Flux.range(1, 10)
+        .delayElements(Duration.ofSeconds(1));
+  }
+
+  private static Flux<Integer> fallback () {
+    return Flux.range(100, 10)
+        .delayElements(Duration.ofMillis(200));
+  }
+}
+```
+
+### Default if empty
+- Если Producer возвращает 0 результатов можно вернуть что-то дефолтное
+```
+public class Lecture08DefaultIfEmpty {
+  public static void main(String[] args) {
+    getOrderNumbers()
+        .filter(i -> i > 10)
+        .defaultIfEmpty(-100)
+        .subscribe(Util.subscriber());
+  }
+
+  private static Flux<Integer> getOrderNumbers () {
+    return Flux.range(1, 10);
   }
 }
 ```
