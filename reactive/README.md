@@ -870,6 +870,9 @@ public class Lecture08FluxPush {
 + [Delay](#delay)
 + [OnError](#onerror)
 + [Timeout](#timeout)
++ [Default if empty](#default-if-empty)
++ [Switch if empty](#switch-if-empty)
++ [Transform](#transform)
 
 ### Handle
 - Работает как смесь методов `filter и map`
@@ -1136,6 +1139,52 @@ public class Lecture08DefaultIfEmpty {
 
   private static Flux<Integer> getOrderNumbers () {
     return Flux.range(1, 10);
+  }
+}
+```
+
+### Switch if empty
+- Если Producer возвращает 0 результатов, то можно переключиться на другого Producer
+```
+public class Lecture09SwitchIfEmpty {
+  public static void main(String[] args) {
+    getOrderNumbers()
+        .filter(i -> i > 10)
+        .switchIfEmpty(fallback())
+        .subscribe(Util.subscriber());
+  }
+
+  private static Flux<Integer> getOrderNumbers () {
+    return Flux.range(1, 10);
+  }
+
+  private static Flux<Integer> fallback () {
+    return Flux.range(20, 5);
+  }
+}
+```
+
+### Transform
+- Если необходимо объеденить несколько операций над данными
+- Позволяет передавать "свои" фильтры
+```
+public class Lecture10Transform {
+  public static void main(String[] args) {
+    getPerson()
+        .transform(applyFilterMap())
+        .subscribe(Util.subscriber());
+  }
+
+  public static Flux<Person> getPerson () {
+    return Flux.range(1, 10)
+        .map(i -> new Person());
+  }
+
+  public static Function<Flux<Person>, Flux<Person>> applyFilterMap () {
+    return flux -> flux
+        .filter(p -> p.getAge() > 10)
+        .doOnNext(p -> p.setName(p.getName().toUpperCase()))
+        .doOnDiscard(Person.class, p -> System.out.println("Not allowing: " + p));
   }
 }
 ```
