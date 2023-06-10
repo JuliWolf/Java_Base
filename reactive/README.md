@@ -873,6 +873,9 @@ public class Lecture08FluxPush {
 + [Default if empty](#default-if-empty)
 + [Switch if empty](#switch-if-empty)
 + [Transform](#transform)
++ [SwitchOnFirst](#switchonfirst)
++ [FlatMap](#flatmap)
++ [ConcatMap](#concatmap)
 
 ### Handle
 - Работает как смесь методов `filter и map`
@@ -1188,3 +1191,57 @@ public class Lecture10Transform {
   }
 }
 ```
+
+### SwitchOnFirst
+- Если необходимо поменять Provider в случае не подходящих данных
+- signal хранит в себе данные текущего действия, а так же текущего элемента например в случае действия onNext
+- Вторым аргументом получает Flux
+```
+public class Lecture11SwitchOnFirst {
+  public static void main(String[] args) {
+    getPerson()
+        .switchOnFirst(((signal, personFlux) -> {
+          if (signal.isOnNext() && signal.get().getAge() > 10) {
+            return personFlux;
+          }
+
+          return applyFilterMap().apply(personFlux);
+        }))
+        .subscribe(Util.subscriber());
+  }
+
+  public static Flux<Person> getPerson () {
+    return Flux.range(1, 10)
+        .map(i -> new Person());
+  }
+
+  public static Function<Flux<Person>, Flux<Person>> applyFilterMap () {
+    return flux -> flux
+        .filter(p -> p.getAge() > 10)
+        .doOnNext(p -> p.setName(p.getName().toUpperCase()))
+        .doOnDiscard(Person.class, p -> System.out.println("Not allowing: " + p));
+  }
+}
+```
+
+### Flatmap
+- Используется для преобразования элементов одного потока в другой
+- Пример
+  - Есть пользователь
+  - Есть покупки, которые привязаны к пользователю
+  - По userId мы хотим получить список всех покупок
+  - UserService - возвращает Flux<User>
+  - OrderService - возвращает Flux<PurchaseOrder>
+```
+public class Lecture12FlatMap {
+  public static void main(String[] args) {
+    UserService.getUsers()
+        .flatMap(user -> OrderService.getOrders(user.getUserId())) // Flux
+        .subscribe(Util.subscriber());
+  }
+}
+```
+
+### ConcatMap
+- Работает точно так же как FlatMap только переключение между Publisher происходит только после вызова метода onComplete
+
