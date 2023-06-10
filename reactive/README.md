@@ -1430,6 +1430,13 @@ public class Lecture05HotPublishCache {
 ```
 
 ## Threads
+
++[Schedulers != Parallel-execution](#schedulers--parallel-execution)
++[PublishOn](#publishOn)
++[PublishOn vs SubscribeOn](#publishon-vs-subscribeon)
++[Parallel](#parallel)
++[Sequential](#sequential)
+
 - Можно запускать Flux в отдельных потоках самостоятельно, но лучше использовать те методы, которые нам предоставляет WebFlux
 - Для выполнения flux  разных потоках необходимо использовать метод `subscribeOn`
   - parallel - создает по 1 потоку на 1 CPU
@@ -1480,6 +1487,99 @@ public class Lecture02SubscribeOnDemo {
     for (int i = 0; i < 2; i++) {
       new Thread(runnable).start();
     }
+
+    Util.sleepSeconds(5);
+
+  }
+
+  private static void printThreadName (String msg) {
+    System.out.println(msg + "\t\t: Thread:" + Thread.currentThread().getName());
+  }
+}
+```
+
+### Schedulers != Parallel-execution
+* Все операции всегда выполняются последовательно
+* Данные передается 1 за другим в ThreadPool
+* `Schedulers.parallel()` - означает создаение потоков для CPU. Не ведет к параллельному выполнению
+
+### PublishOn
+- В теории данную настройку должен устанавливать тот, кто разрбатывает Provider
+- Определяет, что раздача данных будет происходить параллельно
+- Можно менять Scheduler в процессе
+- Влияет только на downstream операции, то есть только те, что идут после вызова метода `publishOn`
+```
+public class Lecture04PublishOn {
+  public static void main(String[] args) {
+    Flux<Object> flux = Flux.create(fluxSink -> {
+          printThreadName("create");
+          for (int i = 0; i < 4; i++) {
+            fluxSink.next(i);
+          }
+
+          fluxSink.complete();
+        })
+        .doOnNext(i -> printThreadName("next " + i));
+
+    flux
+        .publishOn(Schedulers.boundedElastic())
+        .doOnNext(i -> printThreadName("next " + i))
+        .publishOn(Schedulers.parallel())
+        .subscribe(v -> printThreadName("sub "+ v));
+
+    Util.sleepSeconds(5);
+
+  }
+
+  private static void printThreadName (String msg) {
+    System.out.println(msg + "\t\t: Thread:" + Thread.currentThread().getName());
+  }
+}
+```
+
+### PublishOn vs SubscribeOn
+| PublishOn                                                        | SubscribeOn                                                |
+|------------------------------------------------------------------|------------------------------------------------------------|
+| Вляет на операции, которые выполняются после вызова downstream   | Влияют на все операции, который написаны выше upstream     |
+
+### Parallel
+- Используется чтобы Publisher раздавал данные в нескольких потоках
+- Необходимо использовать Thread-save структуры, для предотвращения ошибок
+- Можно указать максимальное количество потоков, в рамках которых будет выполнятся раздава данных
+```
+public class Lecture06Parallel {
+  public static void main(String[] args) {
+    List<Integer> list = new ArrayList<>();
+
+    Flux.range(1, 999)
+        .parallel()
+        .runOn(Schedulers.parallel())
+        .subscribe(v -> list.add(v));
+
+    Util.sleepSeconds(5);
+    System.out.println(list.size());
+
+  }
+
+  private static void printThreadName (String msg) {
+    System.out.println(msg + "\t\t: Thread:" + Thread.currentThread().getName());
+  }
+}
+```
+
+* Flux.interval в своей реализации уже использует parallel
+
+### Sequential
+- Превращает параллельный Flux в не паралльный
+```
+public class Lecture07Sequential {
+  public static void main(String[] args) {
+    Flux.range(1, 10)
+        .parallel(2)
+        .runOn(Schedulers.boundedElastic())
+        .doOnNext(i -> printThreadName("next " + i))
+        .sequential()
+        .subscribe(v -> printThreadName("sub " + v));
 
     Util.sleepSeconds(5);
 
