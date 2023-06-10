@@ -1431,12 +1431,12 @@ public class Lecture05HotPublishCache {
 
 ## Threads
 
-+[Schedulers != Parallel-execution](#schedulers--parallel-execution)
-+[PublishOn](#publishOn)
-+[PublishOn vs SubscribeOn](#publishon-vs-subscribeon)
-+[Parallel-execution](#parallel-execution)
-+[Sequential](#sequential)
-+[Summary](#summary-3)
++ [Schedulers != Parallel-execution](#schedulers--parallel-execution)
++ [PublishOn](#publishOn)
++ [PublishOn vs SubscribeOn](#publishon-vs-subscribeon)
++ [Parallel-execution](#parallel-execution)
++ [Sequential](#sequential)
++ [Summary](#summary-3)
 
 - Можно запускать Flux в отдельных потоках самостоятельно, но лучше использовать те методы, которые нам предоставляет WebFlux
 - Для выполнения flux  разных потоках необходимо использовать метод `subscribeOn`
