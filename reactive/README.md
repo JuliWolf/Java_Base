@@ -1434,8 +1434,9 @@ public class Lecture05HotPublishCache {
 +[Schedulers != Parallel-execution](#schedulers--parallel-execution)
 +[PublishOn](#publishOn)
 +[PublishOn vs SubscribeOn](#publishon-vs-subscribeon)
-+[Parallel](#parallel)
++[Parallel-execution](#parallel-execution)
 +[Sequential](#sequential)
++[Summary](#summary-3)
 
 - Можно запускать Flux в отдельных потоках самостоятельно, но лучше использовать те методы, которые нам предоставляет WebFlux
 - Для выполнения flux  разных потоках необходимо использовать метод `subscribeOn`
@@ -1542,7 +1543,7 @@ public class Lecture04PublishOn {
 |------------------------------------------------------------------|------------------------------------------------------------|
 | Вляет на операции, которые выполняются после вызова downstream   | Влияют на все операции, который написаны выше upstream     |
 
-### Parallel
+### Parallel-execution
 - Используется чтобы Publisher раздавал данные в нескольких потоках
 - Необходимо использовать Thread-save структуры, для предотвращения ошибок
 - Можно указать максимальное количество потоков, в рамках которых будет выполнятся раздава данных
@@ -1590,3 +1591,11 @@ public class Lecture07Sequential {
   }
 }
 ```
+
+### Summary
+| Schedulers методы | Использование                                    |
+|-------------------|--------------------------------------------------|
+| boundedElastic    | Сетевый операции и операции затратные по времени |
+| parallel          | CPU задачи                                       |
+| single            | Одиночные задачи для одного потока               |
+| immediate         | В текущем потоке                                 |
