@@ -11,6 +11,7 @@
 + [Stop emitting if process is cancelled](#stop-emitting-if-process-is-cancelled)
 + [Flux generate](#flux-generate)
 + [Operators](#operators)
++ [Cold and Hot Publishers](#cold-and-hot-publishers)
 
 ## IO модели
 - sync + blocking - Дефолтная работа запросов
@@ -1245,3 +1246,184 @@ public class Lecture12FlatMap {
 ### ConcatMap
 - Работает точно так же как FlatMap только переключение между Publisher происходит только после вызова метода onComplete
 
+
+## Cold and Hot Publishers
+
++ [Cold publisher](#cold-publisher)
++ [Hot publisher](#hot-publisher)
+
+
+### Cold publisher
+- Холодная подписка означает, что Provider будет начинать свою работу только в момент подписки на него
+```
+public class Lecture01ColdPublisher {
+  public static void main(String[] args) {
+    Flux<String> movieStream = Flux.fromStream(() -> getMovie())
+        .delayElements(Duration.ofSeconds(2));
+
+    movieStream
+        .subscribe(Util.subscriber("sam"));
+
+    Util.sleepSeconds(5);
+
+    movieStream
+        .subscribe(Util.subscriber("mike"));
+
+    Util.sleepSeconds(60);
+  }
+
+  // netflix
+  private static Stream<String> getMovie () {
+    System.out.println("got the movie streaming req");
+    return Stream.of(
+        "Scene 1",
+        "Scene 2",
+        "Scene 3",
+        "Scene 4",
+        "Scene 5",
+        "Scene 6",
+        "Scene 7"
+    );
+  }
+}
+```
+
+### Hot publisher
+
++ [Share](#share)
++ [RefCount](#refcount)
++ [AutoConnect](#autoconnect)
+
+- Горячая подписка - Publisher начинает раздавать данные вне зависимости от того есть у него подписчики или нет
+- Если в процессе появится еще один подписчик он получит данные не с начала, а с того момента когда он присоеденился
+```
+public class Lecture02HotPublisher {
+  public static void main(String[] args) {
+    Flux<String> movieStream = Flux.fromStream(() -> getMovie())
+        .delayElements(Duration.ofSeconds(2))
+        // Активирует горячую подписку
+        .share();
+
+    movieStream
+        .subscribe(Util.subscriber("sam"));
+
+    Util.sleepSeconds(5);
+
+    movieStream
+        .subscribe(Util.subscriber("mike"));
+
+    Util.sleepSeconds(60);
+  }
+
+  // netflix
+  private static Stream<String> getMovie () {
+    System.out.println("got the movie streaming req");
+    return Stream.of(
+        "Scene 1",
+        "Scene 2",
+        "Scene 3",
+        "Scene 4",
+        "Scene 5",
+        "Scene 6",
+        "Scene 7"
+    );
+  }
+}
+```
+
+#### Share
+- Метод Share объединяет 2 оператора 
+  - `.publish()`
+  - `.refCount(1)` - минимальное колчество подписчиков для начала работы
+
+#### RefCount
+- Если подписчик подписывается после того как для первого подписчика Flux отдал все данные и вызвал метод onComplete </br>
+  данные будут отдаваться с самого начала (начнется новая подписка)
+
+#### AutoConnect
+- Позволяет определить минимально количество подписчиков
+- Если подписчик подписывается после того как onComplete был вызван он не получает данных
+- Если указать 0, то данные начнут раздаваться сразу, вне зависимости от того, есть подписчики или нет
+```
+public class Lecture04HotPublishAutoConnect {
+  public static void main(String[] args) {
+    // share = publish().refCount(1)
+    Flux<String> movieStream = Flux.fromStream(() -> getMovie())
+        .delayElements(Duration.ofSeconds(1))
+        // Активирует горячую подписку
+        .publish()
+        .autoConnect(0);
+
+    Util.sleepSeconds(3);
+
+    movieStream
+        .subscribe(Util.subscriber("sam"));
+
+    Util.sleepSeconds(10);
+
+    System.out.println("Mike if about to join");
+
+    movieStream
+        .subscribe(Util.subscriber("mike"));
+
+    Util.sleepSeconds(60);
+  }
+
+  // movie theatre
+  private static Stream<String> getMovie () {
+    System.out.println("got the movie streaming req");
+    return Stream.of(
+        "Scene 1",
+        "Scene 2",
+        "Scene 3",
+        "Scene 4",
+        "Scene 5",
+        "Scene 6",
+        "Scene 7"
+    );
+  }
+}
+```
+
+#### Cache
+- Обединяет 2 метода
+  - `publish()`
+  - `replay()` - можно указать максимальное количество элементов, которые будут сохранены (по дефолту int.max)
+```
+public class Lecture05HotPublishCache {
+  public static void main(String[] args) {
+    // share = publish().refCount(1)
+    Flux<String> movieStream = Flux.fromStream(() -> getMovie())
+        .delayElements(Duration.ofSeconds(1))
+        .cache(2);
+
+    Util.sleepSeconds(2);
+
+    movieStream
+        .subscribe(Util.subscriber("sam"));
+
+    Util.sleepSeconds(10);
+
+    System.out.println("Mike if about to join");
+
+    movieStream
+        .subscribe(Util.subscriber("mike"));
+
+    Util.sleepSeconds(60);
+  }
+
+  // movie theatre
+  private static Stream<String> getMovie () {
+    System.out.println("got the movie streaming req");
+    return Stream.of(
+        "Scene 1",
+        "Scene 2",
+        "Scene 3",
+        "Scene 4",
+        "Scene 5",
+        "Scene 6",
+        "Scene 7"
+    );
+  }
+}
+```
