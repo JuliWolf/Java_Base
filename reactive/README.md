@@ -14,6 +14,7 @@
 + [Cold and Hot Publishers](#cold-and-hot-publishers)
 + [Threads](#threads)
 + [Overflow Strategy](#overflow-strategy)
++ [Combining publishers](#combining-publishers)
 
 ## IO модели
 - sync + blocking - Дефолтная работа запросов
@@ -1766,6 +1767,208 @@ public class Lecture05BufferWithSize {
         .subscribe(Util.subscriber());
 
     Util.sleepSeconds(10);
+  }
+}
+```
+
+## Combining publishers
+
++ [StartWith](#startwith)
++ [Concat / ConcatWith](#concat--concatwith)
++ [Merge](#merge)
++ [ZIP](#zip)
++ [CombineLatest](#combinelatest)
+
+### StartWith
+
+- Сначала забирает все данные из 1го Publisher
+- Потом начинает забирать данные из 2го Publisher
+
+* Данные будут сначала создаваться и кешироваться
+* Далее сначала вернутся данные из кеша и только потом снова будут генерироваться
+```
+public class NameGenerator {
+  private List<String> list = new ArrayList<>();
+
+  public Flux<String> generateNames () {
+    return Flux.generate(stringSynchronousSink -> {
+      System.out.println("generator fresh");
+      Util.sleepSeconds(1);
+      String name = Util.faker().name().firstName();
+      list.add(name);
+      stringSynchronousSink.next(name);
+    })
+        .cast(String.class)
+        .startWith(getFromCache());
+  }
+
+  private Flux<String> getFromCache () {
+    return Flux.fromIterable(list);
+  }
+}
+```
+
+```
+public class Lecture01StartWith {
+  public static void main(String[] args) {
+    NameGenerator generator = new NameGenerator();
+    generator.generateNames()
+        .take(2)
+        .subscribe(Util.subscriber("sam"));
+
+    generator.generateNames()
+        .take(2)
+        .subscribe(Util.subscriber("mike"));
+
+    generator.generateNames()
+        .take(3)
+        .subscribe(Util.subscriber("Jake"));
+
+    generator.generateNames()
+        .filter(n -> n.startsWith("A"))
+        .take(1)
+        .subscribe(Util.subscriber("Jake"));
+  }
+}
+```
+
+### Concat / ConcatWith
+
+- Процесс начинается с основного стрима
+- Когда первый стрим закончил работу, данные начнут забираться из следующего стрима
+```
+public class Lecture02Concat {
+  public static void main(String[] args) {
+    Flux<String> flux1 = Flux.just("a", "b");
+    Flux<String> flux2 = Flux.just("c", "d", "e");
+
+    Flux<String> flux = flux1.concatWith(flux2);
+    flux.subscribe(Util.subscriber());
+  }
+}
+```
+* Можно объеденить с несколькими стримами
+```
+public class Lecture02Concat {
+  public static void main(String[] args) {
+    Flux<String> flux1 = Flux.just("a", "b");
+    Flux<String> flux2 = Flux.just("c", "d", "e");
+    Flux<String> flux3 = Flux.just("f", "g", "h");
+
+    Flux<String> fluxConcat = Flux.concat(flux1, flux2, flux3);
+    fluxConcat.subscribe(Util.subscriber());
+  }
+}
+```
+* Если один из стримов возвращает ошибку, мы можем отложить ошибку до того момента, когда остальные стримы завершат свое выполнение
+```
+public class Lecture02Concat {
+  public static void main(String[] args) {
+    Flux<String> flux1 = Flux.just("a", "b");
+    Flux<String> flux2 = Flux.just("c", "d", "e");
+    Flux<String> flux3 = Flux.just("f", "g", "h");
+    Flux<String> fluxError = Flux.error(new RuntimeException("oops"));
+
+    Flux<String> fluxConcatWithError = Flux.concatDelayError(flux2, flux3, fluxError);
+    fluxConcatWithError.subscribe(Util.subscriber());
+  }
+}
+```
+
+### Merge
+
+- Обединяет все стримы и возвращает один
+- Данные отдаются по мере готовности их в каждом отдельном стриме
+- Процесс заканчивается тогда, когда все Provider заканчивают свою работу
+```
+public class EmirateFlights {
+  public static Flux<String> getFlights () {
+    return Flux.range(1, Util.faker().random().nextInt(1, 10))
+        .delayElements(Duration.ofSeconds(1))
+        .map(i -> "Emirates " + Util.faker().random().nextInt(100, 999))
+        .filter(i -> Util.faker().random().nextBoolean());
+  }
+}
+```
+```
+public class Lecture03Merge {
+  public static void main(String[] args) {
+    Flux<String> mergeFlux = Flux.merge(
+        QatarFlights.getFlights(),
+        EmirateFlights.getFlights(),
+        AmericanAirlines.getFlights()
+    );
+
+    mergeFlux.subscribe(Util.subscriber());
+
+    Util.sleepSeconds(10);
+
+  }
+}
+```
+
+### ZIP
+
+- Забирает по одному элементу из каждого стрима для создания одного элемента для подписчика
+- Если в одном из стримов нет элементов, то процесс завершается
+- Возвращает тип `Tuple`
+- Если передать больше 8 стримов, то нужно будет передать свою `ByFunction` для объединения данных
+```
+public class Lecture04ZIP {
+  public static void main(String[] args) {
+    // return Tuple
+    // Если больше 8, тьо нужно будет передать свою ByFunction для объединения данных
+    Flux.zip(
+        getBody(),
+        getEngine(),
+        getTires()
+    )
+      .subscribe(Util.subscriber());
+  }
+
+  private static Flux<String> getBody () {
+    return Flux.range(1, 5)
+        .map(i -> "body");
+  }
+
+  private static Flux<String> getEngine () {
+    return Flux.range(1, 2)
+        .map(i -> "engine");
+  }
+
+  private static Flux<String> getTires () {
+    return Flux.range(1, 8)
+        .map(i -> "tires");
+  }
+}
+```
+
+
+### CombineLatest
+
+- Объединяет последние элементы стримов
+- Если стрим А последним элементом отдал 1 и стрим B последним элементом отдал 2, то результатом будет `12`
+- После чего стрим А отдал элемент 4, результатом будет `42`
+```
+public class Lecture05CombineLast {
+  public static void main(String[] args) {
+    Flux.combineLatest(
+        getString(),
+        getNumber(),
+        (stringStream, numberStream) -> stringStream + numberStream
+    ).subscribe(Util.subscriber());
+
+    Util.sleepSeconds(10);
+  }
+
+  private static Flux<String> getString () {
+    return Flux.just("A", "B", "C", "D")
+        .delayElements(Duration.ofSeconds(1));
+  }
+
+  private static Flux<String> getNumber () {
+    return Flux.just("1", "2", "3")
+        .delayElements(Duration.ofSeconds(3));
   }
 }
 ```
