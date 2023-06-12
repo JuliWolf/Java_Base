@@ -13,6 +13,7 @@
 + [Operators](#operators)
 + [Cold and Hot Publishers](#cold-and-hot-publishers)
 + [Threads](#threads)
++ [Overflow Strategy](#overflow-strategy)
 
 ## IO модели
 - sync + blocking - Дефолтная работа запросов
@@ -656,6 +657,7 @@ public class Lecture10MonoFromFlux {
 + [Summary](#summary-2)
 
 - С помощью метода `Flux.create` мы можем реализовать своего собственного Consumer для эмита данных
+- Вторым параметром может принимать OverflowStrategy для обработки данных, которые будут выкинуты в процессе при переполнении очереди
 ```
 public class Lecture01FluxCreate {
   public static void main(String[] args) {
@@ -1599,3 +1601,171 @@ public class Lecture07Sequential {
 | parallel          | CPU задачи                                       |
 | single            | Одиночные задачи для одного потока               |
 | immediate         | В текущем потоке                                 |
+
+
+## Overflow Strategy
+
++ [Overflow Strategy table](#overflow-strategy-table)
++ [Drop](#drop)
++ [Latest](#latest)
++ [Error](#error)
++ [Buffer](#buffer)
+
+- Проблема:
+  - Provider быстро создает и отдает данные
+  - Долгий процесс обработки данных прежде чем отдать их Consumer
+- Итого:
+  - Данные, которые были созданы Provider сохраняются в памяти до тех пор, пока не будут обработы и получены Consumer
+
+### Overflow Strategy table
+| Strategy | Behavior                                                    | Method                 |
+|----------|-------------------------------------------------------------|------------------------|
+| buffer   | Сохраняет в памяти                                          | `onBackpressureBuffer` |
+| drop     | Когда очередь наполняется, все новые данные будут пропущены | `onBackpressureDrop`   |
+| latest   | Когда очередь наполняется, самые первые начинают удаляться  | `onBackpressureLatest` |
+| error    | Возвращает ошибку при переполеннии                          | `onBackpressureError`  |
+
+* Изменить максимальное количество элементов для Queue
+```
+System.setProperty("reactor.bufferSize.small", "16");
+```
+
+### Drop
+```
+public class Lecture02Drop {
+  public static void main(String[] args) {
+    System.setProperty("reactor.bufferSize.small", "16");
+
+    Flux.create(fluxSink -> {
+          for (int i = 1; i < 501; i++) {
+            fluxSink.next(i);
+            System.out.println("Pushed: " + i);
+            Util.sleepMillis(1);
+          }
+
+          fluxSink.complete();
+        })
+        .onBackpressureDrop()
+        .publishOn(Schedulers.boundedElastic())
+        .doOnNext(i -> {
+          Util.sleepMillis(10);
+        })
+        .subscribe(Util.subscriber());
+
+    Util.sleepSeconds(60);
+  }
+}
+```
+
+* Метод onBackpressureDrop может принимать callback метод для обработки значений, которые были скинуты
+```
+public class Lecture02Drop {
+  public static void main(String[] args) {
+    System.setProperty("reactor.bufferSize.small", "16");
+
+    List<Object> list = new ArrayList<>();
+
+    Flux.create(fluxSink -> {
+          for (int i = 1; i < 201; i++) {
+            fluxSink.next(i);
+            System.out.println("Pushed: " + i);
+            Util.sleepMillis(1);
+          }
+
+          fluxSink.complete();
+        })
+        .onBackpressureDrop(list::add)
+        .publishOn(Schedulers.boundedElastic())
+        .doOnNext(i -> {
+          Util.sleepMillis(10);
+        })
+        .subscribe(Util.subscriber());
+
+    Util.sleepSeconds(10);
+
+    System.out.println(list);
+  }
+}
+```
+
+### Latest
+```
+public class Lecture03Latest {
+  public static void main(String[] args) {
+    System.setProperty("reactor.bufferSize.small", "16");
+
+    Flux.create(fluxSink -> {
+          for (int i = 1; i < 201; i++) {
+            fluxSink.next(i);
+            System.out.println("Pushed: " + i);
+            Util.sleepMillis(1);
+          }
+
+          fluxSink.complete();
+        })
+        .onBackpressureLatest()
+        .publishOn(Schedulers.boundedElastic())
+        .doOnNext(i -> {
+          Util.sleepMillis(10);
+        })
+        .subscribe(Util.subscriber());
+
+    Util.sleepSeconds(10);
+  }
+}
+```
+
+### Error
+```
+public class Lecture04Error {
+  public static void main(String[] args) {
+    System.setProperty("reactor.bufferSize.small", "16");
+
+    Flux.create(fluxSink -> {
+          for (int i = 1; i < 201 && !fluxSink.isCancelled(); i++) {
+            fluxSink.next(i);
+            System.out.println("Pushed: " + i);
+            Util.sleepMillis(1);
+          }
+
+          fluxSink.complete();
+        })
+        .onBackpressureError()
+        .publishOn(Schedulers.boundedElastic())
+        .doOnNext(i -> {
+          Util.sleepMillis(10);
+        })
+        .subscribe(Util.subscriber());
+
+    Util.sleepSeconds(10);
+  }
+}
+```
+
+### Buffer
+- Можно ограничить количество сохраненных элементов в памяти передав первым параметром максимальное количество
+- Кроме того можно передать коллбек метод для обработки значений, которые были выкинуты
+```
+public class Lecture05BufferWithSize {
+  public static void main(String[] args) {
+
+    Flux.create(fluxSink -> {
+          for (int i = 1; i < 201 && !fluxSink.isCancelled(); i++) {
+            fluxSink.next(i);
+            System.out.println("Pushed: " + i);
+            Util.sleepMillis(1);
+          }
+
+          fluxSink.complete();
+        })
+        .onBackpressureBuffer(20, o -> System.out.println("Dropped: " + o))
+        .publishOn(Schedulers.boundedElastic())
+        .doOnNext(i -> {
+          Util.sleepMillis(10);
+        })
+        .subscribe(Util.subscriber());
+
+    Util.sleepSeconds(10);
+  }
+}
+```
