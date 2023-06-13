@@ -15,6 +15,7 @@
 + [Threads](#threads)
 + [Overflow Strategy](#overflow-strategy)
 + [Combining publishers](#combining-publishers)
++ [Batching](#batching)
 
 ## IO модели
 - sync + blocking - Дефолтная работа запросов
@@ -1969,6 +1970,111 @@ public class Lecture05CombineLast {
   private static Flux<String> getNumber () {
     return Flux.just("1", "2", "3")
         .delayElements(Duration.ofSeconds(3));
+  }
+}
+```
+
+## Batching
+
+- Позволяет объединять несколько элементов в пачки
+
++ [Buffer](#buffer)
+
+### Buffer
+- Собирает указанное количество элементов в лист
+- Отдает список когда он будет иметь указанное количество элементов
+```
+public class Lecture01Buffer {
+  public static void main(String[] args) {
+    eventStream()
+        .buffer(5)
+        .subscribe(Util.subscriber());
+
+    Util.sleepSeconds(60);
+  }
+
+  private static Flux<String> eventStream () {
+    return Flux.interval(Duration.ofMillis(300))
+        .map(i -> "event" + i);
+  }
+}
+```
+* Если `complete` событие было вызвано, то процесс передачи завершится тем количеством элементов, которые уже были добавлены в список
+* Если `complete` события не было вызвано, то buffer будет ожидать
+```
+public class Lecture01Buffer {
+  public static void main(String[] args) {
+    eventStream()
+        .buffer(5)
+        .subscribe(Util.subscriber());
+
+    Util.sleepSeconds(60);
+  }
+
+  private static Flux<String> eventStream () {
+    return Flux.interval(Duration.ofMillis(300))
+        .take(3)
+        .map(i -> "event" + i);
+  }
+}
+```
+
+- Можно указать период, по истечению которого все собранные данные будут отданы подписчику
+```
+public class Lecture01Buffer {
+  public static void main(String[] args) {
+    eventStream()
+        .buffer(Duration.ofSeconds(2))
+        .subscribe(Util.subscriber());
+
+    Util.sleepSeconds(60);
+  }
+
+  private static Flux<String> eventStream () {
+    return Flux.interval(Duration.ofMillis(300))
+        .map(i -> "event" + i);
+  }
+}
+```
+- Так как в указанный период может быть передано очень много элементов, можно ограничить количество элементов для листа
+- Если же необходимое количество за указанный промежуток времени не было получено, то вернется столько элементов, сколько есть в листе
+```
+public class Lecture01Buffer {
+  public static void main(String[] args) {
+    eventStream()
+        .bufferTimeout(5, Duration.ofSeconds(2))
+        .subscribe(Util.subscriber());
+
+    Util.sleepSeconds(60);
+  }
+
+  private static Flux<String> eventStream () {
+    return Flux.interval(Duration.ofMillis(10))
+        .map(i -> "event" + i);
+  }
+}
+
+```
+- Можно всегда получать {n} последних элементов
+  - Ограничиваем буффер 3мя элементами
+  - Добавляем в буффер 1, 2, 3
+  - Буффер возвращает подписчику [1,2,3]
+  - Добавляем в буффер 4
+  - При этом из листа убирается 1 
+  - Подписчик получит -> [2,3,4]
+```
+public class Lecture02OverlapAndDrop {
+  public static void main(String[] args) {
+    eventStream()
+        .buffer(3, 1)
+        .subscribe(Util.subscriber());
+
+    Util.sleepSeconds(60);
+  }
+
+  private static Flux<String> eventStream () {
+    return Flux.interval(Duration.ofMillis(300))
+        .map(i -> "event" + i);
   }
 }
 ```
