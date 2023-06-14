@@ -1979,6 +1979,8 @@ public class Lecture05CombineLast {
 Позволяет объединять несколько элементов в пачки
 
 + [Buffer](#buffer-1)
++ [Window](#window)
++ [GroupBy](#groupby)
 
 ### Buffer
 - Собирает указанное количество элементов в лист
@@ -2078,3 +2080,79 @@ public class Lecture02OverlapAndDrop {
   }
 }
 ```
+
+### Window
+
+- Работает так же как buffer, но возвращает Flux
+
+```
+public class Lecture03Window {
+  private static AtomicInteger atomicInteger = new AtomicInteger(1);
+
+  public static void main(String[] args) {
+    eventStream()
+        .window(5)
+        .flatMap(flux -> saveEvents(flux))
+        .subscribe(Util.subscriber());
+
+    Util.sleepSeconds(60);
+  }
+
+  private static Flux<String> eventStream () {
+    return Flux.interval(Duration.ofMillis(500))
+        .map(i -> "event" + i);
+  }
+
+  private static Mono<Integer> saveEvents (Flux<String> flux) {
+    return flux
+        .doOnNext(e -> System.out.println("saving " + e))
+        .doOnComplete(() -> {
+          System.out.println("saved this batch");
+          System.out.println("----------------");
+        })
+        .then(Mono.just(atomicInteger.getAndIncrement()));
+  }
+}
+```
+* Метод then выполняется после того как выполнится все, что выше него
+
+- Можно задать ограничение по времени
+```
+public class Lecture03Window {
+  private static AtomicInteger atomicInteger = new AtomicInteger(1);
+
+  public static void main(String[] args) {
+    eventStream()
+        .window(Duration.ofSeconds(2))
+        .flatMap(flux -> saveEvents(flux))
+        .subscribe(Util.subscriber());
+
+    Util.sleepSeconds(60);
+  }
+}
+```
+
+### GroupBy
+
+- Позволяет объеденить элементы по какому-то принципу (свойству)
+- Возвращает `GroupedFlux`
+- Метод subscribe вызывается по 1му разу для каждой группы
+```
+public class Lecture04GroupBy {
+  public static void main(String[] args) {
+    Flux.range(1, 30)
+        .delayElements(Duration.ofSeconds(1))
+        .groupBy(i -> i % 2) // key 0, 1
+        .subscribe(groupedFlux -> process(groupedFlux, groupedFlux.key()));
+
+    Util.sleepSeconds(60);
+  }
+
+  private static void process (Flux<Integer> flux, int key) {
+    flux.subscribe( i -> System.out.println("Key: " + key + ", Item: " + i));
+  }
+}
+```
+
+
+
