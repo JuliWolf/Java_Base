@@ -1,4 +1,4 @@
-package com.example.reactive.part09.assignment;
+package com.example.reactive.part09.assignment.assignment01;
 
 import lombok.ToString;
 
