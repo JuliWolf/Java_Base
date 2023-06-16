@@ -16,6 +16,7 @@
 + [Overflow Strategy](#overflow-strategy)
 + [Combining publishers](#combining-publishers)
 + [Batching](#batching)
++ [Repeat & Retry](#repeat---retry)
 
 ## IO модели
 - sync + blocking - Дефолтная работа запросов
@@ -2154,5 +2155,149 @@ public class Lecture04GroupBy {
 }
 ```
 
+## Repeat & Retry
+
++ [Repeat](#repeat)
++ [Repeat with condition](#repeat-with-condition)
++ [Retry](#retry)
++ [Retry with delay](#retry-with-delay)
++ [RetryWhen](#retrywhen)
++ [Summary](#summary-5)
 
 
+### Repeat
+- Позволяет переподписаться еще раз после получения Complete сигнала
+```
+public class Lecture01Repeat {
+  public static void main(String[] args) {
+    getIntegers()
+        .repeat(2)
+        .subscribe(Util.subscriber());
+  }
+
+  private static Flux<Integer> getIntegers () {
+    return Flux.range(1, 3)
+        .doOnSubscribe(s -> System.out.println("Subscribed"))
+        .doOnComplete(() -> System.out.println("---Completed"));
+  }
+}
+```
+
+### Repeat with condition
+- Можно задать условие, которое будет возвращать true/false
+- Если условие возвращает true, то происходит переподписка
+- Если условие возвращает false, то переподписки не будет
+```
+public class Lecture02RepeatWithCondition {
+  public static void main(String[] args) {
+    getIntegers()
+        .repeat(() -> atomicInteger.get() < 14)
+        .subscribe(Util.subscriber());
+  }
+
+  private static Flux<Integer> getIntegers () {
+    return Flux.range(1, 3)
+        .doOnSubscribe(s -> System.out.println("Subscribed"))
+        .doOnComplete(() -> System.out.println("---Completed"))
+        .map(i -> atomicInteger.getAndIncrement());
+  }
+}
+```
+
+### Retry
+- Позволяет повторить подписку подписки при получении ошибки
+```
+public class Lecture03Retry {
+  private static AtomicInteger atomicInteger = new AtomicInteger(1);
+
+  public static void main(String[] args) {
+    getIntegers()
+        .retry(2)
+        .subscribe(Util.subscriber());
+  }
+
+  private static Flux<Integer> getIntegers () {
+    return Flux.range(1, 3)
+        .doOnSubscribe(s -> System.out.println("Subscribed"))
+        .doOnComplete(() -> System.out.println("---Completed"))
+        .map(i -> i / (Util.faker().random().nextInt(1, 5) > 3 ? 0 : 1))
+        .doOnError(err -> System.out.println("---error"));
+  }
+}
+```
+
+### Retry with delay
+- Позволяет повторить попытку определенное количество раз, но через определенный промежуток времени
+```
+public class Lecture04RetryWithDelay {
+  public static void main(String[] args) {
+    getIntegers()
+        .retryWhen(Retry.fixedDelay(2, Duration.ofSeconds(3)))
+        .subscribe(Util.subscriber());
+
+    Util.sleepSeconds(60);
+  }
+
+  private static Flux<Integer> getIntegers () {
+    return Flux.range(1, 3)
+        .doOnSubscribe(s -> System.out.println("Subscribed"))
+        .doOnComplete(() -> System.out.println("---Completed"))
+        .map(i -> i / (Util.faker().random().nextInt(1, 5) > 3 ? 0 : 1))
+        .doOnError(err -> System.out.println("---error"));
+  }
+}
+```
+
+### RetryWhen
+- Используется когда нужно по разному обрабатывать ошибки
+- Например, при ошибке 500 мы пытаемся снова получить информацию
+- При ошибке 404 процесс завершаем, так как это ошибка запроса
+```
+public class Lecture05RetryWhenAdvanced {
+  public static void main(String[] args) {
+    orderService(Util.faker().business().creditCardNumber())
+        .doOnError(err -> System.out.println(err.getMessage()))
+        .retryWhen(Retry.from(
+            flux -> flux
+              .doOnNext(retrySignal -> {
+                System.out.println(retrySignal.totalRetries());
+                System.out.println(retrySignal.failure());
+              })
+              .handle((retrySignal, synchronousSink) -> {
+                if (retrySignal.failure().getMessage().equals("500")) {
+                  synchronousSink.next(1);
+                } else {
+                  synchronousSink.error(retrySignal.failure());
+                }
+              })
+              .delayElements(Duration.ofSeconds(1))
+        ))
+        .subscribe(Util.subscriber());
+
+    Util.sleepSeconds(60);
+  }
+
+  private static Mono<String> orderService (String ccNumber) {
+    return Mono.fromSupplier(() -> {
+      processPayment(ccNumber);
+      return Util.faker().idNumber().valid();
+    });
+  }
+
+  // payment service
+  private static void processPayment (String ccNumber) {
+    int random = Util.faker().random().nextInt(1, 10);
+    if (random < 8) {
+      throw new RuntimeException("500");
+    } else if (random < 10) {
+      throw new RuntimeException("404");
+    }
+  }
+}
+```
+
+### Summary
+| Тип    | Поведение                                        |
+|--------|--------------------------------------------------|
+| repeat | Переподписаться после получения complete сигнала |
+| retry  | Переподписаться после получения error сигнала    |
