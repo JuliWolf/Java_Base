@@ -2308,6 +2308,7 @@ public class Lecture05RetryWhenAdvanced {
 
 + [Sinks types](#sinks-types)
 + [One](#one)
++ [Many-unicast](#many-unicast)
 
 **Может использоваться для** 
 - Передачи данных между различными компонентами
