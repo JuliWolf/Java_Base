@@ -16,7 +16,8 @@
 + [Overflow Strategy](#overflow-strategy)
 + [Combining publishers](#combining-publishers)
 + [Batching](#batching)
-+ [Repeat & Retry](#repeat---retry)
++ [Repeat & Retry](#repeat--retry)
++ [Sinks](#sinks)
 
 ## IO модели
 - sync + blocking - Дефолтная работа запросов
@@ -2301,3 +2302,132 @@ public class Lecture05RetryWhenAdvanced {
 |--------|--------------------------------------------------|
 | repeat | Переподписаться после получения complete сигнала |
 | retry  | Переподписаться после получения error сигнала    |
+
+
+## Sinks
+
++ [Sinks types](#sinks-types)
++ [One](#one)
+
+**Может использоваться для** 
+- Передачи данных между различными компонентами
+- Создания отдельного потока обработкаи данных
+- Возможность асинхронного управления потоками данных
+- Создания новых реактивных компонентов
+
+**Предоставляет несколько типов конечных токек**
+- UnicastProcessor
+- MulticastProcessor
+- DirectProcessor
+- ReplayProcessor
+- EmitterProcessor
+
+### Sinks types
+
+| Тип            | Поведение | Pub:Sub                                                                               |
+|----------------|-----------|---------------------------------------------------------------------------------------|
+| one            | Mono      | 1:N                                                                                   |
+| many-unicast   | Flux      | 1:1                                                                                   |
+| many-multicast | Flux      | 1:N                                                                                   |
+| many-reply     | Flux      | 1:N(с возможностью повтора всех значений для подписчиков, которые подключились позже) |
+
+
+### One
+- Возвращает один элемент как Mono 
+- Возвращает значение переданное в `tryEmitValue`
+```
+public class Lecture01SinkOne {
+  public static void main(String[] args) {
+    // Mono 1 value / empty / error
+    Sinks.One<Object> sink = Sinks.one();
+
+    Mono<Object> mono = sink.asMono();
+
+    mono.subscribe(Util.subscriber("sam"));
+
+    sink.tryEmitValue("hi");
+  }
+}
+```
+- Возврат ошибки `tryEmitError`
+```
+public class Lecture01SinkOne {
+  public static void main(String[] args) {
+    // Mono 1 value / empty / error
+    Sinks.One<Object> sink = Sinks.one();
+
+    Mono<Object> mono = sink.asMono();
+
+    mono.subscribe(Util.subscriber("sam"));
+
+    sink.tryEmitError(new RuntimeException("sam"));
+  }
+}
+```
+
+- Возврат пустого значения `tryEmitEmpty`
+```
+public class Lecture01SinkOne {
+  public static void main(String[] args) {
+    // Mono 1 value / empty / error
+    Sinks.One<Object> sink = Sinks.one();
+
+    Mono<Object> mono = sink.asMono();
+
+    mono.subscribe(Util.subscriber("sam"));
+
+    sink.tryEmitEmpty();
+  }
+}
+```
+
+- Попробовать передать значение и обработать ошибку если она произойдет `emitValue`
+```
+public class Lecture01SinkOne {
+  public static void main(String[] args) {
+    // Mono 1 value / empty / error
+    Sinks.One<Object> sink = Sinks.one();
+
+    Mono<Object> mono = sink.asMono();
+
+    mono.subscribe(Util.subscriber("sam"));
+
+    sink.emitValue("hi", (signalType, emitResult) -> {
+      System.out.println(signalType.name());
+      System.out.println(emitResult.name());
+      // Вернуть true если нужно повторить попытку
+      return false;
+    });
+
+    sink.emitValue("hello", (signalType, emitResult) -> {
+      System.out.println(signalType.name());
+      System.out.println(emitResult.name());
+      // Вернуть true если нужно повторить попытку
+      return false;
+    });
+  }
+}
+```
+
+### Many-unicast
+- Позволяет отдавать много элементов 1му подписчику
+```
+public class Lecture02SinkUnicast {
+  public static void main(String[] args) {
+    // Метод для отправки данных
+    Sinks.Many<Object> sink = Sinks.many()
+        .unicast()
+        .onBackpressureBuffer();
+
+    // Метод для получения данных подписчиками
+    Flux<Object> flux = sink.asFlux();
+
+    flux.subscribe(Util.subscriber("Sam"));
+
+
+    sink.tryEmitNext("hi");
+    sink.tryEmitNext("how are you");
+    sink.tryEmitNext("?");
+  }
+}
+```
