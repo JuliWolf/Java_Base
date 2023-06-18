@@ -2309,6 +2309,9 @@ public class Lecture05RetryWhenAdvanced {
 + [Sinks types](#sinks-types)
 + [One](#one)
 + [Many-unicast](#many-unicast)
++ [Thread safe](#thread-safe)
++ [Many-multicast](#many-multicast)
++ [Many-replay](#many-replay)
 
 **Может использоваться для** 
 - Передачи данных между различными компонентами
@@ -2429,6 +2432,196 @@ public class Lecture02SinkUnicast {
     sink.tryEmitNext("hi");
     sink.tryEmitNext("how are you");
     sink.tryEmitNext("?");
+  }
+}
+```
+
+### Thread safe
+- sink считаются thread safe операциями
+- чтобы обеспечить потокобезопасность данных необходимо передавать callback функцию в метод `emitNext`, которая будет возвращать true/false в зависимость от успешности операции
+- Функция принимает 2 аргумента
+  - Синк
+  - Ошибку
+- Если возвращать true - означает попробовать сделать действие еще раз, то есть запустить retry
+```
+public class Lecture03SinkThreadSafety {
+  public static void main(String[] args) {
+    Sinks.Many<Object> sink = Sinks.many()
+        .unicast()
+        .onBackpressureBuffer();
+
+    Flux<Object> flux = sink.asFlux();
+
+    List<Object> list = new ArrayList<>();
+
+    flux.subscribe(list::add);
+
+    for (int i = 0; i < 1000; i++) {
+      final int j = i;
+      CompletableFuture.runAsync(() -> {
+        sink.emitNext(j, (s, e) -> true);
+      });
+    }
+
+    Util.sleepSeconds(3);
+
+    System.out.println(list.size());
+  }
+}
+```
+
+### Many-multicast
+
++ [Кейсы](#кейсы)
++ [directAllOrNothing](#directallornothing)
++ [directBestEffort](#directbesteffort)
+
+- Flux с несколькими подписчиками
+
+```
+public class Lecture04SinkMulti {
+  public static void main(String[] args) {
+    Sinks.Many<Object> sink = Sinks.many()
+        .multicast()
+        .onBackpressureBuffer();
+
+    Flux<Object> flux = sink.asFlux();
+
+    flux.subscribe(Util.subscriber("Sam"));
+    flux.subscribe(Util.subscriber("Mike"));
+
+
+    sink.tryEmitNext("hi");
+    sink.tryEmitNext("how are you");
+    sink.tryEmitNext("?");
+  }
+}
+```
+
+#### Кейсы
+1. подписчик `Sam` подписывается
+2. Начинается эмит событий
+3. Подписчик `Mike` подписывается</br>
+ФР: Подписчик `Mike` получает только то, что было передано после того как он подписался
+```
+public class Lecture04SinkMulti {
+  public static void main(String[] args) {
+    Sinks.Many<Object> sink = Sinks.many()
+        .multicast()
+        .onBackpressureBuffer();
+
+    Flux<Object> flux = sink.asFlux();
+
+    flux.subscribe(Util.subscriber("Sam"));
+    
+    sink.tryEmitNext("hi");
+    sink.tryEmitNext("how are you");
+    
+    flux.subscribe(Util.subscriber("Mike"));
+    
+    sink.tryEmitNext("?");
+  }
+}
+```
+
+1. Начинается эмит данных
+2. Подписывается подписчик `Sam`
+3. Подписывается подписчик `Mike`
+4. Продолжается эмит данных</br>
+ФР: Подписчик `Sam` получит все данные из буффера, а подписчик `Mike` получит только то, что было передано после его подписки
+```
+public class Lecture04SinkMulti {
+  public static void main(String[] args) {
+    Sinks.Many<Object> sink = Sinks.many()
+        .multicast()
+        .onBackpressureBuffer();
+
+    Flux<Object> flux = sink.asFlux();
+    
+    sink.tryEmitNext("hi");
+    sink.tryEmitNext("how are you");
+    
+    flux.subscribe(Util.subscriber("Sam"));
+    flux.subscribe(Util.subscriber("Mike"));
+
+    sink.tryEmitNext("?");
+  }
+}
+```
+
+#### `directAllOrNothing`
+- В случае если мы не хотим сохранять испторию в буффере и хотим отдавать данные только после подписки
+```
+public class Lecture04SinkMulti {
+  public static void main(String[] args) {
+    Sinks.Many<Object> sink = Sinks.many()
+        .multicast()
+        .directAllOrNothing();
+
+    Flux<Object> flux = sink.asFlux();
+
+    sink.tryEmitNext("hi");
+    sink.tryEmitNext("how are you");
+
+    flux.subscribe(Util.subscriber("Sam"));
+    flux.subscribe(Util.subscriber("Mike"));
+
+    sink.tryEmitNext("?");
+    flux.subscribe(Util.subscriber("Jake"));
+    sink.tryEmitNext("new msg");
+  }
+}
+```
+* Данные получают все или никто
+
+#### directBestEffort
+- Данные получают те, кто подключился вовремя
+```
+public class Lecture05SinkMultiDirectAll {
+  public static void main(String[] args) {
+    System.setProperty("reactor.bufferSize.small", "16");
+
+    Sinks.Many<Object> sink = Sinks.many()
+        .multicast()
+        .directBestEffort();
+
+    Flux<Object> flux = sink.asFlux();
+
+    flux.subscribe(Util.subscriber("Sam"));
+    flux
+        .delayElements(Duration.ofMillis(100))
+        .subscribe(Util.subscriber("Mike"));
+
+    for (int i = 0; i < 100; i++) {
+      sink.tryEmitNext(i);
+    }
+
+    Util.sleepSeconds(10);
+  }
+}
+```
+
+### Many-replay
+- Повторяет все данные для всех подключившихся
+- Можно ограничить количество записей, передав первый параметр в метод `all`
+```
+public class Lecture06SinkReplay {
+  public static void main(String[] args) {
+    Sinks.Many<Object> sink = Sinks.many()
+        .replay()
+        .all(1);
+
+    Flux<Object> flux = sink.asFlux();
+
+    sink.tryEmitNext("hi");
+    sink.tryEmitNext("how are you");
+
+    flux.subscribe(Util.subscriber("Sam"));
+    flux.subscribe(Util.subscriber("Mike"));
+
+    sink.tryEmitNext("?");
+    flux.subscribe(Util.subscriber("Jake"));
+    sink.tryEmitNext("new msg");
   }
 }
 ```
