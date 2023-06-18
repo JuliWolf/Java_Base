@@ -19,6 +19,7 @@
 + [Repeat & Retry](#repeat--retry)
 + [Sinks](#sinks)
 + [Context](#context)
++ [Test](#test)
 
 ## IO модели
 - sync + blocking - Дефолтная работа запросов
@@ -2686,3 +2687,244 @@ public class Lecture01Context {
   }
 }
 ```
+
+## Test
+
++ [Just-test](#just-test)
++ [Error-test](#error-test)
++ [Range-test](#range-test)
++ [Assert-test](#assert-test)
++ [Delay-test](#delay-test)
++ [Virtual-time-test](#virtual-time-test)
++ [Scenario-name-test](#scenario-name-test)
++ [Context-test](#context-test)
++ [Summary](#summary-6)
+
+### Just-test
+```
+  @Test
+  public void justTest () {
+    Flux<Integer> just = Flux.just(1, 2, 3);
+
+    StepVerifier.create(just)
+        .expectNext(1)
+        .expectNext(2)
+        .expectNext(3)
+        .verifyComplete();
+  }
+```
+- Можно передать в `expectNext` сразу несколько значений
+```
+  @Test
+  public void justTestWithExpectNextMultiple () {
+    Flux<Integer> just = Flux.just(1, 2, 3);
+
+    StepVerifier.create(just)
+        .expectNext(1, 2, 3)
+        .verifyComplete();
+  }
+```
+
+### Error-test
+```
+  @Test
+  public void testWithError () {
+    Flux<Integer> just = Flux.just(1, 2, 3);
+    Flux<Integer> error = Flux.error(new RuntimeException("oops"));
+    Flux<Integer> concat = Flux.concat(just, error);
+
+    StepVerifier.create(concat)
+        .expectNext(1, 2, 3)
+        .verifyError();
+  }
+```
+- Ожидаение определенного класса ошибки - `verifyError`
+```
+  @Test
+  public void testWithExactError () {
+    Flux<Integer> just = Flux.just(1, 2, 3);
+    Flux<Integer> error = Flux.error(new RuntimeException("oops"));
+    Flux<Integer> concat = Flux.concat(just, error);
+
+    StepVerifier.create(concat)
+        .expectNext(1, 2, 3)
+        .verifyError(IllegalStateException.class);
+  }
+```
+- Ожидаение определенного сообщения ошибки - `verifyErrorMessage`
+```
+  @Test
+  public void testWithExactMessageError () {
+    Flux<Integer> just = Flux.just(1, 2, 3);
+    Flux<Integer> error = Flux.error(new RuntimeException("oops"));
+    Flux<Integer> concat = Flux.concat(just, error);
+
+    StepVerifier.create(concat)
+        .expectNext(1, 2, 3)
+        .verifyErrorMessage("oops");
+  }
+```
+
+### Range-test
+- Ожидаем {n} сигналов `onNext` - `expectNextCount`
+```
+  @Test
+  public void rangeTest () {
+    Flux<Integer> range = Flux.range(1, 50);
+
+    StepVerifier.create(range)
+        .expectNextCount(50)
+        .verifyComplete();
+  }
+```
+- Все значения должны соотвествовать определенным условиям - `thenConsumeWhile`
+```
+  @Test
+  public void rangeCheckConditionTest () {
+    Flux<Integer> range = Flux.range(1, 50);
+
+    StepVerifier.create(range)
+        .thenConsumeWhile(i -> i < 100)
+        .verifyComplete();
+  }
+```
+
+### Assert-test
+- Проверяем конкретные значения в стриме
+```
+  @Test
+  public void assertNotNullTest () {
+    Mono<BookOrder> mono = Mono.fromSupplier(() -> new BookOrder());
+
+    StepVerifier.create(mono)
+        .assertNext(b -> Assertions.assertNotNull(b.getAuthor()))
+        .verifyComplete();
+  }
+```
+
+### Delay-test
+- Проверяем время выполнения стрима
+```
+  @Test
+  public void assertDelayTest () {
+    Mono<BookOrder> mono = Mono.fromSupplier(() -> new BookOrder())
+            .delayElement(Duration.ofSeconds(3));
+
+    StepVerifier.create(mono)
+        .assertNext(b -> Assertions.assertNotNull(b.getAuthor()))
+        .expectComplete()
+        .verify(Duration.ofSeconds(2));
+  }
+```
+
+### Virtual-time-test
+- Для проверки стримов, выполенение которых занимает много времени, можно иммитировать что время уже прошло. Тем самым ускорить время выполнения теста
+```
+public class Lecture05VirtualTimeTest {
+  @Test
+  public void assertVirtualTimeTest () {
+
+    StepVerifier.withVirtualTime(() -> timeConsumingFlux())
+        .thenAwait(Duration.ofSeconds(30))
+        .expectNext("1a", "2a", "3a", "4a")
+        .verifyComplete();
+  }
+
+  private Flux<String> timeConsumingFlux () {
+    return Flux.range(1, 4)
+        .delayElements(Duration.ofSeconds(5))
+        .map(i -> i + "a");
+  }
+}
+```
+
+- Если необходимо проверить, что никаких событий не было в течении определенного промежутка времени
+1. Ожидаем что произойдет подписка на события `expectSubscription`
+2. В течении 4 секунд ничего не будет происходить `expectNoEvent`
+3. Ожидаем еще 20 секунд `thenAwait`
+4. Проверяем данные
+```
+  @Test
+  public void assertVirtualTimeNoEventTest () {
+    StepVerifier.withVirtualTime(() -> timeConsumingFlux())
+        .expectSubscription() // sub is an event
+        .expectNoEvent(Duration.ofSeconds(4))
+        .thenAwait(Duration.ofSeconds(20))
+        .expectNext("1a", "2a", "3a", "4a")
+        .verifyComplete();
+  }
+```
+
+### Scenario-name-test
+- Можно добавить дополнительные обозначения сценарию для лучшего анализа - `StepVerifierOptions`
+```
+  @Test
+  public void scenarioNameTest () {
+    Flux<String> flux = Flux.just("a", "b", "c");
+
+    StepVerifierOptions scenarioName = StepVerifierOptions.create().scenarioName("alphabets-test");
+
+    StepVerifier.create(flux, scenarioName)
+        .expectNextCount(12)
+        .verifyComplete();
+  }
+```
+- Дополнительно можно давать названия конкретным этапам проверки - `as`
+```
+  @Test
+  public void scenarioNameAsTest () {
+    Flux<String> flux = Flux.just("a", "b", "c");
+
+
+    StepVerifier.create(flux)
+        .expectNext("a")
+        .as("a-test")
+        .expectNext("b")
+        .as("b-test")
+        .expectNext("c")
+        .as("c-test")
+        .verifyComplete();
+  }
+```
+
+### Context-test
+- С помощью `StepVerifierOptions` можно добавить значения для контекста
+```
+  @Test
+  public void contextTest () {
+    StepVerifierOptions stepVerifierOptions = StepVerifierOptions.create().withInitialContext(Context.of("user", "sam"));
+
+    StepVerifier.create(getWelcomeMessage(), stepVerifierOptions)
+        .expectNext("Welcome sam")
+        .verifyComplete();
+  }
+
+  private Mono<String> getWelcomeMessage () {
+    return Mono.deferContextual(ctx -> {
+      if (ctx.hasKey("user")) {
+        return Mono.just("Welcome " + ctx.get("user"));
+      } else {
+        return Mono.error(new RuntimeException("unauthenticated"));
+      }
+    });
+  }
+```
+
+### Summary
+| StepVerifier        | Scope               | methods                                         | Назначение                                                          |
+|---------------------|---------------------|-------------------------------------------------|---------------------------------------------------------------------|
+| StepVerifier.create |                     |                                                 |                                                                     |
+|                     | Next                |                                                 |                                                                     |
+|                     |                     | `expectNext(...)`                               | Ожидаем определенное значение при вызове `onNext`                   |
+|                     |                     | `expectNextCount()`                             | Ожидаем что метод `onNext` будет вызван конкретное количествл раз   |
+|                     |                     | `thenConsumeWhile(...)`                         | Все значения будут соотвествовать условию                           |
+|                     | Verify              |                                                 |                                                                     |
+|                     |                     | `verifyComplete`                                | Ожидаем вызове метода `onComplete`                                  |
+|                     |                     | `verify(Duration)`                              | Ожидаем завершения по истечению указанного количества времени       |
+|                     |                     | `verifyError()`                                 | Ожидаем ошибку                                                      |
+|                     | For slow publisher  |                                                 |                                                                     |
+|                     |                     | `StepVerifier.withVirtualTime(() -> getFlux)`   | Ожидаем что процесс выполнения будет долгим                         |
+|                     |                     | `thenAwait(Duration)`                           | Иммитируем что определенное количество времени прошло               |
+|                     | StepVerifierOptions |                                                 |                                                                     |
+|                     |                     | Context                                         | Добавляем значения в контекст                                       |
+|                     |                     | Scenario name                                   | Добавляем дополнительных данных в тест для конкретизации выполнения |
