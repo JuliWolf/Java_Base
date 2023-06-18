@@ -18,6 +18,7 @@
 + [Batching](#batching)
 + [Repeat & Retry](#repeat--retry)
 + [Sinks](#sinks)
++ [Context](#context)
 
 ## IO модели
 - sync + blocking - Дефолтная работа запросов
@@ -2622,6 +2623,66 @@ public class Lecture06SinkReplay {
     sink.tryEmitNext("?");
     flux.subscribe(Util.subscriber("Jake"));
     sink.tryEmitNext("new msg");
+  }
+}
+```
+
+## Context
+- Контекст используется для передачи данных между потоками
+- Например, передача данных об авторизованном пользователе
+```
+public class Lecture01Context {
+  public static void main(String[] args) {
+    getWelcomeMessage()
+        .contextWrite(Context.of("user", "Sam"))
+        .subscribe(Util.subscriber());
+  }
+
+  private static Mono<String> getWelcomeMessage () {
+    return Mono.deferContextual(ctx -> {
+      if (ctx.hasKey("user")) {
+        return Mono.just("Welcome " + ctx.get("user"));
+      } else {
+        return Mono.error(new RuntimeException("unauthenticated"));
+      }
+    });
+  }
+}
+```
+* Команды для добавления данных в контекст читаются снизу вверх
+* Поэтому значение "jake" будет последним
+```
+public class Lecture01Context {
+  public static void main(String[] args) {
+    // Команды для добавления данных в контекст читаются снизу вверх
+    // Поэтому значение "jake" будет последним
+    getWelcomeMessage()
+        .contextWrite(Context.of("user", "Jake"))
+        .contextWrite(Context.of("user", "Sam"))
+        .subscribe(Util.subscriber());
+  }
+
+  private static Mono<String> getWelcomeMessage () {
+    return Mono.deferContextual(ctx -> {
+      if (ctx.hasKey("user")) {
+        return Mono.just("Welcome " + ctx.get("user"));
+      } else {
+        return Mono.error(new RuntimeException("unauthenticated"));
+      }
+    });
+  }
+}
+```
+* Чтобы изменить все данные, которые были ранее добавлены в контекст можно использовать коллбек метод
+```
+public class Lecture01Context {
+  public static void main(String[] args) {
+    // Команды для добавления данных в контекст читаются снизу вверх
+    // Поэтому значение "jake" будет последним
+    getWelcomeMessage()
+        .contextWrite(ctx -> ctx.put("user", ctx.get("user").toString().toUpperCase()))
+        .contextWrite(Context.of("user", "Sam"))
+        .subscribe(Util.subscriber());
   }
 }
 ```
