@@ -2235,8 +2235,8 @@ public class AsyncConfiguration extends AsyncConfigurerSupport {
 
 + [1. Что такое Hibernate](#1-что-такое-hibernate)
 + [2. Проблема n+1 в Hibernate](#2-проблема-n1-в-hibernate)
-+ [3. Как решить проблему n+1](#2-проблема-n1-в-hibernate)
-+ [4. Плюсы и минусы](#2-проблема-n1-в-hibernate)
++ [3. Как решить проблему n+1](#3-как-решить-проблему-n1)
++ [4. Плюсы и минусы](#4-плюсы-и-минусы)
 
 ### 1. Что такое Hibernate
 ORM - Object-relational mapping - это отображение объектов какого-либо объектно-ориентированного языка в структуры реляционных баз данных
