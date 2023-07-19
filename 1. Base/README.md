@@ -977,7 +977,14 @@ throw
 
 
 ### 9. Что такое try-with-resources?</br>
-Это оператор, который решает проблему с обязательным вывзовом close()
+Это оператор, который решает проблему с обязательным вывзовом close()</br>
+блоке try указываем операцию, для окончания которой должен быть вызван метод close
+```
+try (FileReader fr = new FileReader(path);
+     BufferedReader br = new BufferedReader(fr)) {
+    return br.readLine();
+}
+```
 
 
 ### 10. Что произойдет есть исключение будет выброшено из блока catch после чего другое исключенгие будет выброшено из блока finally</br>
@@ -1806,7 +1813,7 @@ public class SharedResource {
 + [12. КТо уничтожает бин со Scope prototype](#12-кто-уничтожает-бин-со-scope-prototype)
 + [13. Аннотация @Cachable](#13-аннотация-cachable)
 + [14. Аннотация @Async](#14-аннотация-async-)
-+ [15. Типы Repository](#15-аннотация-async-)
++ [15. Типы Repository](#15-типы-repository)
 
 ### 1. Что такое `Autowiring` и как работает</br>
    **IOC** - Inversion of control</br>
@@ -2226,8 +2233,10 @@ public class AsyncConfiguration extends AsyncConfigurerSupport {
 
 ## Hibernate
 
-+ [1. Что такое Hibernate]()
-+ [2. Проблема n+1 в Hibernate]()
++ [1. Что такое Hibernate](#1-что-такое-hibernate)
++ [2. Проблема n+1 в Hibernate](#2-проблема-n1-в-hibernate)
++ [3. Как решить проблему n+1](#2-проблема-n1-в-hibernate)
++ [4. Плюсы и минусы](#2-проблема-n1-в-hibernate)
 
 ### 1. Что такое Hibernate
 ORM - Object-relational mapping - это отображение объектов какого-либо объектно-ориентированного языка в структуры реляционных баз данных
@@ -2238,7 +2247,109 @@ Hibernate - заботится о связи Java классов с таблиц
 
 
 ### 2. Проблема n+1 в Hibernate
-Проблема N + 1 возникает, когда фреймворк доступа к данным выполняет N дополнительных SQL-запросов для получения тех же данных, которые можно получить при выполнении одного SQL-запроса.
+-Проблема N + 1 возникает, когда фреймворк доступа к данным выполняет N дополнительных SQL-запросов для получения тех же данных, которые можно получить при выполнении одного SQL-запроса.</br>
+-При использовании `FetchType.EAGER` все данные не будут загружены в одном запросе, а бадут загружаться отдельными запросами на каждую сущность
+```
+SELECT
+    pc.id AS id1_1_,
+    pc.post_id AS post_id3_1_,
+    pc.review AS review2_1_
+FROM
+    post_comment pc
+ 
+SELECT p.id AS id1_0_0_, p.title AS title2_0_0_ FROM post p WHERE p.id = 1
+SELECT p.id AS id1_0_0_, p.title AS title2_0_0_ FROM post p WHERE p.id = 2
+SELECT p.id AS id1_0_0_, p.title AS title2_0_0_ FROM post p WHERE p.id = 3
+SELECT p.id AS id1_0_0_, p.title AS title2_0_0_ FROM post p WHERE p.id = 4
+```
+- При работе с кешом второго уровня
+```
+List<PostComment> comments = entityManager.createQuery("""
+    select pc
+    from PostComment pc
+    order by pc.post.id desc
+    """, PostComment.class)
+.setMaxResults(10)
+.setHint(QueryHints.HINT_CACHEABLE, true)
+.getResultList();
+```
+Если PostComment не находится в кэше второго уровня, то будет выполнено N запросов для получения каждого отдельного PostComment:
+```
+SELECT pc.id AS id1_1_0_,
+       pc.post_id AS post_id3_1_0_,
+       pc.review AS review2_1_0_
+FROM post_comment pc
+WHERE pc.id = 3
+  
+SELECT pc.id AS id1_1_0_,
+       pc.post_id AS post_id3_1_0_,
+       pc.review AS review2_1_0_
+FROM post_comment pc
+WHERE pc.id = 2
+  
+SELECT pc.id AS id1_1_0_,
+       pc.post_id AS post_id3_1_0_,
+       pc.review AS review2_1_0_
+FROM post_comment pc
+WHERE pc.id = 1
+```
+
+
+### 3. Как решить проблему n+1
+1. Использовать `FetchType.LAZY` - по сути откладывает проблему до момента обращения к lazy
+2. Использовать `JOIN FETCH`
+```
+List<PostComment> comments = entityManager.createQuery("""
+    select pc
+    from PostComment pc
+    join fetch pc.post p
+    """, PostComment.class)
+.getResultList();
+ 
+for(PostComment comment : comments) {
+    LOGGER.info(
+        "The Post '{}' got this review '{}'",
+        comment.getPost().getTitle(),
+        comment.getReview()
+    );
+}
+```
+```
+SELECT
+    pc.id as id1_1_0_,
+    pc.post_id as post_id3_1_0_,
+    pc.review as review2_1_0_,
+    p.id as id1_0_1_,
+    p.title as title2_0_1_
+FROM
+    post_comment pc
+INNER JOIN
+    post p ON pc.post_id = p.id
+     
+-- The Post 'High-Performance Java Persistence - Part 1' got this review
+-- 'Excellent book to understand Java Persistence'
+ 
+-- The Post 'High-Performance Java Persistence - Part 2' got this review
+-- 'Must-read for Java developers'
+ 
+-- The Post 'High-Performance Java Persistence - Part 3' got this review
+-- 'Five Stars'
+ 
+-- The Post 'High-Performance Java Persistence - Part 4' got this review
+-- 'A great reference book'
+```
+
+### 4. Плюсы и минусы
+(+)
+1. Превращает sql запросы в объекты java 
+2. Маппит результат sql запроса в класс
+
+(-)
+1. Не подходит при работе с большим количеством данных, так как на каждую сущность создает объект
+2. Есть проблемы n+1
+
+
+
 
 ## END ----------------- Hibernate -----------------
 ## Kafka
