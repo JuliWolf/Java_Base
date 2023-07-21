@@ -14,7 +14,7 @@ https://github.com/johnivo/job4j/blob/master/interview_questions/Core.md#4-%D0%9
 + [Concurrency](#concurrency)
 + [Spring изнутри](#spring-изнутри)
 + [Spring](#spring)
-+ [Hibernate](#hibernate)
++ [Hibernate & JPA](#hibernate--jpa)
 + [Kafka](#kafka)
 + [Stream](#stream)
 + [SOLID](#solid)
@@ -2219,7 +2219,7 @@ public class AsyncConfiguration extends AsyncConfigurerSupport {
 
 ## END ----------------- Spring -----------------
 
-## Hibernate
+## Hibernate & JPA
 
 + [1. Что такое Hibernate](#1-что-такое-hibernate)
 + [2. Проблема n+1 в Hibernate](#2-проблема-n1-в-hibernate)
@@ -2230,7 +2230,7 @@ public class AsyncConfiguration extends AsyncConfigurerSupport {
 + [7. Как добавить пользовательскую реализацию репозитория](#7-как-добавить-пользовательскую-реализацию-репозитория)
 + [8. Изменить поведение уже существующего метода](#8-изменить-поведение-уже-существующего-метода)
 + [9. Как использовать `Query` в запросах](#9-как-использовать-query-в-запросах)
-+ [10. Что представляет собой EntityManager](#9-как-использовать-query-в-запросах)
++ [10. Что представляет собой EntityManager](#10-что-представляет-собой-entitymanager)
 
 ### 1. Что такое Hibernate
 ORM - Object-relational mapping - это отображение объектов какого-либо объектно-ориентированного языка в структуры реляционных баз данных
@@ -2470,7 +2470,7 @@ public interface ParentEntityRepository<T> extends Repository<T, Long> {
 - Позволяет управлять жизненным циклом сущностей, отслеживать изменения и сохранять их в базе данных
 
 
-## END ----------------- Hibernate -----------------
+## END ----------------- Hibernate & JPA -----------------
 
 ## Kafka
 
