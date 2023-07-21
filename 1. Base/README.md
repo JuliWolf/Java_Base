@@ -2341,6 +2341,10 @@ public class AsyncConfiguration extends AsyncConfigurerSupport {
 + [3. Как решить проблему n+1](#3-как-решить-проблему-n1)
 + [4. Плюсы и минусы](#4-плюсы-и-минусы)
 + [5. Hibernate ленивая инициализация (LazyInitialization)](#5-hibernate-ленивая-инициализация-lazyinitialization)
++ [6. Как реализовать пользовательский интерфейс repository](#5-hibernate-ленивая-инициализация-lazyinitialization)
++ [7. Как добавить пользовательскую реализацию репозитория](#5-hibernate-ленивая-инициализация-lazyinitialization)
++ [8. Изменить поведение уже существующего метода](#5-hibernate-ленивая-инициализация-lazyinitialization)
++ [9. Как использовать `Query` в запросах](#5-hibernate-ленивая-инициализация-lazyinitialization)
 
 ### 1. Что такое Hibernate
 ORM - Object-relational mapping - это отображение объектов какого-либо объектно-ориентированного языка в структуры реляционных баз данных
@@ -2452,7 +2456,7 @@ INNER JOIN
 1. Не подходит при работе с большим количеством данных, так как на каждую сущность создает объект
 2. Есть проблемы n+1
 
-### 5. Hibernate ленивая инициализация (LazyInitialization)</br>
+### 5. Hibernate ленивая инициализация (LazyInitialization)
 @OneToMany(fetch=FetchType.Lazy)
 
 Для акцивации такой связи необходимо проверить било ли инициализировано</br>
@@ -2460,6 +2464,120 @@ boolean success = Hibernate.isInitialized(products);</br></br>
 
 Инициализировать</br>
 Hibernate.initialize(post);
+
+### 6. Как реализовать пользовательский базовый repository
+- Создать свой интерфейс, который будет экстендиться от CrudRepo
+```
+@NoRepositoryBean
+public interface BaseRepository <T extends BaseEntity, ID extends Serializable>
+        extends JpaRepository<T, ID> {
+
+    void delete(T entity);
+}
+```
+- Реализовать интерфейс
+```
+//Базовый пользовательский класс имплементирующий BaseRepository
+public class BaseRepositoryImpl <T extends BaseEntity, ID extends Serializable>
+        extends SimpleJpaRepository<T, ID>
+        implements BaseRepository<T, ID> {
+
+    private final EntityManager entityManager;
+
+    public BaseRepositoryImpl(JpaEntityInformation<T, ?> entityInformation,
+                     EntityManager entityManager) {
+        super(entityInformation, entityManager);
+        this.entityManager = entityManager;
+    }
+
+    @Transactional
+    @Override
+    public void delete(BaseEntity entity) {
+        entity.setDeleted(true);
+        entityManager.persist(entity);
+    }
+}
+```
+
+### 7. Как добавить пользовательскую реализацию репозитория
+- Объявляем интерфейс
+```
+public interface CustomizedEmployees<T> {
+
+    List<T> getEmployeesMaxSalary();
+
+}
+```
+- Имплементируем интерфейс
+```
+public class CustomizedEmployeesImpl implements CustomizedEmployees {
+
+    @PersistenceContext
+    private EntityManager em;
+
+    @Override
+    public List getEmployeesMaxSalary() {
+        return em.createQuery("from Employees where salary = (select max(salary) from Employees )", Employees.class)
+                .getResultList();
+    }
+}
+```
+- Расширяем репозиторий
+```
+@Repository
+public interface CustomizedEmployeesCrudRepository extends CrudRepository<Employees, Long>, CustomizedEmployees<Employees> 
+```
+
+### 8. Изменить поведение уже существующего метода
+```
+public interface CustomizedEmployees<T> {
+
+    void delete(T entity);
+    // ...
+}
+// Имплементация CustomizedEmployees
+public class CustomizedEmployeesImpl implements CustomizedEmployees {
+
+    @PersistenceContext
+    private EntityManager em;
+
+    @Transactional
+    @Override
+    public void delete(Object entity) {
+        Employees employees = (Employees) entity;
+        employees.setDeleted(true);
+        em.persist(employees);
+    }
+}
+```
+
+### 9. Как использовать `Query` в запросах
+- Используется если нужен специфичный метод или его реализация, которую нельзя описать через имя метода
+```
+@Repository
+public interface CustomizedEmployeesCrudRepository extends CrudRepository<Employees, Long>, CustomizedEmployees<Employees> {
+
+    @Query("select e from Employees e where e.salary > :salary")
+    List<Employees> findEmployeesWithMoreThanSalary(@Param("salary") Long salary, Sort sort);
+    // ...
+}
+```
+** Если запросы должны лишь модифицируеющие, то можно использовать аннотацию `@Modifying`
+```
+@Modifying
+@Query("update Employees e set e.firstName = ?1 where e.employeeId = ?2")
+int setFirstnameFor(String firstName, String employeeId);
+```
+
+Пример: Получить список объектов с признаком "удален" или "активный"
+```
+@NoRepositoryBean
+public interface ParentEntityRepository<T> extends Repository<T, Long> {
+
+    @Query("select t from #{#entityName} t where t.deleted = ?1")
+    List<T> findMarked(Boolean deleted);
+}
+```
 
 ## END ----------------- Hibernate -----------------
 
