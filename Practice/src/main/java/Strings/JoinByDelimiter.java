@@ -15,7 +15,7 @@ public class JoinByDelimiter {
     StringBuilder result = new StringBuilder();
 
     int i = 0;
-    for (i = 0; i < args.length - 1; i++) {
+    for (; i < args.length - 1; i++) {
       result.append(args[i]).append(delimiter);
     }
 

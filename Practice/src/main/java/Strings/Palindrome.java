@@ -23,7 +23,6 @@ public class Palindrome {
       right--;
     }
 
-
     return true;
   }
 
