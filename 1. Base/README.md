@@ -2256,8 +2256,8 @@ public class AsyncConfiguration extends AsyncConfigurerSupport {
 + [8. Изменить поведение уже существующего метода](#8-изменить-поведение-уже-существующего-метода)
 + [9. Как использовать `Query` в запросах](#9-как-использовать-query-в-запросах)
 + [10. Что представляет собой EntityManager](#10-что-представляет-собой-entitymanager)
-+ [11. В чем отличие merge от persist](#10-что-представляет-собой-entitymanager)
-+ [12. Что такое Persistence Context](#10-что-представляет-собой-entitymanager)
++ [11. В чем отличие merge от persist](#11-в-чем-отличие-merge-от-persist)
++ [12. Что такое Persistence Context](#12-что-такое-persistence-context)
 
 ### 1. Что такое Hibernate
 ORM - Object-relational mapping - это отображение объектов какого-либо объектно-ориентированного языка в структуры реляционных баз данных
