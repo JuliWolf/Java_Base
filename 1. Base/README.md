@@ -14,6 +14,7 @@ https://github.com/johnivo/job4j/blob/master/interview_questions/Core.md#4-%D0%9
 + [Concurrency](#concurrency)
 + [Spring изнутри](#spring-изнутри)
 + [Spring](#spring)
++ [Spring Кеш](#spring-кеш)
 + [Spring Patterns](https://github.com/JuliWolf/Spring/blob/master/Spring-patterns/README.md)
 + [Hibernate & JPA](#hibernate--jpa)
 + [Kafka](#kafka)
@@ -2256,6 +2257,109 @@ public class AsyncConfiguration extends AsyncConfigurerSupport {
 
 
 ## END ----------------- Spring -----------------
+
+## Spring Кеш
+
++ [1. Как активировать кеширование в Spring]()
++ [2. Как отметить данные, которые будут кешироваться]()
++ [3. Как обновить данные в кеше?]()
++ [4. Какую структуру по умолчанию Spring использует для кеша]()
+
+### 1. Как активировать кеширование в Spring
+Для активации кеширование достаточно добавить аннотацию `@EnableCaching`
+```
+@SpringBootApplication
+@EnableCaching
+public class DemoCacheAbleApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(DemoCacheAbleApplication.class, args);
+	}
+}
+```
+
+### 2. Как отметить данные, которые будут кешироваться
+Добавить аннотацию `@Cacheable`
+```
+@Cacheable(cacheNames="person")
+public Person findCacheByName(String name) {
+  //...
+}
+```
+```
+@Component
+public class PersonRepository {
+
+    private static final Logger logger = LoggerFactory.getLogger(PersonRepository.class);
+    private List<Person> persons  = new ArrayList<>();
+
+    public void initPersons(List<Person> persons) {
+       this.persons.addAll(persons);
+    }
+
+    private Person findByName(String name) {
+        Person person = persons.stream()
+                .filter(p -> p.getName().equals(name))
+                .findFirst()
+                .orElse(null);
+        return person;
+    }
+
+    @Cacheable(cacheNames="person")
+    public Person findCacheByName(String name) {
+        logger.info("find person ... " + name);
+        final Person person = findByName(name);
+        return person;
+    }
+}
+```
+Можно обозначить `key` - имя параметра, какой использовать в качестве ключа
+```
+@Cacheable(cacheNames="person", key="#name")
+public Person findByKeyField(String name, Integer age) {
+```
+
+### 3. Как обновить данные в кеше?
+1. Использовать аннотацию `@CachePut`</br>
+Фунция с этой аннотацией будет всегда вызываться код, а результат помещать в кеш
+```
+@CachePut(cacheNames="person")
+public Person findByNameAndPut(String name) {
+    logger.info("findByName and put person ... " + name);
+    final Person person = findByName(name);
+    logger.info("put in cache person " + person);
+    return person;
+}
+```
+
+2. Использовать аннотацию `@CacheEvict`</br>
+Позволяет не просто посещать хранилище кеша, но и выселять. Полезно для удаления устаревших и неиспользуемых данных из кеша</br>
+```
+@SpringBootApplication
+@EnableCaching
+public class DemoCacheAbleApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(DemoCacheAbleApplication.class, args);
+	}
+
+	@Bean
+	public CacheManager cacheManager() {
+		SimpleCacheManager cacheManager = new SimpleCacheManager();
+		cacheManager.setCaches(Arrays.asList(
+				new ConcurrentMapCache("person"),
+				new ConcurrentMapCache("addresses")));
+		return cacheManager;
+	}
+}
+```
+
+### 4. Какую структуру по умолчанию Spring использует для кеша
+ConcurrentMapCache
+
+
+
+## END ----------------- Spring Кеш -----------------
 
 ## Hibernate & JPA
 
