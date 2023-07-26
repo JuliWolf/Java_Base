@@ -26,6 +26,7 @@ https://github.com/johnivo/job4j/blob/master/interview_questions/Core.md#4-%D0%9
 + [Servlet](#servlet)
 + [JsonB](https://github.com/JuliWolf/Java_Base/blob/main/JsonB/README.md)
 + [Mockito & Junit](https://github.com/JuliWolf/Spring/blob/master/mockito/README.md)
++ [Swagger](#swagger)
 
 ## REST vs SOAP
 
@@ -2357,8 +2358,6 @@ public class DemoCacheAbleApplication {
 ### 4. Какую структуру по умолчанию Spring использует для кеша
 ConcurrentMapCache
 
-
-
 ## END ----------------- Spring Кеш -----------------
 
 ## Hibernate & JPA
@@ -3385,6 +3384,46 @@ public class HelloWorldServlet extends HttpServlet {
 - Предоставляет поддержку для внедрения зависимостей в контроллеры и обработку исключений
 
 ## END ---------------- Servlet ----------------
+
+## Swagger
+
++ [1. Какие аннотации используются для swagger документации]()
+
+### 1. Какие аннотации используются для swagger документации
+- `@Operation` - описывает операцию или обычно метод HTTP для определенного пути
+- `@Parameter` - представляет один параметр в операции OpenAPI
+- `@RequestBody` - представляет тело запроса в операции
+- `@ApiResponse` - представляет ответ в операции
+- `@Tag` - представляет теги для операции или определения OpenAPI
+- `@Server` - представляет серверы для операции или для определения OpenAPI
+- `@Callback` - исывает набор запросов
+- `@Link` - представляет возможную ссылку времени разработки для ответа
+- `@Schema` - позволяет определять входные и выходные данные
+- `@ArraySchema` - позволяет определять входные и выходные данные для типов массивов
+- `@Content` - позволяет схему и примеры для определенного типа мультимедиа
+- `@Hidden` - скрывает ресурс, операцию или свойство
+```
+@Tag(name = "User", description = "The User API")
+@RestController
+public class UserController {}
+    @Operation(summary = "Gets all users", tags = "user")
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Found the users",
+            content = {
+                @Content(
+                    mediaType = "application/json",
+                    array = @ArraySchema(schema = @Schema(implementation = UserApi.class)))
+            }
+        )
+    })
+    @GetMapping("/users")
+    public List<UserApi> getUsers()
+```
+
+
+## END ---------------- Swagger ----------------
 
 26. Можно ли увеличить размер массива после его инициализации?
 нет, только пересоздать новый массив
