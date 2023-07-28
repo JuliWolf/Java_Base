@@ -958,7 +958,6 @@ Exception - можно обработать ошибку
 - Использовани е профилировщика для анализацы производительности приложения (TODO)
 
 
-
 ## END ---------------- Исключения ----------------
 
 ## Сериализация и копирование
@@ -1982,11 +1981,12 @@ public interface BeanPostProcessor {
 + [5. Spring boot](#5-spring-boot)
 + [6. RestTemplate](#6-resttemplate)
 + [7. Как активировать/деактивировать Бин](#7-как-активироватьдеактивировать-бин)
-+ [8. @PreDestroy что это такое и зачем он нужен](#8-predestroy-что-это-такое-и-зачем-он-нужен)
-+ [9. Кто уничтожает бин со Scope prototype](#9-кто-уничтожает-бин-со-scope-prototype)
-+ [10. Аннотация @Cachable](#10-аннотация-cachable)
-+ [11. Аннотация @Async](#11-аннотация-async-)
-+ [12. Типы Repository](#12-типы-repository)
++ [8. Spring Filters](#7-как-активироватьдеактивировать-бин)
++ [9. @PreDestroy что это такое и зачем он нужен](#9-predestroy-что-это-такое-и-зачем-он-нужен)
++ [10. Кто уничтожает бин со Scope prototype](#10-кто-уничтожает-бин-со-scope-prototype)
++ [11. Аннотация @Cachable](#11-аннотация-cachable)
++ [12. Аннотация @Async](#12-аннотация-async-)
++ [13. Типы Repository](#13-типы-repository)
 
 ### 1. Что такое `Autowiring` и как работает
 **IOC** - Inversion of control</br>
@@ -2066,6 +2066,7 @@ public class SimpleBookController {
     }
 }
 ```
+
 **@RestController** - Это специализированная сервис контроллера. Включает в себя @Controller и @ResponseBody аннотации</br>
 Необходим при написании REST запросов
 ```
@@ -2083,10 +2084,10 @@ public class SimpleBookRestController {
     }
 }
 ```
+
 **@Configuration** - класс для настройки приложения, объявления бинов
 
-
-### 3. AOP
+### 4. AOP
 Аспектно-ориентированное программирование - это парадигма программирования, являющейся в дальнейшем развитием процедурно и объектно-ориентированного программирования</br></br>
 
 **Join Point** - это точки наблюдения, присоединения к коду, где планируется введение функциональности
@@ -2108,7 +2109,7 @@ public void forDaoPackage () {}
 **Aspect**</br>
 модуль, в котором собраны описанные Pointcut и Advice
 
-### 4. Spring boot
+### 5. Spring boot
 В базе используется сервер Tomcat</br></br>
 
 Без Spring Boot
@@ -2139,7 +2140,7 @@ public void forDaoPackage () {}
 - @EnableAutoConfiguration
 - @ComponentScan
 
-### 5. RestTemplate
+### 6. RestTemplate
 ```
 @Bean
 public RestTemplate restTemplate (RestTemplateBuilder builder) {
@@ -2156,7 +2157,7 @@ public RestTemplate restTemplate () {
 }
 ```
 
-### 6. Как активировать/деактивировать Бин
+### 7. Как активировать/деактивировать Бин
 @Profile("dev")</br>
 @Profile("production")</br></br>
 
@@ -2167,7 +2168,7 @@ spring.profiles.active=dev</br></br>
 
 Дополнительно в интерфейсе 'ConfigurableEnvironment' можно установить настройки активных профилей вызвав 'SpringApplication.setAdditionalProdiles(...)'
 
-### 7. Spring Filters
+### 8. Spring Filters
 
 Для создания фильтры необходимо создать бин и заинжектить интерфейс 'Filter'
 ```
@@ -2216,15 +2217,15 @@ FilterRegistrationBean<RequestResponseLoggingFilter> registrationBean = new Filt
 }
 ```
 
-### 8. @PreDestroy что это такое и зачем он нужен
+### 9. @PreDestroy что это такое и зачем он нужен
 Если мы указывем аннотацию @PreDestroy над методом, то этот метод будет вызван при закрытии контекста
 
-### 9. Кто уничтожает бин со Scope prototype
+### 10. Кто уничтожает бин со Scope prototype
 Он уничтожается garbage collector после того как все ссылки на него будут уничтожены</br>
 В некоторых случаях советую явно уничтожать подобные бины</br>
 Для этго можно написать пост процессор, методы которого будут явно уничтожать компоненты прототипа
 
-### 10. Аннотация `@Cachable`
+### 11. Аннотация `@Cachable`
 https://habr.com/ru/companies/rosbank/articles/694768/ </br>
 Если мы хотим закешировать методы, мы ставим данную аннотацию, которая создать мапу с закешированными значениями
 ```
@@ -2234,7 +2235,7 @@ public Set<SignatureLevel> getSignatureLevels(long userId) {
 }
 ```
 
-### 11. Аннотация `@Async`
+### 12. Аннотация `@Async`
 Позволяет запускать методы в фоновом потоке </br>
 - Для активации необходимо добавить аннотацию `@EnableAsync` над основным классом приложения
 ```
@@ -2248,7 +2249,7 @@ public class AsyncConfiguration extends AsyncConfigurerSupport {
 - Нельзя вызывать метод из того же класса, к которому он принадлежит
 - Если метод должен что-то возвращать, то возвращаемый тип должен быть `CompletableFuture`
 
-### 12. Типы Repository
+### 13. Типы Repository
 - `CrudRepository` - базовый интерфейс репозитория. Предоставляет методы для создания, чтения, обновления и удаление объектов
 - `PagingAndSortingRepository` - Расширяет `CrudRepository` и добавляет методы для поддержки постраничного и сортированного доступа к данным
 - `JpaRepository` - предоставляет дополнительную функциональность для работы с сущностями JPA(Java Persistence API)</br>
