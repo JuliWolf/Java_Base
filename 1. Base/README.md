@@ -1981,7 +1981,7 @@ public interface BeanPostProcessor {
 + [5. Spring boot](#5-spring-boot)
 + [6. RestTemplate](#6-resttemplate)
 + [7. Как активировать/деактивировать Бин](#7-как-активироватьдеактивировать-бин)
-+ [8. Spring Filters](#7-как-активироватьдеактивировать-бин)
++ [8. Spring Filters](#8-spring-filters)
 + [9. @PreDestroy что это такое и зачем он нужен](#9-predestroy-что-это-такое-и-зачем-он-нужен)
 + [10. Кто уничтожает бин со Scope prototype](#10-кто-уничтожает-бин-со-scope-prototype)
 + [11. Аннотация @Cachable](#11-аннотация-cachable)
