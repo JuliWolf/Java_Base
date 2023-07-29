@@ -3,6 +3,7 @@ https://github.com/johnivo/job4j/blob/master/interview_questions/Core.md#4-%D0%9
 + [REST vs SOAP](#rest-vs-soap)
 + [Основы](#основы)
 + [Garbage collector](#garbage-collector)
++ [Classloader](#classloader)
 + [ООП](#ооп)
 + [Процедурная Java](#процедурная-java)
 + [ООП в Java](#ооп-в-java)
@@ -276,6 +277,127 @@ package-private
 
 
 ## END ---------------- Garbage collector ----------------
+
+## Classloader
+
++ [1. Задачи classloader]()
++ [2. Этапы получения работающего JVM кода]()
++ [3. Условия для выполнения этапов]()
++ [4. Типы загрузчиков]()
++ [5. От какого класса наследуются все загрузчики?]()
++ [6. От какого класса наследуются базоый загрузчик?]()
++ [7. Какие методы надо реализовывать при реализации Classloader]()
++ [8. Какой метод является точной входа для загрузки классов]()
++ [9. Логика работы `classLoader`]()
++ [10. Принципы загрузки классов]()
++ [11. Схема загрузки классов]()
+
+### 1. Задачи classloader
+- Для поставки в JVM скомпилированного байт-кода, который хранится в файлах с расширением `.class`, но модет быть также получен из других источников
+
+### 2. Этапы получения работающего JVM кода
+- Загрузить байт-код из ресурсов и создание экземпляра класса `Class`
+  - Поиск запрошенного класса среди загруженных ранее
+  - Получение байт-кода для загрузки и проверки его корректности
+  - Создание экземпляра класса `Class`
+  - Загрузка родительских классов
+- Связываение (линковка)
+  - `Verification` - проверка корректности полученного байт-кода
+  - `Preparation` - выделение оперативной памяти под статические поля и инициализация их значениями по умолчанию
+  - `Resolution` - разрешение символьных ссылок типов, полей и методов
+- Инициализация полученного объекта
+
+### 3. Условия для выполнения этапов
+- Класс должен быть полностью загружен прежде, чем слинкован
+- Класс должен быть полностью проверен и подготовлен прежде, чем проиницилизирован
+- Ошибки разрешения ссылок происходят во время выполнения программ, даже если быть обнаружены на этапе линковки
+
+### 4. Типы загрузчиков
+- **Bootstrap** - базовый загрузчик, также называется `Primodial Classloader`
+  - загружает стандартные классы JDK из архива rt.jar
+- **Extension ClassLoader** - загрузчик расширенный
+  - Загружает классы расширений, которые по умолчанию находятся в каталоге `jre/lib/ext`, но могут быть заданы системным свойством `java.ext.dirs`
+- **System Classloader** - системный загрузчик
+  - загружает классы приложения, опрределенные в переменной среды окружения CLASSPATH
+
+(*) Используется иерархия загрузчиков классов
+- Корневой - базовый
+- Загрузчик расширений
+- Системный загрузчик
+
+### 5. От какого класса наследуются все загрузчики?
+абстрактный классс `Classloader`
+
+### 6. От какого класса наследуются базоый загрузчик?
+базовый загрузчик является нативным и его реализация включена в JVM
+
+### 7. Какие методы надо реализовывать при реализации Classloader
+- loadClass(String name)
+- loadClass(String name, boolean resolve)
+- findLoadedClass(String name)
+- getParent()
+- findClass(String name)
+- resolveClass(Class<?> c)
+
+### 8. Какой метод является точной входа для загрузки классов
+- Метод `loadClass(String name)`
+
+### 9. Логика работы `classLoader`
+- Вызывается метод `loadClass(String name)`
+- Его реализация сводится к вызову protected метода `loadClass(String name, boolean resolve)`
+    - На вход этого метода подаются два параметра
+    - 1 бинарное имя класса, который необходимо загрузить
+    - 2 флаг, определяющий, требуется ли выполнять процедуру разрешения символьных ссылок (по умолчанию false)
+- Далее происходит вызов метода `findLoadedClass(String name)`
+  - Проверяет был ли класс уже загружен ранее
+    - Если был, то вернет ссылку на класс
+    - Иначе вызывает метод загрузки класса у родительского загрузчика
+    - Если ни один из загрузчиков не смог найти загруженный класс, каждый из них следуя в обратном порядке попытается этот класс найти и загрузить, переопределяя метод `findClass(String name)`
+- Послед загрузки определяется стоит ли выполнять загрузку классов по символьным ссылкам
+
+### 10. Принципы загрузки классов
+- **Дегерирование**
+  - Запрос на загрузку класс передается родительскому загрузчику
+  - Попытка загрузить класс самостоятельно выполняется, только если родительский загрузчик не смог найти и загрузить класс
+  - Позволяет загружать классы тем загрузчиком, который максимально близко к базовому
+- **Видимость**
+  - Загрузчик видит только свои классы и классы родителя и понятия не имеет о классах, которые были загружены его потомком
+- **Уникальность**
+  - Класс может быть загружен только однажды
+
+### 11. Схема загрузки классов
+1. Приходит вызов загрузки класса
+2. Происходит поиск этого класса в кеше уже загруженных классов текущего загрузчика
+3. Если класс не загружался ранее
+   1. Управление передается родительскому загрузчику (делегирование)
+      1. Если класс уже был загружен и загрузчик знает о его местонахождении, то будет возвращен объект `Class` этого класса
+      2. Если нет, поиск будет продолжаться до тех пор, пока не дойдет до базового загрузчика
+         1. Если в базовом загрузчике нет информации об искомо классе, будет выполнен поиск байт-кода
+            - Если класс загрузить н удается, то управление возвращается обратно к загрузчику-потомку
+            - Потомок будет выполнять загрузку из известным ему источников и передавать ниже по цепочке
+
+```
+| Генерируется исключение java.lang.ClassNotFoundException | <---------------------------------------  < нет | класс загружен? | да >--
+                                                                                                                         |
+                                                                                                                загрузка |
+| Программа запросила класс {name} | --------------------------------> |*********************** System Classloader ***********************|
+                                   |                                             | поиск в кеше                          |
+                                   |                                             |                                       | нет
+                                   | <--------------------------------<да | Класс найден? |                       | Класс загружен? | да >--
+                                   |                                         нет |                                       |
+                                   |                                             |                              загрузка |
+                                   |                                   |********************* Extension ClassLoader **********************|
+                                   |                                             | поиск в кеше                          |
+                                   |                                             |                                       | нет
+                                   | <--------------------------------<да | Класс найден? |                       | Класс загружен? | да >--
+                                   |                                         нет |                                       |
+                                   |                                             |                              загрузка |
+                                   |                                   |************************* Bootstrap ******************************|
+                                   |                                             | поиск в кеше                          |
+                                   |                                             |                                       |
+                                   | <--------------------------------<да | Класс найден? | нет>-----------------> | Попытка загрузить класс |
+```
+## END ---------------- Classloader ----------------
 
 ## ООП
 
@@ -1987,6 +2109,8 @@ public interface BeanPostProcessor {
 + [11. Аннотация @Cachable](#11-аннотация-cachable)
 + [12. Аннотация @Async](#12-аннотация-async-)
 + [13. Типы Repository](#13-типы-repository)
++ [14. Модули spring Session](#13-типы-repository)
++ [15. Какой аннотацией включается сессия](#13-типы-repository)
 
 ### 1. Что такое `Autowiring` и как работает
 **IOC** - Inversion of control</br>
@@ -2257,6 +2381,88 @@ public class AsyncConfiguration extends AsyncConfigurerSupport {
 - `JpaSpecificationExecutor` - добавляет возможность выполнять запросы с использовнием спецификаций. Дает возможность создать критерии поиска с использованием логических операторов
 - `ReactiveCrudRepository` - Предоставляет асинхронную поддержку для чтения, записи и удаления оьбъектов
 
+### 14. Модули spring Session 
+Сессия спринга состоит из следующих модулей
+- Spring Session core - Предоставляет основные API и функции для работы
+- Spring Session Data Redis - предоставляет `SessionRepository` и `ReactiveSessionRepository` для Redis
+- Spring Session JDBC - предоставляет реализации для реалиционных бд
+- Spring Session Hazelcast - предоставляет реализации для Hazelcast
+- Spring Session MongoDB - предоставляет реализации для MongoDB
+
+### 15. Какой аннотацией включается сессия
+`@EnableJdbcHttpSession`
+
+### 16. Пример своего `WebSecurityConfig`
+```
+@EnableWebSecurity
+@EnableJdbcHttpSession
+@RequiredArgsConstructor
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final UserDetailsService userDetailsService;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationFailureHandler securityErrorHandler;
+    private final ConcurrentSessionStrategy concurrentSessionStrategy;
+    private final SessionRegistry sessionRegistry;
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+                .cors().and()
+                //для защиты о csrf атак
+                .csrf().and()
+                .httpBasic().and()
+                .authorizeRequests()
+                .anyRequest()
+                .authenticated().and()
+                //Логаут
+                .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/api/logout"))
+                //Возвращаем при логауте 200(по умолчанию возвращается 203)
+                .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
+                //Инвалидируем сессию при логауте
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                //Удаляем всю информацию с фронта при логауте(т.е. чистим куки, хидеры и т.д.)
+                .addLogoutHandler(new HeaderWriterLogoutHandler(new ClearSiteDataHeaderWriter(Directive.ALL)))
+                .permitAll().and()
+                //Включаем менеджер сессий(для контроля количества сессий)
+                .sessionManagement()
+                //Указываем макимальное возможное количество сессий(тут указано не 1, т.к. мы будем пользоваться своей кастомной стратегией)
+                .maximumSessions(3)
+                //При превышение количества активных сессий(3) выбрасывается исключение  SessionAuthenticationException
+                .maxSessionsPreventsLogin(true)
+                //Указываем как будут регестрироваться наши сессии(тогда во всем приложение будем использовать именно этот бин)
+                .sessionRegistry(sessionRegistry).and()
+                //Добавляем нашу кастомную стратегию для проверки кличества сессий
+                .sessionAuthenticationStrategy(concurrentSessionStrategy)
+                //Добавляем перехватчик для исключений
+                .sessionAuthenticationFailureHandler(securityErrorHandler);
+    }
+
+    //для инвалидации сессий при логауте
+    @Bean
+    public static ServletListenerRegistrationBean httpSessionEventPublisher() {
+        return new ServletListenerRegistrationBean(new HttpSessionEventPublisher());
+    }
+
+    @Bean
+    public static SessionRegistry sessionRegistry(JdbcIndexedSessionRepository sessionRepository) {
+        return new SpringSessionBackedSessionRegistry(sessionRepository);
+    }
+
+    @Bean
+    public static PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(12);
+    }
+
+}
+```
 
 ## END ----------------- Spring -----------------
 
