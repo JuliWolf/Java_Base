@@ -1697,6 +1697,7 @@ DROP view [ IF EXISTS ] view_name;
 + [20. Классы для создания синхронизирующих точек](#20-классы-для-создания-синхронизирующих-точек)
 + [21. Executors](#21-executors)
 + [22. Чем отличается Runnable от Callable](#22-чем-отличается-runnable-от-callable)
++ [23. Какие бывают типы ключей](#22-чем-отличается-runnable-от-callable)
 
 ### 1. В чем разница между sleep() и wait()?
 wait - освобождает монитор</br>
@@ -1889,6 +1890,187 @@ public class SharedResource {
 | Содержит только 1 метод run(), который не принимает аргументов и не возвращает результат | Содержит метод call(), который может выбразывать исключения, не требуя обработки |
 | Для выполнения можно использовать   ExecutorService и Thread лассы                       | Для выполнения можно использовать ExecutorService и FutureTask классы            |
 
+### 23. Какие бывают типы ключей
+- check constrains
+- not-null constrains
+- unique constrains
+- primary keys
+- foreign keys
+- exclusion constrains
+
+### 24. Тип ключа `check`
+- Позволяет определить булево выражение
+```
+CREATE TABLE products (
+    product_no integer,
+    name text,
+    price numeric CHECK (price > 0)
+);
+```
+- Можно задать отдельное имя ключу
+```
+CREATE TABLE products (
+    product_no integer,
+    name text,
+    price numeric CONSTRAINT positive_price CHECK (price > 0)
+);
+```
+- Определить ключ, который относится к нескольким колонкам
+```
+CREATE TABLE products (
+    product_no integer,
+    name text,
+    price numeric CHECK (price > 0),
+    discounted_price numeric CHECK (discounted_price > 0),
+    CHECK (price > discounted_price)
+);
+```
+
+### 25. Тип ключа `not-null`
+- Колонка всегда должна содержать значение отличное от null
+```
+CREATE TABLE products (
+    product_no integer NOT NULL,
+    name text NOT NULL,
+    price numeric
+);
+```
+- Колонка может иметь несколько ключей
+```
+CREATE TABLE products (
+    product_no integer NOT NULL,
+    name text NOT NULL,
+    price numeric NOT NULL CHECK (price > 0)
+);
+```
+
+### 26. Тип ключа `unique`
+- Значение в каждой строче не должно повторяться, должно быть уникально
+```
+CREATE TABLE products (
+    product_no integer UNIQUE,
+    name text,
+    price numeric
+);
+```
+- Группа колонок
+```
+CREATE TABLE example (
+    a integer,
+    b integer,
+    c integer,
+    UNIQUE (a, c)
+);
+```
+- 2 значения null не считаются одиннаковыми, поэтому стоит добавлять `NULLS NOT DISTINCT`
+```
+CREATE TABLE products (
+    product_no integer UNIQUE NULLS NOT DISTINCT,
+    name text,
+    price numeric
+);
+```
+
+### 27. Тип ключа `primary keys`
+- Колонка или группа колонок может использоваться как уникальный идентификатор
+```
+CREATE TABLE products (
+    product_no integer UNIQUE NOT NULL,
+    name text,
+    price numeric
+);
+```
+идентично
+```
+CREATE TABLE products (
+    product_no integer PRIMARY KEY,
+    name text,
+    price numeric
+);
+```
+
+### 28. Тип ключа `foreign keys`
+- Обозначает, что данное значение связано с колонкой в другой таблице
+```
+CREATE TABLE products (
+    product_no integer PRIMARY KEY,
+    name text,
+    price numeric
+);
+```
+- Если мы хотим хранить ключи только на те элементы, которые действительно есть в другой таблице
+```
+CREATE TABLE orders (
+    order_id integer PRIMARY KEY,
+    product_no integer REFERENCES products (product_no),
+    quantity integer
+);
+```
+- Группа ключей
+```
+CREATE TABLE t1 (
+  a integer PRIMARY KEY,
+  b integer,
+  c integer,
+  FOREIGN KEY (b, c) REFERENCES other_table (c1, c2)
+);
+```
+- Реализация many-to-many
+```
+CREATE TABLE products (
+    product_no integer PRIMARY KEY,
+    name text,
+    price numeric
+);
+
+CREATE TABLE orders (
+    order_id integer PRIMARY KEY,
+    shipping_address text,
+    ...
+);
+
+CREATE TABLE order_items (
+    product_no integer REFERENCES products,
+    order_id integer REFERENCES orders,
+    quantity integer,
+    PRIMARY KEY (product_no, order_id)
+);
+```
+
+### 29. Типы поведений при использовании foreig keys
+- `ON DELETE RESTRICT` Запрет на удаление элементов 
+- `ON DELETE CASCADE` При удалении удалить все связанные элементы
+- `ON DELETE NO ACTION` - дефолтное поведение, ничего не происходит, при проверке ключа будет выброшена ошибка
+- `ON DELETE SET NULL` - При удалении будут выставлены нуловые значения
+- `ON DELETE SET DEFAULT` - При удалении будут выставлены дефолтные значения (если дефолтное значение не будет соотвествовать условиям, то операция не будет выполнена)
+```
+CREATE TABLE tenants (
+    tenant_id integer PRIMARY KEY
+);
+
+CREATE TABLE users (
+    tenant_id integer REFERENCES tenants ON DELETE CASCADE,
+    user_id integer NOT NULL,
+    PRIMARY KEY (tenant_id, user_id)
+);
+
+CREATE TABLE posts (
+    tenant_id integer REFERENCES tenants ON DELETE CASCADE,
+    post_id integer NOT NULL,
+    author_id integer,
+    PRIMARY KEY (tenant_id, post_id),
+    FOREIGN KEY (tenant_id, author_id) REFERENCES users ON DELETE SET NULL (author_id)
+);
+```
+
+### 30. Тип ключа `exclusion constrains`
+- При сравнении колонок, ни одно из сравнений не вернет true
+```
+CREATE TABLE circles (
+    c circle,
+    EXCLUDE USING gist (c WITH &&)
+);
+```
 
 ## END ---------------- Concurrency ----------------
 
