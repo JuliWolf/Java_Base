@@ -2115,8 +2115,9 @@ public interface BeanPostProcessor {
 + [11. Аннотация @Cachable](#11-аннотация-cachable)
 + [12. Аннотация @Async](#12-аннотация-async-)
 + [13. Типы Repository](#13-типы-repository)
-+ [14. Модули spring Session](#13-типы-repository)
-+ [15. Какой аннотацией включается сессия](#13-типы-repository)
++ [14. Модули spring Session](#14-модули-spring-session)
++ [15. Какой аннотацией включается сессия](#15-какой-аннотацией-включается-сессия)
++ [16. Пример своего `WebSecurityConfig`](#16-пример-своего-websecurityconfig)
 
 ### 1. Что такое `Autowiring` и как работает
 **IOC** - Inversion of control</br>
