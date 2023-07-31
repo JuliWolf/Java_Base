@@ -1918,6 +1918,7 @@ CREATE TABLE circles (
 + [29. `Semaphore`](#29-semaphore)
 + [30. Синхронизаторы - Барьеры](#30-синхронизаторы---барьеры)
 + [31. `CyclicBarrier`](#31-cyclicbarrier)
++ [32. Executors](#32-executors)
 
 ### 1. В чем разница между sleep() и wait()?
 wait - освобождает монитор</br>
