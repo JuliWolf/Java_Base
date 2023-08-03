@@ -1918,7 +1918,8 @@ CREATE TABLE circles (
 + [29. `Semaphore`](#29-semaphore)
 + [30. Синхронизаторы - Барьеры](#30-синхронизаторы---барьеры)
 + [31. `CyclicBarrier`](#31-cyclicbarrier)
-+ [32. Executors](#32-executors)
++ [32. Какие недостатки у неограниченного количества потоков](#31-cyclicbarrier)
++ [33. Executors](#33-executors)
 
 ### 1. В чем разница между sleep() и wait()?
 wait - освобождает монитор</br>
@@ -2310,7 +2311,14 @@ public class Preloader {
 ### 31. `CyclicBarrier`
 - Выполняет синхронизацию заданного количества потоков в одной точке
 
-### 32. Executors
+### 32. Какие недостатки у неограниченного количества потоков
+- создание каждого потока занимает время и требует некоторой обрабатывающей деятельности
+- Ресурсопотребление - Потоки потребляют системные ресурсы, в особенности память
+- Стабильность - есь лимит на число создаваемых потоков
+
+### 33. Executors
+Использование Executor является одним из способов реализации паттерна "производитель-потребитель"</br>
+
 - Помогает повторно использовать освободившиеся потоки
 - Помогает организовывать очереди из пула потоков
 - Помогает подписываться на результат выполнения задачи
@@ -2318,6 +2326,61 @@ public class Preloader {
 1. `ThreadPoolExecutor` - пул потоков с возможностью указывать рабочее и максимальное кол-во потоков в пуле
 2. `ScheduledThreadPoolExecutor` - расширяет фунционал `ThreadPoolExecutor` возможностью выполнять задачи отложенно или регулярно
 3. `ThreadPoolExecutor` - Более легкий пул потоков для "самовоспроизводящихся" задач
+
+### 34. Методы Executors
+- newFixedThreadPool - пул потоков фиксированного размера создает определенного число потоков по мере предоставления задач, а зачем стараетсяч держать размер пула
+- newCachedThreadPool - кэшированный пул потоков убирает простаивающие потоки и при необходимости добавляет новые
+- newSingleThreadExecutor - Создает один поток для последовательной обработки задач
+- newScheduledThreadPool - пул потоков фиксированного размера, который поддерживает отложенное и переодическое выполнение задач
+
+### 35. Методы жизненного цикла Executors
+- Жизненный цикл имеет три состояния
+  - работает
+  - выключается
+  - терминирован
+```
+public interface ExecutorService extends Executor {
+    void shutdown();
+    List<Runnable> shutdownNow();
+    boolean isShutdown();
+    boolean isTerminated();
+    boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException;
+    ...
+}
+```
+
+### 36. Что такое "утечка потока"
+Timer - Поток не может отлавливать непроверяемое исключение, выдаваемое из задачи TimeTask, которое его терминирует
+
+### 37. Жизненный цикл задачи, выполняемой исполнителем
+- создана
+- предоставлена
+- запущена
+- завершена
+```
+public interface Callable<V> {
+    V call() throws Exception;
+}
+
+public interface Future<V> {
+    boolean cancel(boolean mayInterruptIfRunning);
+    boolean isCancelled();
+    boolean isDone();
+    V get() throws InterruptedException, ExecutionException, CancellationException;
+    V get(long timeout, TimeUnit unit) thows InterruptedException, ExecutionException, CancellationException, TimeoutException;
+}
+```
+
+### 38. Что такое `CompletionService`
+- Сочетает в себе функционал исполнителя `Executor` и блокирующей очереди `BlockingQueue`
+- Можно передавать ей задачи `Callable` на выполнение и использовать методы `take` и `poll`
+
+### 39. `ExecutorCompletionService`
+- может использовать один исполнитель `Executor` совместно
+- В данном кейсе `CompletionService` действует как дескриптор для пакета вычислений.
+  - Запоминает число задач
+  - Подсчитывает число извлеченных завершенных результатов
+- Можно узнать когда все результаты для данного пакеты были извлечены благодаря работе `CompletionService`
 
 ## END ---------------- Concurrency ----------------
 
