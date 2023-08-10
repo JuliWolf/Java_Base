@@ -1,14 +1,20 @@
-+ [Общие понятия]()
++ [Общие понятия](#общие-понятия)
 
 
 ## Общие понятия
 
-+ [1. Что такое DDD?]()
-+ [2. Что такое Sub-domain?]()
-+ [3. Типы поддоменов]()
-+ [4. Что помогает определить DDD?]()
-+ [5. Элементы DDD]()
-+ [5.1. Value objects]()
++ [1. Что такое DDD?](#1-что-такое-domain)
++ [2. Что такое Sub-domain?](#2-что-такое-sub-domain)
++ [3. Типы поддоменов](#3-типы-поддоменов)
++ [4. Что помогает определить DDD?](#4-что-помогает-определить-ddd)
++ [5. Элементы DDD](#5-элементы-ddd)
++ [5.1. Value objects](#51-value-objects)
++ [5.2. Entries](#52-entries)
++ [5.3. Aggregates](#53-aggregates)
++ [5.4. Domain events](#54-domain-events)
++ [5.5. Repositories](#55-repositories)
++ [5.6. Factories](#56-factories)
++ [5.7. Services](#57-services)
 
 
 ### 1. Что такое Domain?
