@@ -28,6 +28,7 @@ https://github.com/johnivo/job4j/blob/master/interview_questions/Core.md#4-%D0%9
 + [JsonB](https://github.com/JuliWolf/Java_Base/blob/main/JsonB/README.md)
 + [Mockito & Junit](https://github.com/JuliWolf/Spring/blob/master/mockito/README.md)
 + [Swagger](#swagger)
++ [DDD](ddd.md)
 
 ## REST vs SOAP
 
