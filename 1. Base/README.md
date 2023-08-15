@@ -4191,7 +4191,8 @@ public enum DayOfWeek {
 + [2. Как запускать war file](#2-как-запускать-war-file)
 + [3. Чем отличается package от install](#3-чем-отличается-package-от-install)
 + [4. Какие есть команды у Maven](#4-какие-есть-команды-у-maven)
-+ [5. Области действия зависимостей (scope)](#4-какие-есть-команды-у-maven)
++ [5. Области действия зависимостей (scope)](#5-области-действия-зависимостей-scope)
++ [6. Плагины](#6-плагины)
 
 ### 1. Как запускать jar file
 - java -jar main.jar
@@ -4254,6 +4255,14 @@ public enum DayOfWeek {
 ```
 
 ### 6. Плагины
+- maven-compiler-plugin - плагин компиляции
+- maven-resources-plugin - плагин включения ресурсов
+- maven-source-plugin - плагин включения исходных кодов
+- maven-dependency-plugin - плагин копирования зависимостей
+- maven-jar-plugin - плагин создания jar-файла
+- maven-surefire-plugin - плагин запуска тестов
+- buildnumber-maven-plugin - плагин генерации номера сборки
+
 - `maven-compiler-plugin` - Плагин компиляции
   - Позволяет управлять версией компилятора
   - Позволяет определить версию java машины
