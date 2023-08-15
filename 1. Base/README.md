@@ -2726,6 +2726,7 @@ public interface BeanPostProcessor {
 + [14. Модули spring Session](#14-модули-spring-session)
 + [15. Какой аннотацией включается сессия](#15-какой-аннотацией-включается-сессия)
 + [16. Пример своего `WebSecurityConfig`](#16-пример-своего-websecurityconfig)
++ [17. Как заинджектить несколько бинов по одному интерфейсу](#16-пример-своего-websecurityconfig)
 
 ### 1. Что такое `Autowiring` и как работает
 **IOC** - Inversion of control</br>
@@ -3077,6 +3078,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 }
+```
+
+### 17. Как заинджектить несколько бинов по одному интерфейсу
+1. Создать несколько бинов имплементирующий один интерфейс
+2. Заинджектить бин по интерфейсу
+```
+@Autowired
+private List<Test> testList;
 ```
 
 ## END ----------------- Spring -----------------
