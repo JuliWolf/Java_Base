@@ -1134,7 +1134,7 @@ boolean isPresent = optionalValue.isPresent(); // возвращает true, е�
 
 |                  |                     | Object                   |                                |
 |------------------|---------------------|--------------------------|--------------------------------|
-|                  |                     | Throwablechecked)        |                                |
+|                  |                     | Throwable(checked)       |                                |
 | Error            |                     | Exception                |                                |
 | OutOfMemoryError | StackOverflowError  | RuntumeException         | IOExeption(checked)            |
 | LinkageError     |                     | IllegalArgumentExceprion | FileNotFoundException(checked) |
@@ -4261,7 +4261,7 @@ public enum DayOfWeek {
 - maven-dependency-plugin - плагин копирования зависимостей
 - maven-jar-plugin - плагин создания jar-файла
 - maven-surefire-plugin - плагин запуска тестов
-- buildnumber-maven-plugin - плагин генерации номера сборки
+- buildnumber-maven-plugin - плагин генерации номера сборки</br></br>
 
 - `maven-compiler-plugin` - Плагин компиляции
   - Позволяет управлять версией компилятора
