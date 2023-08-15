@@ -1505,6 +1505,8 @@ equals и hashCode
     - Если было найдено совпадение, то заменяем текущие значения на новые
   - Увеличиваем количество элементов
   - Проверяем loadFactor
+- При удалении элемента
+  - Если количество элементов в бакете становится меньше или равно 6, то красное-черное дерево превращается в связанный список
   
 ### 24. Как строиться красное-черное дерево?
 - Элементы сортируется по хеш-коду
@@ -4189,6 +4191,7 @@ public enum DayOfWeek {
 + [2. Как запускать war file](#2-как-запускать-war-file)
 + [3. Чем отличается package от install](#3-чем-отличается-package-от-install)
 + [4. Какие есть команды у Maven](#4-какие-есть-команды-у-maven)
++ [5. Области действия зависимостей (scope)](#4-какие-есть-команды-у-maven)
 
 ### 1. Как запускать jar file
 - java -jar main.jar
@@ -4227,6 +4230,191 @@ public enum DayOfWeek {
 - mvn -V package - (Упаковка с отображением версий)
 - mvn -T 4 clean install - (Параллельная упаковка в 4х потоках)
 
+### 5. Области действия зависимостей (scope)
+- test - зависимость будет использована при выполнении компиляции части проекта, которая содержит тесты, а также при запуске тестов
+- compile - Настройка по умолчанию. Зависимость доступна для компиляции приложения и тестов
+  - Для запуска тестов `mvn test`
+  - для запуска приложения используется плагин `exec`
+- provided - Аналогично `compile` за исключением того, что артефакт будет использоваться на этапе компиляции и тестирования, но не включается в сборку
+  - например `hibernate`, `jsf` - необходимы только на этапе разработки
+- runtime - артефакт нужен только на стадии выполнения приложения
+- system - аналогично `provided` за исключением того, что артефакт будет указываться явно в виде абсолютного пути к файлу определенногому в теге systemPath
+```
+<dependencies>
+    <dependency>
+        <groupId>ru.carousel</groupId>
+        <artifactId>carousel-lib</artifactId>
+        <version>1.0</version>
+        <scope>system</scope>
+        <systemPath>
+               /projects/libs/carousel-lib.jar
+        </systemPath>
+    </dependency>
+</dependencies>
+```
+
+### 6. Плагины
+- `maven-compiler-plugin` - Плагин компиляции
+  - Позволяет управлять версией компилятора
+  - Позволяет определить версию java машины
+  - source - версия java-кода
+  - target - версия java машины
+  - encoding - Кодировка исходного кода
+```
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-compiler-plugin</artifactId>
+    <version>3.1</version>
+    <configuration>
+        <source>1.7</source>
+        <target>1.7</target>
+        <encoding>UTF-8</encoding>
+    </configuration>
+</plugin>
+```
+
+- `maven-resources-plugin` - плагин включения ресурсов
+  - Перед сборкой копирует все ресурсы (файлы изображений, файлы .properties) в директорию таргет
+```
+<plugin>
+    <artifactId>maven-resources-plugin</artifactId>
+    <version>2.6</version>
+    <executions>
+        <execution>
+            <id>copy-resources</id>
+            <phase>validate</phase>
+            <goals>
+                <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+                <outputDirectory>
+                       ${basedir}/target/resources
+                </outputDirectory>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources/props</directory>
+                        <filtering>true</filtering>
+                        <includes>
+                            <include>**/*.properties</include>
+                        </includes>
+                    </resource>
+                    <resource>
+                        <directory>src/main/resources/images</directory>
+                        <includes>
+                            <include>**/*.png</include>
+                        </includes>
+                    </resource>
+                </resources>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+```
+
+- `maven-source-plugin` - Плагин включения сходных кодов
+  - позволяет включать в сборку проекта исходный код
+```
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-source-plugin</artifactId>
+    <version>2.2.1</version>
+    <executions>
+        <execution>
+            <id>attach-sources</id>
+            <phase>verify</phase>
+            <goals>
+                <goal>jar</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+```
+
+- `maven-dependency-plugin` - для копирования зависимостей в директорию сборки
+  - outputDirectory - определение директории, в которую будут копироваться зависимости
+  - overWriteReleases(default: false) - флаг необходимости перезаписывания зависимостей при создании релиза
+  - overWriteSnapshots - флаг необходимости перезаписывания неокончательных зависимостей, в которых присутствует SNAPSHOT
+  - overWriteIfNewer(default: true) - флаг необходимости перезаписывания библиотек с наличием более новых версий
+```
+<plugin> 
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-dependency-plugin</artifactId>
+    <version>2.5.1</version>
+    <configuration>
+        <outputDirectory>
+            ${project.build.directory}/lib/
+        </outputDirectory>
+        <overWriteReleases>false</overWriteReleases>
+        <overWriteSnapshots>false</overWriteSnapshots>
+        <overWriteIfNewer>true</overWriteIfNewer>
+    </configuration>
+    <executions>
+        <execution> 
+            <id>copy-dependencies</id>
+            <phase>package</phase>
+            <goals>
+                <goal>copy-dependencies</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+```
+
+- `maven-jar-plugin` - плагин создания jar-файла
+  - позволяет сформировать манифест, 
+  - описать дополнительные ресурсы, необходимые для включения в jar-файл
+  - упаковать проект в jar-файл
+  - `excludes` - блокирует включение в сборку определенных файлов изображений
+```
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-jar-plugin</artifactId>
+    <version>2.4</version>
+    <configuration>
+        <includes>
+            <include>**/properties/*</include>
+        </includes>
+        <excludes>
+            <exclude>**/*.png</exclude>
+        </excludes>
+        <archive>
+           <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+        </archive>
+    </configuration>
+</plugin>
+```
+* Может создать и включить в сборку MANIFEST.MF самостоятельно
+  * В секцию `archive` включить тег `manifest`
+    * addClasspath - определяет необходимость добавления в манифест CLASSPATH
+    * classpathPrefix - позволяет дописывать префикс перед каждым ресурсом
+    * mainClass - указывает на главный исполяемый класс
+```
+<configuration>
+    <archive>
+        <manifest>
+            <addClasspath>true</addClasspath>
+            <classpathPrefix>lib/</classpathPrefix>
+            <mainClass>ru.company.AppMain</mainClass>
+        </manifest>
+    </archive>
+</configuration>
+```
+
+- `maven-surefire-plugin` - плагин для запуска тестов и генерации отчетов по результатам их выполнения
+```
+<plugins>
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.12.4</version>
+        <configuration>
+            <includes>
+                <include>Sample.java</include>
+            </includes>
+        </configuration>
+    </plugin>
+</plugins>
+```
 
 ## END ---------------- Maven ----------------
 
