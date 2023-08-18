@@ -22,15 +22,15 @@ https://github.com/johnivo/job4j/blob/master/interview_questions/Core.md#4-%D0%9
 + [Kafka](#kafka)
 + [Stream](#stream)
 + [SOLID](#solid)
-+ [Java 8](#java-8)
 + [ENUM](#enum)
 + [Maven](#maven)
 + [Servlet](#servlet)
++ [Swagger](#swagger)
++ [Nginx](#Nginx)
++ [Java 8](#java-8)
 + [JsonB](https://github.com/JuliWolf/Java_Base/blob/main/JsonB/README.md)
 + [Mockito & Junit](https://github.com/JuliWolf/Spring/blob/master/mockito/README.md)
-+ [Swagger](#swagger)
 + [DDD](ddd.md)
-+ [Nginx](#Nginx)
 
 ## REST vs SOAP
 
@@ -4107,83 +4107,6 @@ try {
 
 ## END ---------------- SOLID ----------------
 
-## Java 8
-
-+ [1. Методы интерфейсов по умолчанию](#1-методы-интерфейсов-по-умолчанию)
-+ [2. Лямбда-выражения](#2-лямбда-выражения)
-+ [3. Функциональные интерфейсы](#3-функциональные-интерфейсы)
-+ [4. Ссылки на методы и конструкторы](#4-ссылки-на-методы-и-конструкторы)
-+ [5. Области действия лямбд](#5-области-действия-лямбд)
-+ [6. Доступ к полям и статическим переменным](#6-доступ-к-полям-и-статическим-переменным)
-+ [7. Доступ к методам интерфейсом по умолчанию](#7-доступ-к-методам-интерфейсом-по-умолчанию)
-+ [8. Stream](#8-stream)
-+ [9. Апи для работы с датами](#9-апи-для-работы-с-датами)
-+ [10. Аннотации](#10-аннотации)
-
-### 1. Методы интерфейсов по умолчанию 
-```
-interface Formula {
-    double calculate(int a);
-    
-    default double sqrt(int a) {
-        return Math.sqrt(a);
-    }
-}
-```
-
-### 2. Лямбда-выражения
-```
-Collections.sort(names, (String a, String b) -> {
-    return b.compareTo(a);
-});
-```
-
-### 3. Функциональные интерфейсы
-```
-@FunctionalInterface
-interface Converter<F, T> {
-    T convert(F from);
-}
-```
-
-### 4. Ссылки на методы и конструкторы
-```
-Something something = new Something();
-Converter<String, String> converter = something::startsWith;
-String converted = converter.convert("Java");
-System.out.println(converted);
-```
-
-### 5. Области действия лямбд
-Лямбды могут ссылаться на переменные, обхявленные как final, на экземплярные поля класса и статические переменные
-```
-final int num = 1;
-Converter<Integer, String> stringConverter = (from) -> String.valueOf(from + num);
-
-stringConverter.convert(2);
-```
-переменная num не обязательно должна быть final, но должна быть неизменяемой
-
-### 6. Доступ к полям и статическим переменным
-
-### 7. Доступ к методам интерфейсом по умолчанию
-   Внутри лямбда-выражений запрещено обращаться к методам по умолчанию
-
-### 8. Stream
-
-### 9. Апи для работы с датами
-- Clock
-- Часовые пояса
-- LocalTime
-- LocalDate
-- LocalDateTime
-
-### 10. Аннотации
-    @Repeatable
-
-
-## END ---------------- Java 8 ----------------
-
 ## ENUM
 
 + [1. Зачем нужен enum?](#1-зачем-нужен-enum)
@@ -4631,6 +4554,84 @@ public class UserController {}
 | reopen  | открыть лог-файлы заново             | nginx -s reopen   |
 
 ## END ---------------- Nginx ----------------
+
+## Java 8
+
++ [1. Методы интерфейсов по умолчанию](#1-методы-интерфейсов-по-умолчанию)
++ [2. Лямбда-выражения](#2-лямбда-выражения)
++ [3. Функциональные интерфейсы](#3-функциональные-интерфейсы)
++ [4. Ссылки на методы и конструкторы](#4-ссылки-на-методы-и-конструкторы)
++ [5. Области действия лямбд](#5-области-действия-лямбд)
++ [6. Доступ к полям и статическим переменным](#6-доступ-к-полям-и-статическим-переменным)
++ [7. Доступ к методам интерфейсом по умолчанию](#7-доступ-к-методам-интерфейсом-по-умолчанию)
++ [8. Stream](#8-stream)
++ [9. Апи для работы с датами](#9-апи-для-работы-с-датами)
++ [10. Аннотации](#10-аннотации)
+
+### 1. Методы интерфейсов по умолчанию
+```
+interface Formula {
+    double calculate(int a);
+    
+    default double sqrt(int a) {
+        return Math.sqrt(a);
+    }
+}
+```
+
+### 2. Лямбда-выражения
+```
+Collections.sort(names, (String a, String b) -> {
+    return b.compareTo(a);
+});
+```
+
+### 3. Функциональные интерфейсы
+```
+@FunctionalInterface
+interface Converter<F, T> {
+    T convert(F from);
+}
+```
+
+### 4. Ссылки на методы и конструкторы
+```
+Something something = new Something();
+Converter<String, String> converter = something::startsWith;
+String converted = converter.convert("Java");
+System.out.println(converted);
+```
+
+### 5. Области действия лямбд
+Лямбды могут ссылаться на переменные, обхявленные как final, на экземплярные поля класса и статические переменные
+```
+final int num = 1;
+Converter<Integer, String> stringConverter = (from) -> String.valueOf(from + num);
+
+stringConverter.convert(2);
+```
+переменная num не обязательно должна быть final, но должна быть неизменяемой
+
+### 6. Доступ к полям и статическим переменным
+
+### 7. Доступ к методам интерфейсом по умолчанию
+Внутри лямбда-выражений запрещено обращаться к методам по умолчанию
+
+### 8. Stream
+
+### 9. Апи для работы с датами
+- Clock
+- Часовые пояса
+- LocalTime
+- LocalDate
+- LocalDateTime
+
+### 10. Аннотации
+    @Repeatable
+
+
+## END ---------------- Java 8 ----------------
+
 
 26. Можно ли увеличить размер массива после его инициализации?
 нет, только пересоздать новый массив
