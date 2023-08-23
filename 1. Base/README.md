@@ -3251,14 +3251,13 @@ ConcurrentMapCache
 
 ## Spring Transactional
 
-+ [1. Как включить транзакции]()
-+ [2. Какие настройки может иметь аннотация `@EnableTransactionManager`]()
-+ [3. Что делает аннотация `@Transactional`]()
-+ [4. Какие настройки есть у `@Transactional`]()
-+ [5. Как создавать транзакцию без Spring]()
-+ [6. Как `TransactionInterceptor` обрабатывает транзакционный метод]()
-+ [7. Что такое `TransactionManager`]()
-+ []()
++ [1. Как включить транзакции](#1-как-включить-транзакции)
++ [2. Какие настройки может иметь аннотация `@EnableTransactionManager`](#2-какие-настройки-может-иметь-аннотация-enabletransactionmanager)
++ [3. Что делает аннотация `@Transactional`](#3-что-делает-аннотация-transactional)
++ [4. Какие настройки есть у `@Transactional`](#4-какие-настройки-есть-у-transactional)
++ [5. Как создавать транзакцию без Spring](#5-как-создавать-транзакцию-без-spring)
++ [6. Как `TransactionInterceptor` обрабатывает транзакционный метод](#6-как-transactioninterceptor-обрабатывает-транзакционный-метод)
++ [7. Что такое `TransactionManager`](#7-что-такое-transactionmanager)
 
 ### 1. Как включить транзакции
 Добавить над конфигурацией аннотацию `@EnableTransactionManager`
