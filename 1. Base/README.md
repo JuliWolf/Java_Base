@@ -17,6 +17,7 @@ https://github.com/johnivo/job4j/blob/master/interview_questions/Core.md#4-%D0%9
 + [Spring изнутри](#spring-изнутри)
 + [Spring](#spring)
 + [Spring Кеш](#spring-кеш)
++ [Spring Transactional](#spring-transactional)
 + [Spring Patterns](https://github.com/JuliWolf/Spring/blob/master/Spring-patterns/README.md)
 + [Hibernate & JPA](#hibernate--jpa)
 + [Kafka](#kafka)
@@ -1695,9 +1696,16 @@ PreparedStatement - переданные параметры защищены о�
 **Уровни изоляции**
 
 - Read uncommitted (dirty read)
-- Read committed - только зафиксированные изменения
-- Repeatable read (phantom read) - видим вставленные записи
-- Serializable - самый безопасный
+- Read committed - только зафиксированные изменения - есть в Posgresql (по умолчанию)
+- Repeatable read (phantom read) - видим вставленные записи - есть в Posgresql
+- Serializable - самый безопасный - есть в Posgresql
+
+| isolation level  | dirty read | nonrepeatable read | phantom read | serialization anomaly |
+|------------------|------------|--------------------|--------------|-----------------------|
+| read uncommitted | + (not PG) | +                  | +            | +                     |
+| read committed   | -          | +                  | +            | +                     |
+| repeatable read  | -          | -                  | + (not PG)   | +                     |
+| serializable     | -          | -                  | -            | -                     |
 
 ### 8. Пул соединений к БД
    Это шаблон доступа к данным, основной целью которого является снижение накладных расходов, связанных с выполнение подключений к бд</br></br>
@@ -3240,6 +3248,128 @@ public class DemoCacheAbleApplication {
 ConcurrentMapCache
 
 ## END ----------------- Spring Кеш -----------------
+
+## Spring Transactional
+
++ [1. Как включить транзакции]()
++ [2. Какие настройки может иметь аннотация `@EnableTransactionManager`]()
++ [3. Что делает аннотация `@Transactional`]()
++ [4. Какие настройки есть у `@Transactional`]()
++ [5. Как создавать транзакцию без Spring]()
++ [6. Как `TransactionInterceptor` обрабатывает транзакционный метод]()
++ [7. Что такое `TransactionManager`]()
++ []()
+
+### 1. Как включить транзакции
+Добавить над конфигурацией аннотацию `@EnableTransactionManager`
+
+### 2. Какие настройки может иметь аннотация `@EnableTransactionManager`
+- `proxyTargetClass` - (по умолчанию false) - будет ли прокси создаваться через CGLIB(true) или через interface-based proxies (false)
+- `mode` - (по умолчанию `AdviceMode.PROXY`)  -как будут применены ADVICE
+  - `AdviceMode.PROXY` или
+  - `AdviceMode.ASPECTJ` - если выбрать и настроить, то при компиляции будет сгенерирован код так, что лело метода будет уже обернуто кодом, управляющим транзакцией
+- `order` - (по умолчанию `LOWEST_PRECEDENCE`) когда будет применен advice, по умолчанию последним в цепочке
+
+### 3. Что делает аннотация `@Transactional`
+```
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Import(TransactionManagementConfigurationSelector.class)
+public @interface EnableTransactionManagement {...}
+```
+
+### 4. Какие настройки есть у `@Transactional`
+- `propagation` - способ распространения транзакций
+  - `MANDATORY` - если есть текущая активная транзакция, выполняется в ней, иначе выбрасывается исключение
+  - `NESTED` - выполняется внутри вложенной транзакции, если есть активная, если нет - то аналогично `REQUIRED`
+  - `NEVER` - выполняется вне транзакции, если есть активная - выбрасывается исключение
+  - `NOT_SUPPORTED` - выполняется вне транзакции - если есть активная, она приостанавливается
+  - `REQUIRED` - (по умолчанию) если есть активная, то выполняется в ней, если нет, то создается новая
+  - `REQUIRES_NEW` - всегда создается новая транзакция, если есть активная - то она приостанавливается
+  - `SUPPORTS` - если есть активная, то выполняется в ней, есои нет - то выполняется не транзакционно
+- Правила управления откатом
+  - `noRollbackFor` `noRollbackForClassName` - определяет исключения при которых транзакция НЕ будет откатана
+  - `rollbackFor` `rollbackForClassName` - определяет исключения при которых транзакция БУДЕТ откатана
+
+### 5. Как создавать транзакцию без Spring
+1. Создаем соединение  - DriverManager.getConnection(...)
+2. Выполняем запросы
+3. Если нет ошибок, то выполняется commit
+4. Если были ошибки - изменения откатываются 
+```
+Connection connection = DriverManager.getConnection(...);
+try {
+  connection.setAutoCommit(false);
+  PreparedStatement firstStatement = connection.prepareStatement(...);
+
+  firstStatement.executeUpdate();
+
+  PreparedStatement secondStatement = connection.prepareStatement(...);
+
+  secondStatement.executeUpdate();
+  connection.commit();
+} catch (Exception e) {
+  connection.rollback();
+}
+```
+
+### 6. Как `TransactionInterceptor` обрабатывает транзакционный метод
+1. Получаем соединение/транзакцию - createTransactionIfNecessary
+2. Выполняем необходимые запросы - invocation.proceedWithInvocation
+3. Если не было ошибок - выполяем commitTransactionAfterReturning
+4. Если были ошибки - откатываем изменения completeTransactionAfterThrowing
+```
+protected Object invokeWithinTransaction(Method method, Class<?> targetClass, final InvocationCallback invocation)
+
+  // получаем TransactionManager tm и TransactionAttribute txAttr
+  // ...
+
+  if (this.reactiveAdapterRegistry != null && tm instanceof ReactiveTransactionManager) {
+    //код для работы с реактивным стэком
+    // ...
+  }
+
+PlatformTransactionManager ptm = asPlatformTransactionManager(tm);
+final String joinpointIdentification = methodIdentification(method, targetClass, txAttr);
+
+if (txAttr == null || !(ptm instanceof CallbackPreferringPlatformTransactionManager)) {
+  // начинаем транзакцию, если нужно
+  TransactionInfo txInfo = createTransactionIfNecessary(ptm, txAttr, joinpointIdentification);
+
+  Object retVal;
+  try {
+    // выполняем работу внутри транзакции
+    retVal = invocation.proceedWithInvocation();
+  } catch (Throwable ex) {
+    // откатываемся, если нужно
+    completeTransactionAfterThrowing(txInfo, ex);
+    throw ex;
+  } finally {
+    // чистим ThreadLocal переменные
+    cleanupTransactionInfo(txInfo);
+  }
+
+  if (retVal != null && vavrPresent && VavrDelegate.isVavrTry(retVal)) {
+    //код для библиотеки vavr
+    // ...
+  }
+
+  // выполняем commit, если не было ошибок
+  commitTransactionAfterReturning(txInfo);
+  return retVal;
+} else {
+  // код для WebSphere
+  // ...
+}
+}
+```
+
+### 7. Что такое `TransactionManager`
+- Это маркировачный интерфейс, не содержащий никаких методов
+    - Его наследуют `ReactiveTransactionManager` и `PlatformTransactionManager`
+
+## END ----------------- Spring Transactional -----------------
 
 ## Hibernate & JPA
 
