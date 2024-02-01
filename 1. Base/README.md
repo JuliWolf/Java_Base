@@ -14,6 +14,7 @@ https://github.com/johnivo/job4j/blob/master/interview_questions/Core.md#4-%D0%9
 + [Коллекции](#коллекции)
 + [База данных](#база-данных)
 + [Concurrency](#concurrency)
++ [Способы выполнения запросов к другим источникам]()
 + [Spring изнутри](#spring-изнутри)
 + [Spring](#spring)
 + [Spring Кеш](#spring-кеш)
@@ -2665,6 +2666,65 @@ public interface Future<V> {
 
 ## END ---------------- Concurrency ----------------
 
+## Способы выполнения запросов к другим источникам
+
++ [1. Какие есть способы выполнения запросов к другому источнику]()
++ [2. Как работает RestTemplate]()
++ [3. Как работает WebClient]()
++ [4. Пример RestTemplate]()
++ [5. Пример WebClient]()
+
+### 1. Какие есть способы выполнения запросов к другому источнику
+- RestTemplate
+- WebClient
+
+### 2. Как работает RestTemplate
+Использует Java Servlet API, который использует 1-тред-на запрос
+Это означает, что тред будет заблокирован пока не будет получен ответ
+Проблема в том, что каждый тред будет забирать какое-то количество CPU
+
+### 3. Как работает WebClient
+Использует асинхронное, не блокирующее решение, которое предоставляет Spring Reactive framework
+Под капотом запросы будут выстроены в очередь
+Благодаря очередям будет создано меньшее количество тредов, что приведет к меньшей потребности в памяти
+
+### 4. Пример RestTemplate
+```
+@Bean
+public RestTemplate restTemplate (RestTemplateBuilder builder) {
+    return builder
+        .setConnectTimeout(Duration.ofMills(3000))
+        .setReadTimeout(Duration.ofMills(3000))
+        .build();
+}
+
+@Bean
+public RestTemplate restTemplate () {
+    RestTemplate restTemplate = new RestTemplate();
+    return restTemplate;
+}
+```
+
+### 5. Пример WebClient
+```java
+@GetMapping(value = "/tweets-non-blocking",
+  produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+public Flux<Tweet> getTweetsNonBlocking() {
+  log.info("Starting NON-BLOCKING Controller!");
+  Flux<Tweet> tweetFlux = WebClient.create()
+  .get()
+  .uri(getSlowServiceUri())
+  .retrieve()
+  .bodyToFlux(Tweet.class);
+
+  tweetFlux.subscribe(tweet -> log.info(tweet.toString()));
+  log.info("Exiting NON-BLOCKING Controller!");
+  return tweetFlux;
+  }
+```
+
+## END ---------------- Способы выполнения запросов к другим источникам ----------------
+
 ## Spring изнутри
 
 + [1. Ключевые понятие Spring](#1-ключевые-понятие-spring)
@@ -2909,21 +2969,20 @@ Spring сам выбирает какой способ использовать
 + [3. В чём разница между @Component, @Service и @Repository аннотациями?](#3-в-чём-разница-между-component-service-и-repository-аннотациями)
 + [4. AOP](#4-aop)
 + [5. Spring boot](#5-spring-boot)
-+ [6. RestTemplate](#6-resttemplate)
-+ [7. Как активировать/деактивировать Бин](#7-как-активироватьдеактивировать-бин)
-+ [8. Spring Filters](#8-spring-filters)
-+ [9. @PreDestroy что это такое и зачем он нужен](#9-predestroy-что-это-такое-и-зачем-он-нужен)
-+ [10. Кто уничтожает бин со Scope prototype](#10-кто-уничтожает-бин-со-scope-prototype)
-+ [11. Аннотация @Cachable](#11-аннотация-cachable)
-+ [12. Аннотация @Async](#12-аннотация-async-)
-+ [13. Типы Repository](#13-типы-repository)
-+ [14. Модули spring Session](#14-модули-spring-session)
-+ [15. Какой аннотацией включается сессия](#15-какой-аннотацией-включается-сессия)
-+ [16. Пример своего `WebSecurityConfig`](#16-пример-своего-websecurityconfig)
-+ [17. Как заинджектить несколько бинов по одному интерфейсу](#17-как-заинджектить-несколько-бинов-по-одному-интерфейсу)
-+ [18. @Primary](#18-primary)
-+ [19. @Qualifier](#19-qualifier)
-+ [20. Можно ли заинджекстить Singleton в Prototype](#20-можно-ли-заинджекстить-singleton-в-prototype)
++ [6. Как активировать/деактивировать Бин](#6-как-активироватьдеактивировать-бин)
++ [7. Spring Filters](#7-spring-filters)
++ [8. @PreDestroy что это такое и зачем он нужен](#8-predestroy-что-это-такое-и-зачем-он-нужен)
++ [9. Кто уничтожает бин со Scope prototype](#9-кто-уничтожает-бин-со-scope-prototype)
++ [10. Аннотация @Cachable](#10-аннотация-cachable)
++ [11. Аннотация @Async](#11-аннотация-async-)
++ [12. Типы Repository](#12-типы-repository)
++ [13. Модули spring Session](#13-модули-spring-session)
++ [14. Какой аннотацией включается сессия](#14-какой-аннотацией-включается-сессия)
++ [15. Пример своего `WebSecurityConfig`](#15-пример-своего-websecurityconfig)
++ [16. Как заинджектить несколько бинов по одному интерфейсу](#16-как-заинджектить-несколько-бинов-по-одному-интерфейсу)
++ [17. @Primary](#17-primary)
++ [18. @Qualifier](#18-qualifier)
++ [19. Можно ли заинджекстить Singleton в Prototype](#19-можно-ли-заинджекстить-singleton-в-prototype)
 
 ### 1. Что такое `Autowiring` и как работает
 **IOC** - Inversion of control</br>
@@ -3077,24 +3136,7 @@ public void forDaoPackage () {}
 - @EnableAutoConfiguration
 - @ComponentScan
 
-### 6. RestTemplate
-```
-@Bean
-public RestTemplate restTemplate (RestTemplateBuilder builder) {
-    return builder
-        .setConnectTimeout(Duration.ofMills(3000))
-        .setReadTimeout(Duration.ofMills(3000))
-        .build();
-}
-
-@Bean
-public RestTemplate restTemplate () {
-    RestTemplate restTemplate = new RestTemplate();
-    return restTemplate;
-}
-```
-
-### 7. Как активировать/деактивировать Бин
+### 6. Как активировать/деактивировать Бин
 @Profile("dev")</br>
 @Profile("production")</br></br>
 
@@ -3105,7 +3147,7 @@ spring.profiles.active=dev</br></br>
 
 Дополнительно в интерфейсе 'ConfigurableEnvironment' можно установить настройки активных профилей вызвав 'SpringApplication.setAdditionalProdiles(...)'
 
-### 8. Spring Filters
+### 7. Spring Filters
 
 Для создания фильтры необходимо создать бин и заинжектить интерфейс 'Filter'
 ```
@@ -3154,15 +3196,15 @@ FilterRegistrationBean<RequestResponseLoggingFilter> registrationBean = new Filt
 }
 ```
 
-### 9. @PreDestroy что это такое и зачем он нужен
+### 8. @PreDestroy что это такое и зачем он нужен
 Если мы указывем аннотацию @PreDestroy над методом, то этот метод будет вызван при закрытии контекста
 
-### 10. Кто уничтожает бин со Scope prototype
+### 9. Кто уничтожает бин со Scope prototype
 Он уничтожается garbage collector после того как все ссылки на него будут уничтожены</br>
 В некоторых случаях советую явно уничтожать подобные бины</br>
 Для этго можно написать пост процессор, методы которого будут явно уничтожать компоненты прототипа
 
-### 11. Аннотация `@Cachable`
+### 10. Аннотация `@Cachable`
 https://habr.com/ru/companies/rosbank/articles/694768/ </br>
 Если мы хотим закешировать методы, мы ставим данную аннотацию, которая создать мапу с закешированными значениями
 ```
@@ -3172,7 +3214,7 @@ public Set<SignatureLevel> getSignatureLevels(long userId) {
 }
 ```
 
-### 12. Аннотация `@Async`
+### 11. Аннотация `@Async`
 Позволяет запускать методы в фоновом потоке </br>
 - Для активации необходимо добавить аннотацию `@EnableAsync` над основным классом приложения
 ```
@@ -3186,7 +3228,7 @@ public class AsyncConfiguration extends AsyncConfigurerSupport {
 - Нельзя вызывать метод из того же класса, к которому он принадлежит
 - Если метод должен что-то возвращать, то возвращаемый тип должен быть `CompletableFuture`
 
-### 13. Типы Repository
+### 12. Типы Repository
 - `CrudRepository` - базовый интерфейс репозитория. Предоставляет методы для создания, чтения, обновления и удаление объектов
 - `PagingAndSortingRepository` - Расширяет `CrudRepository` и добавляет методы для поддержки постраничного и сортированного доступа к данным
 - `JpaRepository` - предоставляет дополнительную функциональность для работы с сущностями JPA(Java Persistence API)</br>
@@ -3194,7 +3236,7 @@ public class AsyncConfiguration extends AsyncConfigurerSupport {
 - `JpaSpecificationExecutor` - добавляет возможность выполнять запросы с использовнием спецификаций. Дает возможность создать критерии поиска с использованием логических операторов
 - `ReactiveCrudRepository` - Предоставляет асинхронную поддержку для чтения, записи и удаления оьбъектов
 
-### 14. Модули spring Session 
+### 13. Модули spring Session 
 Сессия спринга состоит из следующих модулей
 - Spring Session core - Предоставляет основные API и функции для работы
 - Spring Session Data Redis - предоставляет `SessionRepository` и `ReactiveSessionRepository` для Redis
@@ -3202,10 +3244,10 @@ public class AsyncConfiguration extends AsyncConfigurerSupport {
 - Spring Session Hazelcast - предоставляет реализации для Hazelcast
 - Spring Session MongoDB - предоставляет реализации для MongoDB
 
-### 15. Какой аннотацией включается сессия
+### 14. Какой аннотацией включается сессия
 `@EnableJdbcHttpSession`
 
-### 16. Пример своего `WebSecurityConfig`
+### 15. Пример своего `WebSecurityConfig`
 ```
 @EnableWebSecurity
 @EnableJdbcHttpSession
@@ -3277,7 +3319,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 }
 ```
 
-### 17. Как заинджектить несколько бинов по одному интерфейсу
+### 16. Как заинджектить несколько бинов по одному интерфейсу
 1. Создать несколько бинов имплементирующий один интерфейс
 2. Заинджектить бин по интерфейсу
 ```
@@ -3285,7 +3327,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 private List<Test> testList;
 ```
 
-### 18. @Primary
+### 17. @Primary
 - Используется в случае если мы хотим использовать бин, который был унаследован от ранее созданного бина
 ```
 @Component
@@ -3300,10 +3342,10 @@ public class ChildBean extends ParentBean {
 }
 ```
 
-### 19. @Qualifier
+### 18. @Qualifier
 - Используется для конкретизации какую конкретно реализацию интерфейса следует использовать
 
-### 20. Можно ли заинджекстить Singleton в Prototype
+### 19. Можно ли заинджекстить Singleton в Prototype
 Singleton не может инжектироваться в Prototype напрямую из-за того, что Singleton обычно создается один раз при инициализации контекста приложения и всегда возвращается один и тот же экземпляр
 
 Существует способ обойти это ограничение
