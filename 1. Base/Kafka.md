@@ -1,6 +1,9 @@
 + [Структура](#структура)
 + [Преимущества Kafka](#преимущества-kafka)
 + [Производитель](#производитель)
++ [Разделы](#разделы)
++ [Заголовки](#заголовки)
++ [Перехватчики](#перехватчики)
 
 
 ## Структура
@@ -13,10 +16,12 @@
 
 
 ### 1. Сообщение и пакеты
-Сообщение представляет собой массив байтов
+Сообщение представляет собой массив байтов. Представляет собой пару ключ/значение
+
 Ключ - В сообщении может быть дополнитеьный фрагмет метаданных. Представляет собой тоже массив байтов
 Ключи используются при необходимости лучше управлять записью сообщений в разделы и для сохранения порядка.
 При передаче ключа, сообщение будет записано ровно в том порядке, в котором было передано.
+Все сообщения с одиннаковым ключем попадут в один раздел. Это значит, если каждый процесс читает лишь часть разделов топика, все записи для конкретного ключа будет читать один и тот же процесс
 
 Для эффективности сообщения записываются пакетами
 Пакет (batch) представляет собой набор сообщений, относящихся к одному топику и разделу
@@ -243,3 +248,139 @@ producer.send(record, new DemoProducerCallback()); // (4)
 4. Передаем Callback при отправке записи
 
 ## END ---------------- Производитель ----------------
+
+## Разделы
+
++ [1. Зачем нужны разделы]()
++ [2. Пример создания сообщения с ключем]()
++ [3. Что используется для балансировки сообщений]()
++ [4. Реализация Partitioner]()
+
+### 1. Зачем нужны разделы
+1. Каждый топик может иметь 1 или больше разделов, которые распределяются по разным узлам кластера (брокерам)
+Это позволяет нескольким потребителям считывать данные из одного топика одновременно
+2. Если число потребителей меньше числа разделов, один consumer получает сообщения из нескольких разделов
+3. Если потребителей больше, чем разделов, нескоторые consumer не получат никаких сообщений, пока общее количество потребителей не снизится до количества разделов
+4. На пратике максимальное число разделов ограничивается размером сохраняемых сообщений, которые могут поместиться на одном узле
+   Теоретически максимальное количество разделов может быть любым
+5. Чтобы повысить надежность и доступность данных в кластере Kafka, разедлы могут иметь копии
+6. Число разделов и коэффициент репликации можно настроить для всего класеа или для кадого топика отдельно
+
+
+### 2. Пример создания сообщения с ключем
+```java
+ProducerRecord<String String> record = new ProducerRecord<>("CustomerCountry", "Labratory Equipment", "USA")
+```
+без ключа
+```java
+ProducerRecord<String String> record = new ProducerRecord<>("CustomerCountry", "USA")
+```
+
+### 3. Что используется для балансировки сообщений
+Если ключ не указан, то запись будет отправлена в один из доступных рахделов топика случайным образом
+Для балансировки сообщений по разделам будет применяться циклический алгорит (round-robin)
+Начиная с весрии 2.4 циклический алгоритм является "липким". Это означает, что он будет заполнять пакет сообщений, отправленных в один раздел, прежде чем переключиться на следующий.
+
+Если ключ указан, то будет вычислено хеш-значение с помощью собственного алгоритма хеширования, так что хеш-значение не изменяется при обновлении Java
+
+### 4. Реализация Partitioner
+```java
+import org.apache.kafka.clients.producer.Partitioner;
+import org.apache.kafka.common.Cluster;
+import org.apache.kafka.common.PartitionInfo;
+import org.apache.kafka.common.record.InvalidRecordException;
+import org.apache.kafka.common.utils.Utils;
+
+public class BananaPartitioner implements Partitioner {
+  public void configure (Map<String, ?> configs) {} // 1()
+  
+  public int partition (String topic, Object key, byte[] keyBytes, Object value, byte[] valueBytes, Cluster cluster) {
+    List<PartitionInfo> partitions = cluster.partitionsForTopic(topic);
+    int numPartitions = partitions.size();
+    
+    if ((keyBytes == null) || (!(ky instanceof String))) { // (2)
+      throw new InvalidRecordException("We expect all messages to have customer name as key");
+    }
+    
+    if ((String) key.equals("Banana")) {
+      return numPartitions - 1; // Banana всегда попадает в последний раздел
+    }
+    
+    // Другие записи рспределяются по разделам хеширования
+    return Math.abs(this.murmur(keyBytes)) % (numPartitions - 1);
+  }
+}
+```
+
+1. Интерфейс объекта секционирования включает методы configure, partition и close.
+2. Мы ожидаем только токовые ключи, иначе генерируем исключение
+
+## END ---------------- Разделы ----------------
+
+## Заголовки
+
+Записи могут включать в себя заголовки.
+Заголовки могут содержать некоторые метаданные о записи
+Используются например для указания источника данных в записи, а также для маршрутизации или отслеживания сообщений на основе информации заголовка
+
+Представлены в виде коллекции "ключ/значение".
+Ключи всегда являются строками, а значениями могут быть любые сериализованные объекты
+
+```java
+ProducerRecord<String, String> record = new ProducerRecord<>("CustomerCountry", "Precision Products", "France");
+
+record.headers().add("privacy-level","YOLO".getBytes(StandardCharsets.UTF_8));
+```
+## END ---------------- Заголовки ----------------
+
+## Перехватчики
+
+Перехватчики используются для измененияповедения клиенского приложения, без изменения кода
+
+ProducerInterceptop включают два ключевых метода:
+- ProducerRecord<K, V> onSend(ProducerRecord<K, V> record) - метод будет вызван до того, как созданная запись будет отправлена.
+    Переобпределяя метод можно получить информацию об отправленной записи и даже изменить ее
+- void onAcknowledgement(RecordMetadata metadata, Exception exception) - метод будет вызван, если и когда ответит подтверждением на автоотправку
+
+Примеры использования:
+- Сбор информации для мониторинга и отслеживания
+- Дополнение сообщения стандартными заголовками
+- Редактирование конфиденциальной информации
+
+Пример:
+```java
+public class CountingProducerIntercepor implements ProducerInterceptor {
+  ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+  static AtomicLong numSent = new AtomicLong(0);
+  static AtomicLong numAcked = new AtomicLong(0);
+
+  public void configure(Map<String, ?> map) {
+    Long windowSize = Long.valueOf((String) map.get("counting.interceptor.window.size.ms")); // (1)
+    executorService.scheduleAtFixedRate(CountingProducerInterceptor::run, windowSize, windowSize, TimeUnit.MILLISECONDS);
+  }
+
+  public ProducerRecord onSend(ProducerRecord producerRecord) {
+    numSent.incrementAndGet();
+    return producerRecord; // (2)
+  }
+
+  public void onAcknowledgement(RecordMetadata recordMetadata, Exception e) {
+    numAcked.incrementAndGet(); // (3)
+  }
+  
+  public void close() {
+    executorService.shutdownNow(); // (4)
+  }
+  
+  public static void run() {
+    System.out.println(numSent.getAndSet(0));
+    System.out.println(numAcked.getAndSet(0));
+  }
+}
+```
+
+1. ProducerInterceptor - это настраиваемый интерфейс. Можно переопределить метод confgure и выполнить настройку перед вызовом любого другого метода
+2. Когда запись отправлена, увеличиваем счетчик записей и возвращаем запись
+3. Когда Kafka отвечает подтверждением получения, увеличивем счетчик подтверждений и не должны ничего возвращать
+4. Метод вызывается когда производитель закрывается. В данном случае мы закрываем открытый поток. 
+## END ---------------- Перехватчики ----------------
