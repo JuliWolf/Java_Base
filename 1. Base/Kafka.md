@@ -511,6 +511,12 @@ consumer.subscribe(Pattern.compile("test.*"));
 + [3. Как влияет смещение на перебалансировку](#3-как-влияет-смещение-на-перебалансировку)
 + [4. Как работает автоматическая фиксация](#4-как-работает-автоматическая-фиксация)
 + [5. Синхронная фиксация смещения](#5-синхронная-фиксация-смещения)
++ [6. Асинхронная фиксация](#5-синхронная-фиксация-смещения)
++ [7. Сочетание синхронной и асинхронной фиксации](#5-синхронная-фиксация-смещения)
++ [8. Фиксация заданного смещения](#5-синхронная-фиксация-смещения)
++ [9. Прослушивание на предмет перебалансировки](#5-синхронная-фиксация-смещения)
++ [10. Особенности событий при совместной перебалансировке](#5-синхронная-фиксация-смещения)
++ [11. Использование `onPartitionsRevoked()`](#5-синхронная-фиксация-смещения)
 
 #### 1. Что такое смещение
 Фиксация смещения - это обновление текущей позиции потребителя в разделах
@@ -568,6 +574,202 @@ while(true) {
 2. После завершеия обработки всех записей текущего пакета вызываем `commitSync()` для фиксации последнего смещения
 3. Метод `commitSync()` повторяет фиксацию до тех пор пока не возникнет непоправимая ошибка
 
+#### 6. Асинхронная фиксация
+Асинхронная фиксация в отличии от синхронной не блокирует основной поток.
+Вместо того чтобы ждать ответа брокера на запрос фиксации, просто отправляем запрос и продолжаем работу
 
+```java
+Duration timeout = Duration.ofMillis(100);
+
+while (true) {
+  ConsumerRecods<String, String> records = consumer.poll(timeout);
+  for (ConsumerRecord<String, String> record: records) {
+      System.out.printf("topic = %s, partition = %s,
+          offset = %d, customer = %s, country = %s\n",
+          record.topic(), record.partition(), record.offset(),
+          record.key(), record.value());
+  }
+  
+  consumer.commitAsync(); // (1)
+}
+```
+1. Фиксируем последнее смещение и продолжаем работу
+
+Недостатки:
+`commitSync()` будет повторять попытку фиксации до тех пор, пока она не завершится успешно или не возникнет ошибка, которую нельзя исправить путем повтора
+`commitAsync()` повторять попыту не станет
+    Причина этому то, что на момент получения ответа от сервера уже может быть успешно выполнена более поздняя фиксация
+
+Функция обратного вызова
+```java
+Duration timeout = Duration.ofMillis(100);
+
+while (true) {
+  ConsumerRecods<String, String> records = consumer.poll(timeout);
+  for (ConsumerRecord<String, String> record: records) {
+      System.out.printf("topic = %s, partition = %s,
+          offset = %d, customer = %s, country = %s\n",
+          record.topic(), record.partition(), record.offset(),
+          record.key(), record.value());
+  }
+  
+  consumer.commitAsync(new OffsetCommitCallback() {
+    public void onComplete(Map<TopicPartition,
+      OffsetAndMetadata> offsets, Exception e) {
+          if (e != null)
+            log.error("Commit failed for offsets {}", offsets, e);
+      }
+  }); // (1)
+}
+```
+1. Отправляем запрос на фиксацию и продолжаем работу, но в случае сбоя фиксации записываем в журнал информацию о себе и соответствующие смещения
+
+#### 7. Сочетание синхронной и асинхронной фиксации
+Если речь идет о последней фиксации перед закрытием потребителя и перебалнсировкой, то лчше позаботиться, чтобы она точно оказалась успешной
+
+```java
+Duration timeout = Duration.ofMillis(100);
+
+try {
+  while (!closing) {
+      ConsumerRecords<String, String> records = consumer.poll(timeout);
+      for (ConsumerRecord<String, String> record : records) {140  Глава 4. Потребители Kafka: чтение данных из Kafka
+          System.out.printf("topic = %s, partition = %s, offset = %d,
+              customer = %s, country = %s\n",
+              record.topic(), record.partition(),
+              record.offset(), record.key(), record.value());
+      }
+    consumer.commitAsync(); // (1)
+  }
+  
+  consumer.commitSync(); // (2)
+} catch (Exception e) {
+  log.error("Unexpected error", e);
+} finally {
+  consumer.close();
+}
+```
+
+1. Пока все нормально используем `commitAsync()`
+2. При закрытии вызваем метод `commitSync()`, который станет повторять попытки вплоть до успещного выполнения или невосстановимого сбоя
+
+#### 8. Фиксация заданного смещения
+Если идет обработка пакета записей и смещение последнего полученного вами из раздела 3 в топике "покупатели" сообщения равно 5000
+то можно вызвать метод `commitSync()` для фиксации смещения 5001 для раздела 3 в топике "покупатели"
+
+```java
+private Map<TopicPartition, OffsetAndMetadata> currentOffset = new HashMap<>; // (1)
+
+int count = 0;
+
+...
+
+Duration timeout = Duration.ofMillis(100);
+while (true){
+  ConsumerRecords<String, String> records=consumer.poll(timeout);
+  for (ConsumerRecord<String, String> record : records) {
+      System.out.printf("topic = %s, partition = %s, offset = %d,
+          customer = %s, country = %s\n",
+          record.topic(), record.partition(), record.offset(),
+          record.key(), record.value()); // (2)
+
+      currentOffsets.put(
+          new TopicPartition(record.topic(), record.partition()),
+          new OffsetAndMetadata(record.offset()+1, "no metadata")); // (3)
+      
+      if (count % 1000 == 0) { // (4)
+        consumer.commitAsync(currentOffsets, null); // (5)
+      }
+      
+      count++;
+  }
+}
+```
+
+1. Ассоциативный словарь для отслеживания смещений вручную
+2. Заглушка вместо реальной обработки записей
+3. После чтения каждой записи обновляем словарь смещений, указывая смещение следующего намеченного для обработки сообщения.
+   Зафиксированного смещение всегда должн быть сещением следующего сообщение, которое будет прочитано вашим приложением.
+   Именно с этого места начинаем чтение в следующий раз
+4. Фиксируем текущие смещения через каждые 1000 записей
+5. Для фиксации можно вызвать как `commitAsync()` так и `commitSync()`
+
+#### 9. Прослушивание на предмет перебалансировки
+Если известно, что раздел вот-вот перестанет принадлежать данному потребителю, то желательно зафиксировать смещения последних обработанных событий
+А так же закрыть соеденинения с бд и т.д.
+
+Для работы во время смены разедлов необходимо передавть объект `ConsumerRebalanceListener` при вызове метода `subscribe()`
+
+`ConsumerRebalanceListener` имеет три доступных для реализации метода:
+1. `public void onPartitionsAssigned(Collection<TopicPartition> partitions)` 
+   вызывается после переназначения разделов потребителю, но до того как он начнет получать сообщения.
+    Здесь можно подготовить и загрузить любое состояние, которое будет использоваться с разделом, находим правильное смещение если это необходимо
+    Любая подготовка должна выполнится в течение `max.poll.timeout.ms`
+2. `public void onPartitionsRevoke(Collection<TopicPartition> partitions)`
+   вызывается, когда потребитель должен отказаться от разделов, которыми он ранее владел
+   либо в результате перебалансировки
+    либо при закрытии потребителя
+    Метод вызывается до начала перебалансировки и после того, как потребитель перестал получать сообщения
+    Если используется совместный алгоритм перебалансироки, метод вызывается в конце перебалансировки только с тем подмножеством разлделов, от которых потребитель должен отказаться
+3. `public void onPartitionsLost(Collection partitions)`
+   вызывается только при использовании совместного алгоритма перебалансировки и только в исключительных случаях
+    когда разделы были назначены другим потребителям без предварительного отзыва алгоритмо перебалансировки
+    Здесь очичаются все состояния или ресурсы, которые использовались с этими разделами
+
+#### 10. Особенности событий при совместной перебалансировке
+1. Метод `onPartitionsAssigned()` будет вызываться при каждой перебалансировке. Если нет новых разделов, назанченных пользователю, он будет вызван с пустой коллекцией
+2. Метод `onPartitionsRevoked()` будет вызываться в обычных условия пребалансировки, но только в том случае, если потребитель отказался от владения разделами 
+3. Метод `onPartitionsLost()` будет вызываться в исключительных условиях перебалансировки, и к моменту его вызова у разделов в коллекции уже будут новые владельцы
+
+#### 11. Использование `onPartitionsRevoked()`
+```java
+private Map<TopicPartition, OffsetAndMetadata> currentOffsets = new HashMap<>;
+Duration timeout = Suration.ofMills(100);
+
+private class HandleRebalance implements ConsumerRebalanceListener { // (1)
+  public void onPartitionsAssigned (Collection<TopicPartition> partitions) { // (2)
+    
+  }
+  
+  public void onPartitionsRevoked (Collection<TopicPartition> partitions) {
+    System.out.println("Lost partitions in rebalance. Committing current offsets: " + currentOffsets);
+    consumer.commitSync(currentOffsets); // (3)
+  }
+}
+
+try {
+  consumer.subscribe(topics, new HandleRebalance()); // (4)
+ 
+  while (true) {
+    ConsmerRecords<String, String> records = consumer.poll(timeout);
+      
+    for (ConsumerRecords<String, String> record: records) {
+      System.out.printf("topic = %s, partition = $s, offset = %d, customer = %s, country = %s\n", record.topic(), record.partition(), record.offset(), record.key(), record.value());
+      currentOffsets.put(
+        new TopicPartition(record.topic(), record.partition()),
+        new OffsetAndMetadata(record.offset() + 1, null)
+      );
+    }
+    consumer.commitAsync(currentOffsets, null);
+  }
+} catch (WakeupException e) {
+  // Игнорируем, посколько закрываемся
+} catch (Exception e) {
+  log.error("Unexpected error", e);
+} finally {
+  try {
+    consumer.commitSync(currentOffsets);
+  } finally {
+    consimer.close();
+    System.out.println("Closed consumer and we are done");
+  }
+}
+```
+
+1. Начинаем реализовывать класс `ConsumerRebalanceListener`
+2. При назначении нового раздела не требуется ничего делать, просто читаем сообщение
+3. Когда потребитель вот-вот потеряет раздел из-за перебалансировки, необходимо зафиксировать смещения
+    Фиксируем смещения для всех разделов
+4. Передаем `ConsumerRebalanceListener` в метод `subscribe()`
 
 ## END ---------------- Потребитель ----------------
