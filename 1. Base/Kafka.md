@@ -517,6 +517,9 @@ consumer.subscribe(Pattern.compile("test.*"));
 + [9. Прослушивание на предмет перебалансировки](#9-прослушивание-на-предмет-перебалансировки)
 + [10. Особенности событий при совместной перебалансировке](#10-особенности-событий-при-совместной-перебалансировке)
 + [11. Использование `onPartitionsRevoked()`](#11-использование-onpartitionsrevoked)
++ [12. Получение записей с заданным смещением]()
++ [13. Выход из цикла]()
++ [14. Автономный потребитель]()
 
 #### 1. Что такое смещение
 Фиксация смещения - это обновление текущей позиции потребителя в разделах
@@ -771,5 +774,123 @@ try {
 3. Когда потребитель вот-вот потеряет раздел из-за перебалансировки, необходимо зафиксировать смещения
     Фиксируем смещения для всех разделов
 4. Передаем `ConsumerRebalanceListener` в метод `subscribe()`
+
+#### 12. Получение записей с заданным смещением
+Можно использовать для:
+- Приложение, чувствительное ко времени, может пропустить вперед несколько записей, если оно отстает, или потребитель, 
+    записывающий данные в файл может быть возвращен к определенному моменту времени, чтобы восстановить данные в случае потери файла
+
+Пример:
+```java
+Long oneHourEarlier = Instant.now().atZone(ZoneId.systemDefault())
+  .minusHours(1).toEpochSecond();
+Map<TopicPartition, Long> partitionTimestampMap = consumer.assignment()
+  .stream()
+  .collect(Collectors.toMap(tp -> tp, tp -> oneHourEarlier)); // (1)
+Map<TopicPartition, OffsetAndTimestamp> offsetMap = consumer.offsetsForTimes(partitionTimestampMap); // (2)
+
+for (Map.Entry<TopicPartition, OffsetAndTimestamp> entry: offset.entrySet()) {
+  consumer.seek(entry.getKey(), entry.getValue().offset()); // (3)
+}
+```
+
+1. Мы создаем карту из всех разделов, назначенных этому потребителю (с помощью метода consumer.assignment()), до метки времени, к которой мы хотим вернуть потребители
+2. Получаем смещения, которые были актуальны в этих временнх метках.
+   Этот метод отправляет запрос брокеру, где индекс веменной метки используется для возврата соответствующих смещений
+3. Сбрасываем смещения для каждого раздела на смещение, которое было возвращено на предыдущем шаге
+
+#### 13. Выход из цикла
+`consumer.wakeup()` - единственный метод, потребителя, который можно безопасно вызывать из другого потока
+Вызов `wakeup()` приведет к завершению выполнения метода poll() с генерацией искючения WakeupException
+Если `consumer.wakeup()` был вызван в момент, когда поток не ожидает опроса, то исключение будет вызвано при вызове метода poll() во время следующей итерации
+Обрабатывать исключение `WakeupException` не требуется, но перед завершением выполнение потока нужно вызвать consumer.close()
+
+```java
+Runtime.getRuntime().addShutdownHook(new Thread() {
+  public void run() {
+    System.out.println("Starting exist...");
+    consumer.wakeup(); // (1)
+    
+    try {
+      mainThread.join();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+  }
+})
+  ...
+
+Duration timeout = Duration.ofMills(10000); // (2)
+
+try {
+  // Выполняем цикл вплоть до нажатия Ctrl+C
+  // об очистке при завершении выполнения
+  // позаботится ShutdownHook
+  
+  while (true) {
+    ConsumerRecords<String, String> records = movingAvg.consumer.poll(timeout);
+    System.out.println(System.currentTimeMills() + "-- waiting for data...");
+    
+    for (ConsumerRecord<String, String> record: records) {
+      System.out.printf("offset = %d, key = %s, value = %s\n", record.offset(), record.key(), record.value());
+    }
+    
+    for (TopicPartition tp: consumer.assignment()) {
+      System.out.println("Committing offset at position: " + consumer.position(tp));
+      movingAvg.consumer.commitSync();
+    }
+  }
+} catch (WakeupException e) {
+  // Игнирируем (3)
+} finally {
+  consumer.close(); // (4)
+  System.out.println("Closed consumer and we are done")
+}
+```
+
+1. ShutdownHook работает в отдельном потоке, так что единственное что можно сделать безопасно - это вызвать `wakeup` для выхода их цикла `poll()`
+2. Длительное время ожидания опроса. Если цикл опроса довольно короткий и можно немного подождать перед выходом, не нужно вызывать wakeup
+    - достаточно просто проверять атомарное логическое значение на каждой итерации. 
+   Длительное время ожидания опроса повезло при использовании топиков с низкой пропускной способностью 
+    - таким образом клиент использует меньше ресурсов процессора для постанного зацикливания, пока брокер не получает новых данных для возврата
+3. В результате вызова `wakeup` из другого потока `poll` сгенерирует исключение `WakeupException`. Его лучше перехватить, чтобы не произошло непредвиденного
+   завершеия выполнения приложения, но ничего делать с этим не требуется
+4. Перед завершением выполнения потребителя аккуратно закрываем его
+
+#### 14. Автономный потребитель
+Когда заведомо один потребитель, которому нужно всегда читать данные из всех разделов топика или из его конкретного раздела
+В таком случае достаточно назначить потребителю соотвествующие топик и/или разделы
+Если точно известно, какие разделы должен читать потребитель, то не нужно "подписываться" на топик, а просто "назначить" себе несколко разделов
+
+Пример:
+```java
+Duration timeout = Duration.offMills(100);
+List<PartitionInfo> partitionInfos = null;
+partitionInfos = consumer.partitionsFor("topic"); // (1)
+
+if (partitionInfos != null) {
+  for (Partitionnfo partition: partitionInfos) {
+    partitions.add(new TopicPartition(partition.topic(), partition.partition()));
+  }
+
+  consumer.assign(partitions); // (2)
+  
+  while (true) {
+    ConsumerRecords<String, String> records = consumer.poll(timeout);
+    
+    for (ConsumerRecords<String, String> record: recors) {
+      System.out.printf("topic = %s, partiton = %s, offset = %d, customer = %s, country = %s\n", record.topic(), record.partition(), record.offset(), record.key(), record.value());
+    }
+    
+    consumer.commitSync();
+  }
+}
+```
+
+1. Запрос у кластера доступных в данном топике разделов. Если есть конкретный раздел, то это можно пропустить
+2. Вызываем метод `assing()` и передаем ему список
+
+При добавлении в топик новых разделов потребитель об этом уведомлен не будет.
+Об этом придется позаботится самостоятельно, переодически обращаясь к `consumer.partitionsFor()` или просто перезапуская приложение при добавлении разделов
 
 ## END ---------------- Потребитель ----------------
