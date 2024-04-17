@@ -2,6 +2,7 @@
 + [Преимущества Kafka](#преимущества-kafka)
 + [Производитель](#производитель)
 + [Потребитель](#потребитель)
++ [AdminClient](#adminclient)
 
 ## Структура
 
@@ -897,3 +898,151 @@ if (partitionInfos != null) {
 Об этом придется позаботится самостоятельно, переодически обращаясь к `consumer.partitionsFor()` или просто перезапуская приложение при добавлении разделов
 
 ## END ---------------- Потребитель ----------------
+
+## AdminClient
+
++ [1. Применение AdminClient]()
++ [2. Особенности AdminClient]()
++ [3. Опции методов]()
++ [4. Пример использования]()
++ [5. Управление основными топиками]()
++ [6. Управление конфигурацией]()
++ []()
+
+### 1. Применение AdminClient
+Используется при необходимости выполнить какие-то административные команды из клиенского приложения:
+- Управление топиками - создание
+- Управление группами потребителей
+- Управление конфигурацией сущностей
+
+### 2. Особенности AdminClient
+- Является асинхронным - каждый метод возвращает один или несколько объектов Future
+Например:
+Kafka `AdminClient.createTopics` - возвращает `CreateTopicsResult`
+
+### 3. Опции методов
+Все методы по конфигурации имеют свой набор свойств для настройки
+Единственное свойство, которое есть у всех методов - `timeoutMs` - определяет, как долго клиент будет ожидать завершения конфигурации, прежде чем выдать исключение `TimeoutException`
+
+### 4. Пример использования
+```java
+Properties props = new Properties();
+pops.put(AdmonClientConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+AdminClient admin = AdminClient.create(props);
+// TODO: Do something useful with AdminClient
+admin.close(Duration.ofSeconds(30));
+```
+Статический метод `create` принимает `Properties` в качестве параметра.
+Единственным обязательным параметром является URI для кластера
+
+При закрытии AdminClient некоторые опреации могут быть еще на стадии выполнения, поэтому метод `close` принимает параметр тайм-аута
+После вызова `close` клиент будет ожидать завершения действий до окончания таймаута
+
+### 5. Управление основными топиками
++ [1. Получение списка]()
++ [2. Проверить существует ли топик и создать новый если не существует]()
++ [3. Удаление топика]()
++ [4. Множественное управление топиками с использованием KafkaFuture]()
+
+#### 1. Получение списка
+
+```java
+ListTopicsResult topics = admin.listTopics();
+topics.names().get().forEach(System.out::println);
+```
+ListTopicsResult - является тонкой оберткой над коллекцией Futures
+
+#### 2. Проверить существует ли топик и создать новый если не существует
+```java
+DescribeTopicsResult demoTopic = amin.describeTopics(TOPIC_LIST); // (1)
+
+try {
+  topicDescription = demoTopic.values().get(TOPIC_NAME).get(); // (2)
+  System.out.println("Description of demo topic:" + topicDescription);
+  
+  if (topicDescription.partitions.size() != NUM_PARTITIONS) { // (3)
+    System.out.println("Topic has wrong number of partitions. Exiting.");
+    System.exit(-1);
+  }
+} catch (ExecutionExceptio e) { // (4)
+  // exit early for almost all exceptions
+  if (! (e.getCause() instanceOf UnknownTopicOrPartitionException)) {
+      e.printStackTrace();
+      throw e;
+  }
+
+  // if we are here, topic doesn't exist
+  System.out.println("Topic " + TOPIC_NAME + " does not exist. Going to create it now");
+
+  // Note that number of partitions and replicas is optional. If they are
+  // not specified, the defaults configured on the Kafka brokers will be used
+
+  CreateTopicsResult newTopic = admin.createTopics(Collections.singletonList(new NewTopic(TOPIC_NAME, NUM_PARTITIONS, REP_FACTOR))); // (5)
+
+  // Check that the topic was created correctly:
+  if (newTopic.numPartitions(TOPIC_NAME).get() != NUM_PARTITIONS) { // (6)
+      System.out.println("Topic has wrong number of partitions.");
+      System.exit(-1);
+  }
+}
+```
+
+1. Чтобы проверить существует ли топик с правильной конфигурацией, вызваем `describeTopics()` со списком имен топиков, которые хотим проверить
+2. Если топик не существует, то сервер ответит с ошибкой, а Future завершится выдачей исключения `ExecutionException`
+3. Если топик существкет, Future завершается возвратом `TopicDescription`, который содержит список всех разделов топика, а для каждого раздела, в котором брокер является лидером 
+   - список реплик и список синхронизованных реплик
+4. Все объекты результатом выдают `ExecutionException`, когда Kafka отвечает с ошибкой
+5. Если топик не существует, создаем новый
+6. Дожидаемся результата создания топика и проверяем результат
+
+#### 3. Удаление топика
+````java
+admin.deleteTopics(TOPIC_LIST).all().get();
+
+// Check that it is gone. Note that due to the async nature of deletes,
+// it is possible that at this point the topic still exists
+try {
+  topicDescription = demoTopic.values().get(TOPIC_NAME).get();
+  System.out.println("Topic " + TOPIC_NAME + " is still around");
+} catch (ExecutionException e) {
+  System.out.println("Topic " + TOPIC_NAME + " is gone");
+}
+````
+
+Note: Удаление топика - это безвозвратный процесс. Если удаляется не правильный топик, то вместе с ним все данные будут потеряны
+
+#### 4. Множественное управление топиками с использованием KafkaFuture
+```java
+vertx.createHttpServer().requestHandler(request -> { // (1)
+  String topic = request.getParam("topic"); // (2)
+  String timeout = request.getParam("timeout");
+  int timeoutMc = NumberUtils.toInt(timeout, 1000);
+  DescribeTopicResult demoTopic = admin.describeTopics( // (3)
+    Collections.singletonList(topic),
+    new DescribeTopicOptions().timeoutMs(timeoutMs)
+  );
+  
+  demoTopic.values().get(topic).whenComplete( // (4)
+    new KafkaFuture.BiConsumer<TopicDescription, Throwable>() {
+      @Override
+      public void accept(final TopicDescription topicDescription, final Throwable throwable) {
+        if (throwable != null) {
+          request.response().end("Error trying to describe topic " + topic + " due to " + throwable.getMessage()); // (5)
+        } else {
+          request.response().end(topicDescription.toString()); // (6)
+        } 
+      } 
+    }
+  )
+}).listen(8080);
+```
+1. Используем `Vert.x` для создания HTTP сервера. Каждый раз, когда сервер получет запрос, он вызывает `requestHandler`
+2. Запрос включает в себя имя топика в качестве параметра
+3. Вызываем `AdminClient.describeTopics` и получает ответ `Future`
+4. Вместо использования блокирующего метода `get()` создаем функцию, которая будет вызвана, когда Future завершится
+5. Если Future завершается с исключением, то отправляем ошибку клиенту
+6. Если Future завершается успешно, отвечаем описанием топика
+
+### 6. Управление конфигурацией
+
+## END ---------------- AdminClient ----------------
