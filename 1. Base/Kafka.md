@@ -907,6 +907,7 @@ if (partitionInfos != null) {
 + [4. Пример использования](#4-пример-использования)
 + [5. Управление основными топиками](#5-управление-основными-топиками)
 + [6. Управление конфигурацией](#6-управление-конфигурацией)
++ [7. Управление группами потребителей]()
 + []()
 
 ### 1. Применение AdminClient
@@ -1044,5 +1045,48 @@ vertx.createHttpServer().requestHandler(request -> { // (1)
 6. Если Future завершается успешно, отвечаем описанием топика
 
 ### 6. Управление конфигурацией
+
+```java
+ConfigResource configResource = new ConfigResurce(ConfigResource.Type.TOPIC, TOPIC_NAME); // (1)
+DescribeConfigResult configResult = admin.describeConfigs(Collections.singleton(configResource));
+Config config = configResult.all().get().get(configResourse);
+
+// print nondefault configs
+configs.entries().stream()
+  .filter(entry -> !entry.isDefault())
+  .forEach(System.out::println); // (2)
+
+// Check if topic is compacted
+ConfigEntry compaction = new ConfigEntry(TopicConfig.CLEANUP_POLICY_CONFIG, TopicConfig.CLEANUP_POLICY_COMPACT);
+
+if (!config.entries().contains(compaction)) {
+  // if topic is not compacted, compct it
+  Collection<AlterConfigOp> configOp = new ArrayList<AlterConfigOp>();
+  configOp.add(new AlterConfigOp(compaction, AlterConfigOp.OpType.SET)); // (3)
+  Map<ConfigResource, Collection<AlterConfigOp>> alterConf = new HashMap<>();
+  alterConf.put(configResource, configOp);
+  admin.incrementalAlterConfigs(alterConf).all().get();
+} else {
+  System.out.println("Topic " + TOPIC_NAME + " is compacted topic");
+}
+```
+
+1. В данном зпросе моно указать несколько ресурсов разных типов
+2. Результатом `desctibeConfigs` является карта сопоставления каждого `ConfigResource` с коллекцией конфигурации. 
+    Каждая запись конфигурации имеет метод `isDefault()`, который позволяет указать, какие конфигурации были изменены.
+    Конфигурация топика считается не заанной по умолчанию
+3. Чтобы изменить конфигурацию, укажите карту `ConfigResource`, который хотите изменить и наор операций
+    Каждая операция по изменению конфигурации состоит из элемента конфигурации: `cleanup.policy` — это имя конфигурации, compacted — значение
+    Существует 4 типа операций:
+        - SET - установить
+        - DELETE - удалить
+        - APPEND - добавить
+        - SUBSTRACT - вычесть
+
+
+### 7. Управление группами потребителей
+
++ [1. Измение групп потребителей]()
++ [2. Модификация групп потребителей]()
 
 ## END ---------------- AdminClient ----------------
