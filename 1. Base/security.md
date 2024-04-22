@@ -1,16 +1,16 @@
-+ [1. JKU]()
-+ [2. X5c and X5t]()
-+ [3. JWT]()
-+ [4. JWS methods]()
++ [1. JKU](#1-jku)
++ [2. X5c and X5t](#2-x5c-and-x5t)
++ [3. JWT](#3-jwt)
++ [4. JWS methods](#4-jws-methods)
 
 # 1. JKU
 
-+ [1. What is jku]()
-+ [2. What jku does]()
-+ [3. How to set jku]()
-+ [4. How jku validation works]()
-+ [5. What is SSRF]()
-+ [6. How to validate jku]()
++ [1. What is jku](#1-what-is-jku)
++ [2. What jku does](#2-what-jku-does)
++ [3. How to set jku](#3-how-to-set-jku)
++ [4. How jku validation works](#4-how-jku-validation-works)
++ [5. What is SSRF](#5-what-is-ssrf)
++ [6. How to validate jku](#6-how-to-validate-jku)
 
 ## 1. What is jku
 JSON web key URI header in JSON web Token
@@ -65,11 +65,11 @@ if (!isAllowed) {
 
 # 2. X5c and X5t
 
-+ [1. What is X5c and X5t]()
-+ [2. Details about X5c]()
-+ [3. Details about x5t]()
-+ [4. x5c validation example]()
-+ [5. x5t validation example]()
++ [1. What is X5c and X5t](#1-what-is-x5c-and-x5t)
++ [2. Details about X5c](#2-details-about-x5c)
++ [3. Details about x5t](#3-details-about-x5t)
++ [4. x5c validation example](#4-x5c-validation-example)
++ [5. x5t validation example](#5-x5t-validation-example)
 
 ## 1. What is X5c and X5t
 The X5c and X5t header parameters are part of the JSON Web signature (JWS) PFC and are used for signature verification
@@ -130,14 +130,14 @@ if (isTrusted) {
 
 # 3. JWT
 
-+ [1. What is JWT]()
-+ [2. What contains JWT]()
-+ [3. How JWT decoding]()
-+ [4. Exchange parties]()
-+ [5. What is JWK]()
-+ [6. What is JWS]()
-+ [7. What is JWE]()
-+ [8. JWT registered claims]()
++ [1. What is JWT](#1-what-is-jwt)
++ [2. What contains JWT](#2-what-contains-jwt)
++ [3. How JWT decoding](#3-how-jwt-decoding)
++ [4. Exchange parties](#4-exchange-parties)
++ [5. What is JWK](#5-what-is-jwk)
++ [6. What is JWS](#6-what-is-jws)
++ [7. What is JWE](#7-what-is-jwe)
++ [8. JWT registered claims](#8-jwt-registered-claims)
 
 ## 1. What is JWT
 JSON Web Token - is an open standard `RFC 7519` that defined a compact and self-contained way for securely transmitting digitally signed, trusted, and verified information between parties as a JSON object
@@ -181,11 +181,11 @@ When encrypted you can ensure that the information inside token remains confiden
 
 # 4. JWS methods
 
-+ [1. How to use JWS]()
-+ [2. What is HMAC]()
-+ [3. What is Digital Signature]()
-+ [4. HMAC vs Digital Signature]()
-+ [5. Distributed systems use cases]()
++ [1. How to use JWS](#1-how-to-use-jws)
++ [2. What is HMAC](#2-what-is-hmac)
++ [3. What is Digital Signature](#3-what-is-digital-signature)
++ [4. HMAC vs Digital Signature](4-hmac-vs-digital-signature)
++ [5. Distributed systems use cases](#5-distributed-systems-use-cases)
 
 ## 1. How to use JWS
 - HMAC - uses a single secret key to generate and verify and HMAC
