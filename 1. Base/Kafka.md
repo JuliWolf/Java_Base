@@ -908,7 +908,8 @@ if (partitionInfos != null) {
 + [5. Управление основными топиками](#5-управление-основными-топиками)
 + [6. Управление конфигурацией](#6-управление-конфигурацией)
 + [7. Управление группами потребителей]()
-+ []()
++ [8. Метаданные кластера]()
++ [9. Расширенные операции администратора]()
 
 ### 1. Применение AdminClient
 Используется при необходимости выполнить какие-то административные команды из клиенского приложения:
@@ -1088,5 +1089,103 @@ if (!config.entries().contains(compaction)) {
 
 + [1. Измение групп потребителей]()
 + [2. Модификация групп потребителей]()
+
+#### 1. Измение групп потребителей
+- Составление списка потребителей
+```java
+admin.listCinsumerGroups().valid().get().forEach(System.out::println);
+```
+Будут возвращены только те группы отребителей, которые крастер вернул без ошибок
+
+Если нужны дополнительная информация о некоторыз группах:
+```java
+ConsumerGroupDescription groupDescription = admin
+  .describeConsumerGroups(CONSUMER_GRP_LIST)
+  .describedGroups().get(CONSUMER_GROUP).get();
+System.out.println("Description of group " + CONSUMER_GROUP + ":" + groupDescription);
+```
+В описание входит:
+- члены группы, их идентификаторы и хосты
+- назначенные им разделы
+- алгоритм использованный для назначения
+- хост координатора группы
+
+Получение смещения:
+```java
+Map<TopicPartition, OffsetAndMetadata> offsets = admin.listConsumerGroupOffsets(CONSUMER_GROUP)
+  .partitionsToOffsetAndMetadata().get(); // (1)
+
+Map<TopPartition, OffsetSpec> requestLatestOffsets = new HashMap<>();
+
+for (TopicPartition tp: offsets.keySet()) {
+  requestLatestOffsets.put(tp, OssetsSpec.latest()); // (2)
+}
+
+Map<TopicPartition, ListOffsetsResult.ListOffsetsResultInfo> laterstOffsets = admin.listOffsets(requestLatestOffsets).all().get();
+
+for (Map.Entry<TopicPartition, OffsetAndMetadata> e: offsets.entrySet()) { // (3)
+  String topic = e.getKey().topic();
+  int partition = e.getKey().partition();
+  long committedOffset = e.getValue().offset();
+  long latestOffset = latestOffsets.get(e.getKey()).offset();
+
+  System.out.println("Consumer group " + CONSUMER_GROUP
+      + " has committed offset " + committedOffset
+      + " to topic " + topic + " partition " + partition
+      + ". The latest offset in the partition is "
+      + latestOffset + " so consumer group is "
+      + (latestOffset - committedOffset) + " records behind"
+  );
+}
+```
+1. Получаем карту всех топиков и разделов, которые обрабатывает группы потреьителей, и последнее зафиксированное смещение для каждой из них
+2. Для каждого топика и раздела в результатах мы хотим получить смещение последнего сообщения в разделе.
+    `OffsetSpec` имеет три удобные реализации: `earliest()`, `latest()` и `forTimestamp()`
+3. Перебираем все разделы и для каждого из них выводим последнее зафиксированное смещение, последнее смещение в рзделе и задержку между ними
+
+#### 2. Модификация групп потребителей
+Задача: полностью перепроверить счет с 3:00
+```java
+Map<TopicPartition, ListOffsetsResult.ListOffsetsResultInfo> earliestOffsets = admin.listOffsets(requestEarliestOffsets).all().get(); // (1)
+
+Map<TopicPartition, OffsetAndMetadata> resetOffsets = new HashMap<>();
+for (Map.Entry<TopicPartition, ListOffsetsResult.ListOffsetsResultInfo> e: earliestOffsets.entrySet()) {
+  resetOffsets.put(e.getKey(), new OffsetAndMetadata(e.getValue().offset())); // (2)
+}
+
+try {
+  admin.alterConsumerGroupOffsets(CONSUMER_GROUP, resetOffsets).all().get(); // (3)
+} catch (ExecutionException e) {
+  System.out.println("Failed to update the offsets committed by group "
+    + CONSUMER_GROUP + " with error " + e.getMessage()
+  );
+  if (e.getCause() instanceOf UnknownMemberIdException) {
+  System.out.println("Check if consumer group is still active."); // (4)
+  }
+}
+```
+1. Чтобы сбросить группу потребителей и начать обработку с самого раннего смещения, нам нужно сначала получить самые ранние смещения
+2. Преобразуем карту со значением `ListOffsetsResultInfo`, которые были возвращены `listOffsets`, в карту со значением `OffsetAndMetadata`, которые требуются для `alterConsumerGroupOffset`
+3. После вызова `alterConumerGroupOffsets` мы ждем завершения работы Future
+4. Распространенная причина сбоя `alterConsumerGroupOffsets` заключается в том, что мы сначала не остановили группу потребителей
+
+### 8. Метаданные кластера
+```java
+DescribeClusterResult cluster = admin.describeCluster();
+
+System.out.println("Connected to cluster " + cluster.clusterId().get()); // (1)
+System.out.println("The brokers in the cluster are:");
+cluster.nodes().get().forEach(node -> System.out.println(" * " + node));
+System.out.println("The controller is: " + cluster.controller().get());
+```
+1. Идентификатор кластера представляет собой глобально уникальный идентификатор GUID и поэтому не читается человеком
+
+
+### 9. Расширенные операции администратора
+
++ [1. Добавление разделов в топик]()
++ [2. Удаление записей из топика]()
++ [3. Выборы лидера]()
++ [4. Переназнчение реплик]()
 
 ## END ---------------- AdminClient ----------------
