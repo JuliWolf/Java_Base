@@ -1188,4 +1188,86 @@ System.out.println("The controller is: " + cluster.controller().get());
 + [3. Выборы лидера]()
 + [4. Переназнчение реплик]()
 
+
+#### 1. Добавление разделов в топик
+
+Можно добавить разделы в коллекцию топиков с помощью метода `creatPartitions`
+```java
+Map<String, NewPartitions> newPartitions = new HashMap<>();
+newPartitions.put(TOPIC_NAME, NewPartitions.increaseTo(NUM_ARTITIONS + 2)); // (1)
+admin.createPartitions(newPartitions).all().get();
+```
+
+1. При расширении топиков необходимо указать общее количество разделов, которое будет иметь топик после их добавления, а неколичество новых разделов
+
+#### 2. Удаление записей из топика
+
+Метод `deleteRecords` помечает как удаленные все записи со смещениями старше, чем указано при вызове метода и делает их недоступными для потребителей
+```java
+Map<TopicPartition, ListOffsetsResult.ListOffsetsResultInfo> oldrOffsets = admin.listOffsets(requestOlderOffsets).all().get();
+Map<TopicPartition, RecordsToDelete> recordsToDelete = new HashMap<>();
+
+for (Map.Entry<TopicPartition, ListOffsetsResult.ListOffsetsResultInfo> e: olderOffsets.entrySet()) {
+  recordsToDelete.put(e.getKey(), RecordsToDelete.beforeOffset(e.getValue().offset()));
+}
+
+admin.deleteRecords(recordsToDelete).all().get();
+```
+
+#### 3. Выборы лидера
+Позволяет инициализировать два типа выборов лидера
+- **Выборы предпочтительного лидера** - В каждом разделе есть реплика, которая назнаается предпочтительным лидером.
+    По умолчанию Kafka каждые 5 минут будет проверять, действительно ли реплика предпочтиельного лидера является лидером, 
+    и если это не так, но она имеет право стать лидером, то будет выбирать реплику предпочтительного лидера в качестве лидера.
+    Если `auto.leader.rebalance.enable = false` можно запустить метод `electLeader()`
+- **Выборы нечистого лидера** - Если ведущая реплика раздела становится недоступной, а другие реплики не имеют права становиться ведущими
+    раздел остается без ведущей реплики. Один из способов решения проблемы - инициировать запуск выбора нечистого лидера,
+    что означает избрание лидером реплики, которая в ином случае не имела бы права стать им
+
+```java
+Set<TopicPartition> electableTopics = new HashSet<>();
+electableTopics.add(new TopicPartition(TOPIC_NAME, 0));
+
+try {
+  admin.electLeaders(ElectionType.PREFERRED, electableTopics).all().get(); // (1)
+} catch (ExecutionException e) {
+  if (e.getCause() instanceOf ElectionNotNeededException) {
+    System.out.println("All leaders are preferred already"); // (2)
+  }
+}
+```
+
+1. Выбираем предпочтительного лидера в одном разделе конкретного топика. 
+2. Есди кластер находится в исправом состоянии, команда ничего не сделает.
+    Выборы как предпочтительного, так и нечистого лидера вступают в силу только в том случае, если текщим лидером является реплика, отличная от предпочтительного лидера
+
+#### 4. Переназнчение реплик
+Метод `lterPartitionReassignments` дает тонкий контроль над размещением каждой отдельной реплики для раздела
+
+Пример:
+Есть один брокер с идентификатором 0
+Топик имеет несколько разделов, все с одной репликой на этом брокере
+После добавления ного брокера мы хотим использовать его для хранения некоторых реплик топика
+```java
+Map<TopicPartition, Optional<NewPartitionReassignment>> reassignment = new HashMap<>();
+reassignment.put(new TopicPartition(TOPIC_NAME, 0)), Optional.of(new NewPartitionReassignment(Arrays.asList(0 , 1))); // (1)
+reassignment.put(new TopicPartition(TOPIC_NAME, 1)), Optional.of(new NewPartitionReassignment(Arrays.asList(1))); // (2)
+reassignment.put(new TopicPartition(TOPIC_NAME, 2)), Optional.of(new NewPartitionReassignment(Arrays.asList(1, 0))); // (3)
+reassignment.put(new TopicPartition(TOPIC_NAME, 3)), Optional.empty()); // (4)
+
+admin.alterPartitionReassignments(reassignment).all().get();
+
+System.out.println("currently reassigning: " + admin.listPartitionReassignments().reassingments().get()); // (5)
+demoTopic = admin.describeTopics(TOPIC_LIST);
+topicDescription = demoTopic.values().get(TOPIC_NAME).get();
+System.out.println("Description of demo topic:" + topicDescription); // (6)
+```
+
+1. Добавляем одну реплику в раздел 0, размещаем новую реплику в брокер, который имеет идентификатор 1
+2. Не добавляем никаких реплик в раздел 1 - просто перемещаем одну существующую реплику на новый брокер
+3. Добавляем еще одну реплику в рзадел 2 и делае ее предпочтительным лидером
+4. Для раздела 3 нет текущего переназначения
+5. Перечисляем текущие переназначения
+6. Выводим новое состояние
+
 ## END ---------------- AdminClient ----------------
