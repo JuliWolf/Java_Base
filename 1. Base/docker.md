@@ -4,10 +4,10 @@
 
 ## Core concepts
 
-+ [1. Что такое докер]()
-+ [2. Docker image]()
-+ [3. Docker container]()
-+ [4. Layer based instruction]()
++ [1. Что такое докер](#1-что-такое-докер)
++ [2. Docker image](#2-docker-image)
++ [3. Docker container](#3-docker-container)
++ [4. Layer based instruction](#4-layer-based-instruction)
 
 ### 1. Что такое докер
 
@@ -56,14 +56,14 @@ Docker — это платформа, которая позволяет упак
 
 ## Commands
 
-+ [1. docker build]()
-+ [2. docker run]()
-+ [3. docker ps]()
-+ [4. docker stop]()
-+ [5. docker start]()
-+ [6. docker attach]()
-+ [7. docker logs]()
-+ [5. docker -(options)]()
++ [1. docker build](#1-docker-build)
++ [2. docker run](#2-docker-run)
++ [3. docker ps](#3-docker-ps)
++ [4. docker stop](#4-docker-stop)
++ [5. docker start](#5-docker-start)
++ [6. docker attach](#6-docker-attach)
++ [7. docker logs](#7-docker-logs)
++ [5. docker -(options)](#5-docker--options)
 
 
 ### 1. docker build
