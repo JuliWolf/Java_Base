@@ -241,7 +241,7 @@ testcontainers/ryuk   0.5.1     ec913eeff75a   20 months ago   12.7MB
 
 ### 14. docker cp
 Скопировать данные из контейнера или в контейнер<br>
-`docker cp {from_path} {to_path}`
+`docker cp {from_path} {to_path}`<br>
 `docker cp test/. distracted_swartz:/test`
 
 
@@ -251,21 +251,21 @@ testcontainers/ryuk   0.5.1     ec913eeff75a   20 months ago   12.7MB
 `-a`: `docker ps -a` говорит о том, что мы хотим увидеть все контейнеры, которые когда либо были созданы, а не только активные
 
 #### docker run
-`-d`: `docker run -p 3000:3000 -d ac8d5bf025fb71403ddbeac8984105dbd7a5580a20accb29b3779c44a23c03dd` run with detach mode
-`-p`: `docker run -p 3000:3000 -d ac8d5bf025fb71403ddbeac8984105dbd7a5580a20accb29b3779c44a23c03dd` открыть порт докера по определенному порту
-`--rm`: `docker run -p 3000:3000 -d --rm ac8d5bf025fb71403ddbeac8984105dbd7a5580a20accb29b3779c44a23c03dd` удалить контейнер когда он остановится
-`--name`: `docker run -p 3000:80 -d --rm --name goalsapp 122e98fcbfc4` назначить кастомное имя контейнеру
+`-d`: `docker run -p 3000:3000 -d ac8d5bf025fb71403ddbeac8984105dbd7a5580a20accb29b3779c44a23c03dd` run with detach mode<br>
+`-p`: `docker run -p 3000:3000 -d ac8d5bf025fb71403ddbeac8984105dbd7a5580a20accb29b3779c44a23c03dd` открыть порт докера по определенному порту<br>
+`--rm`: `docker run -p 3000:3000 -d --rm ac8d5bf025fb71403ddbeac8984105dbd7a5580a20accb29b3779c44a23c03dd` удалить контейнер когда он остановится<br>
+`--name`: `docker run -p 3000:80 -d --rm --name goalsapp 122e98fcbfc4` назначить кастомное имя контейнеру<br>
 
 #### docker logs
-`-f`: `docker logs -f zealous_lehmann` продолжать слушать лог в runtime
+`-f`: `docker logs -f zealous_lehmann` продолжать слушать лог в runtime<br>
 
 #### docker start
-`-a`: `docker start -a zealous_lehmann` Запустить остановленный контейнер с attach модом
-`-i`: `docker start -i zealous_lehmann` Запустить контейнер в интерактивном режиме
-`-t`: `docker start -it zealous_lehmann` Запустить контейнер и активировать терминал
+`-a`: `docker start -a zealous_lehmann` Запустить остановленный контейнер с attach модом<br>
+`-i`: `docker start -i zealous_lehmann` Запустить контейнер в интерактивном режиме<br>
+`-t`: `docker start -it zealous_lehmann` Запустить контейнер и активировать терминал<br>
 
 ### docker build
-`-t`: ` docker build -t goals:latest .` Создать image с именем и тегом
+`-t`: ` docker build -t goals:latest .` Создать image с именем и тегом<br>
 
 ## END ---------------- Commands ----------------
 
