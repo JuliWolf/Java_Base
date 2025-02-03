@@ -70,6 +70,9 @@ Docker — это платформа, которая позволяет упак
 + [11. docker image prune](#11-docker-image-prune)
 + [12. docker image inspect](#12-docker-image-inspect)
 + [13. docker container prune](#13-docker-container-prune)
++ [14. docker cp](#14-docker-cp)
++ [15. docker tag](#15-docker-tag)
++ [16. docker pull](#16-docker-pull)
 + [5. docker -(options)](#5-docker--options)
 
 
@@ -244,6 +247,16 @@ testcontainers/ryuk   0.5.1     ec913eeff75a   20 months ago   12.7MB
 `docker cp {from_path} {to_path}`<br>
 `docker cp test/. distracted_swartz:/test`
 
+
+### 15. docker tag
+Переименовать image - создается клон исходного image
+`docker tag {from} {to}`
+`docker tag goals:latest juliwolf/node-hello-world:latest`
+
+
+### 16. docker pull
+Загрузить последнюю версию image
+`docker pull juliwolf/node-hello-world`
 
 ### 5. docker -(options)
 
