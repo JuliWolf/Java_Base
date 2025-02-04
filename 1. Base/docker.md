@@ -8,6 +8,8 @@
 + [2. Docker image](#2-docker-image)
 + [3. Docker container](#3-docker-container)
 + [4. Layer based instruction](#4-layer-based-instruction)
++ [5. Volumes](#5-volumes)
++ [6. Bind mounts](#6-bind-mounts)
 
 ### 1. Что такое докер
 
@@ -52,6 +54,50 @@ Docker — это платформа, которая позволяет упак
 - При создании контейнера докер создает еще один слой(layer) на основе image
 
 
+### 5. Volumes
+Volume - том находится не в контейнере, а на жесктном диске системы, которая содержит контейнеры. <br>
+Тома являются постоянным хранилищем для контейнеров Docker.<br>
+Тома не привязаны к времени жизни контейнера, поэтому данные в них не исчезают при удалении контейнера. <br>
+Контейнеры могут добавлять данные в тома и читать данные из томов<br><br>
+
+Определить папку, которая будет сохранена в Volume можно в DockerFile с помощью команды `VOLUME`
+```
+FROM node:14
+
+WORKDIR /app
+
+COPY package.json .
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 80
+# use anonymous volume
+VOLUME ["/app/feedback"]
+
+CMD ["node", "server.js"]
+```
+
+Существует 2 типа volumes:<br>
+- anonymous volumes - существуют до тех пор, пока существует контейнер, который к нему обращается
+`-v /app/node_modules`<br>
+`docker run -p 3000:80 -d --rm --name feedback-app -v feedback:/app/feedback -v /app/node_modules feedback-node:volumes`
+- named volumes
+`-v nodeModules:/app/node_modules`<br>
+`docker run -p 3000:80 -d --rm --name feedback-app -v feedback:/app/feedback -v nodeModules:/app/node_modules feedback-node:volumes`
+
+
+### 6. Bind mounts
+Файл или каталог хоста (машина, на которой работает docker) монтируется в контейнер<br>
+Запись в примонтированный каталог могут вести программы как в контейнере, так и на хосте<br><br>
+
+`-v {absolute path to folder}:{where to mount in docker}`<br>
+`docker run -p 3000:80 -d --rm --name feedback-app -v feedback:/app/feedback -v "/media/juliwolf/Downloads/test":/app feedback-node:volumes`
+
+`docker run -p 3000:80 -d --rm --name feedback-app -v feedback:/app/feedback -v "/media/juliwolf/Downloads/test":/app -v /app/node_modules feedback-node:volumes`
+*Note: Если происходит пересечение папок для создания volume, bind mounts в приоритете будет папка, которая имеет более точнее значение, т.е. `-v /app/node_modules` и поэтому папка `node_modules` не будет переписана в процессе монтирования
+
 ## END ---------------- Core concepts ----------------
 
 
@@ -73,6 +119,7 @@ Docker — это платформа, которая позволяет упак
 + [14. docker cp](#14-docker-cp)
 + [15. docker tag](#15-docker-tag)
 + [16. docker pull](#16-docker-pull)
++ [17. docker volume ls](#17-docker-volume-ls)
 + [5. docker -(options)](#5-docker--options)
 
 
@@ -258,6 +305,13 @@ testcontainers/ryuk   0.5.1     ec913eeff75a   20 months ago   12.7MB
 Загрузить последнюю версию image
 `docker pull juliwolf/node-hello-world`
 
+
+### 17. docker volume ls
+Посмотреть список томов в докере
+`docker volume ls`
+
+
+
 ### 5. docker -(options)
 
 #### docker ps
@@ -268,7 +322,7 @@ testcontainers/ryuk   0.5.1     ec913eeff75a   20 months ago   12.7MB
 `-p`: `docker run -p 3000:3000 -d ac8d5bf025fb71403ddbeac8984105dbd7a5580a20accb29b3779c44a23c03dd` открыть порт докера по определенному порту<br>
 `--rm`: `docker run -p 3000:3000 -d --rm ac8d5bf025fb71403ddbeac8984105dbd7a5580a20accb29b3779c44a23c03dd` удалить контейнер когда он остановится<br>
 `--name`: `docker run -p 3000:80 -d --rm --name goalsapp 122e98fcbfc4` назначить кастомное имя контейнеру<br>
-
+`-v`: `docker run -p 3000:80 -d --rm --name feedback-app -v feedback:/app/feedback feedback-node:volumes` создать named volume   
 #### docker logs
 `-f`: `docker logs -f zealous_lehmann` продолжать слушать лог в runtime<br>
 
