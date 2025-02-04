@@ -96,6 +96,7 @@ CMD ["node", "server.js"]
 `docker run -p 3000:80 -d --rm --name feedback-app -v feedback:/app/feedback -v "/media/juliwolf/Downloads/test":/app feedback-node:volumes`
 
 `docker run -p 3000:80 -d --rm --name feedback-app -v feedback:/app/feedback -v "/media/juliwolf/Downloads/test":/app -v /app/node_modules feedback-node:volumes`
+
 *Note: Если происходит пересечение папок для создания volume, bind mounts в приоритете будет папка, которая имеет более точнее значение, т.е. `-v /app/node_modules` и поэтому папка `node_modules` не будет переписана в процессе монтирования
 
 ## END ---------------- Core concepts ----------------
