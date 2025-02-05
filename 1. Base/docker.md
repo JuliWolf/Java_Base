@@ -10,6 +10,10 @@
 + [4. Layer based instruction](#4-layer-based-instruction)
 + [5. Volumes](#5-volumes)
 + [6. Bind mounts](#6-bind-mounts)
++ [7. Volumes vs Bind mounts](#7-volumes-vs-bind-mounts)
++ [8. Read only volume](#8-read-only-volume)
++ [9. ENV](#9-env)
++ [10. ARGUMENTS](#10-arguments)
 
 ### 1. Что такое докер
 
@@ -93,11 +97,81 @@ CMD ["node", "server.js"]
 Запись в примонтированный каталог могут вести программы как в контейнере, так и на хосте<br>
 
 `-v {absolute path to folder}:{where to mount in docker}`<br>
-`docker run -p 3000:80 -d --rm --name feedback-app -v feedback:/app/feedback -v "/media/juliwolf/Downloads/test":/app feedback-node:volumes`
+`docker run -p 3000:80 -d --rm --name feedback-app -v feedback:/app/feedback -v "/media/juliwolf/Downloads/test":/app feedback-node:volumes`<br>
 
-`docker run -p 3000:80 -d --rm --name feedback-app -v feedback:/app/feedback -v "/media/juliwolf/Downloads/test":/app -v /app/node_modules feedback-node:volumes`
+`docker run -p 3000:80 -d --rm --name feedback-app -v feedback:/app/feedback -v "/media/juliwolf/Downloads/test":/app -v /app/node_modules feedback-node:volumes`<br>
 
 *Note: Если происходит пересечение папок для создания volume, bind mounts в приоритете будет папка, которая имеет более точнее значение, т.е. `-v /app/node_modules` и поэтому папка `node_modules` не будет переписана в процессе монтирования
+
+
+### 7. Volumes vs Bind mounts
+| Anonymous volume                                                         | Named volume                                | Bind mount                                                                    |
+|--------------------------------------------------------------------------|---------------------------------------------|-------------------------------------------------------------------------------|
+| Привязан к одному контейнеру                                             | Не привязан к одному контейнеру             | Не привязан к контейнеру, так как является ссылкой на файл или папку на хосте |
+| Существует до тех пор пока контейнер не будет остановлен или перезапущен | Существуют и после остановки контейнера     | Существуют и после остановки контейнера                                       |
+| Не может быть использован несколькими контейнерами                       | Можно использовать несколькими контейнерами | Можно использовать несколькими контейнерами                                   |
+| Не может быть переиспользован                                            | Можно переиспользовать                      | Можно переиспользовать                                                        |
+| Может быть полезен для сохранения файлов/папок внутри контейнера         |                                             |                                                                               |
+| Могут быть созданы из Dockerfile с помощью команды `VOLUME`              | Не может быть создан внутри Dockerfile      |                                                                               |
+
+
+### 8. Read only volume
+По дефолту тома имею настройку read-write, то есть контейнерам можно менять данные внутри volume<br>
+read-only volume дают права только на чтение информации
+
+
+### 9. ENV
+env - это переменные окружения<br>
+переменные можно задать в Dockerfile с помощью команды ENV
+```
+FROM node:14
+
+WORKDIR /app
+
+COPY package.json .
+
+RUN npm install
+
+COPY . .
+
+ENV PORT 80
+
+EXPOSE $PORT
+
+CMD ["node", "server.js"]
+```
+
+Переменные окружения можно задать при старте контейнера с помощью команды `--env` или `-e`<br>
+`--env` `-e`: `docker run -p 3000:8000 -d --rm --env PORT=8000 --name feedback-app -v feedback:/app/feedback feedback-node:volumes` Создать env переменные для контейнера
+
+Так же можно задать env переменные из файла с помощью команды `--env-file`<br>
+`--env-file`: `docker run -p 3000:8000 --env-file ./.env  -d --rm --name feedback-app -v feedback:/app/feedback feedback-node:volumes` Создать env переменные из файла
+
+
+### 10. ARGUMENTS
+Build arguments - это переменные которые передаются во время процесса сборки<br>
+Переменные можно задать внутри Dockerfile и назначить им дефолтные значения<br>
+```
+FROM node:14
+
+ARG DEFAULT_PORT=80
+
+WORKDIR /app
+
+COPY package.json .
+
+RUN npm install
+
+COPY . .
+
+ENV PORT $DEFAULT_PORT
+
+EXPOSE $PORT
+
+CMD ["node", "server.js"]
+```
+С помощью команды `--build-arg` можно задать значение аргументам<br>
+`docker build -t feedback-node:dev --build-arg DEFAULT_PORT=8000 .`
 
 ## END ---------------- Core concepts ----------------
 
@@ -121,6 +195,9 @@ CMD ["node", "server.js"]
 + [15. docker tag](#15-docker-tag)
 + [16. docker pull](#16-docker-pull)
 + [17. docker volume ls](#17-docker-volume-ls)
++ [18. docker volume inspect](#18-docker-volume-inspect)
++ [19. docker volume rm](#19-docker-volume-rm)
++ [20. docker volume prune](#20-docker-volume-prune)
 + [5. docker -(options)](#5-docker--options)
 
 
@@ -312,6 +389,34 @@ testcontainers/ryuk   0.5.1     ec913eeff75a   20 months ago   12.7MB
 `docker volume ls`
 
 
+### 18. docker volume inspect
+Посмотреть подробную информацию тома<br>
+`docker volume inspect feedback`
+```js
+[
+    {
+        "CreatedAt": "2025-02-04T21:57:52+03:00",
+        "Driver": "local",
+        "Labels": null,
+        "Mountpoint": "/var/lib/docker/volumes/feedback/_data",
+        "Name": "feedback",
+        "Options": null,
+        "Scope": "local"
+    }
+]
+```
+
+
+### 19. docker volume rm
+Удалить том<br>
+`docker volume rm feedback-files`
+
+
+### 20. docker volume prune
+Удалить все неиспользуемые тома<br>
+`docker volume prune`
+
+
 ### 5. docker -(options)
 
 #### docker ps
@@ -323,6 +428,10 @@ testcontainers/ryuk   0.5.1     ec913eeff75a   20 months ago   12.7MB
 `--rm`: `docker run -p 3000:3000 -d --rm ac8d5bf025fb71403ddbeac8984105dbd7a5580a20accb29b3779c44a23c03dd` удалить контейнер когда он остановится<br>
 `--name`: `docker run -p 3000:80 -d --rm --name goalsapp 122e98fcbfc4` назначить кастомное имя контейнеру<br>
 `-v`: `docker run -p 3000:80 -d --rm --name feedback-app -v feedback:/app/feedback feedback-node:volumes` создать named volume   
+`-v ...:ro`: `docker run -p 3000:80 -d --rm --name feedback-app -v feedback:/app/feedback:ro feedback-node:volumes` создать named read only volume   
+`--env` `-e`: `docker run -p 3000:8000 -d --rm --env PORT=8000 --name feedback-app -v feedback:/app/feedback feedback-node:volumes` Создать env переменные для контейнера
+`--env-file`: `docker run -p 3000:8000 --env-file ./.env  -d --rm --name feedback-app -v feedback:/app/feedback feedback-node:volumes` Создать env переменные из файла   
+
 #### docker logs
 `-f`: `docker logs -f zealous_lehmann` продолжать слушать лог в runtime<br>
 
