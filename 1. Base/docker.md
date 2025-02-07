@@ -14,6 +14,7 @@
 + [8. Read only volume](#8-read-only-volume)
 + [9. ENV](#9-env)
 + [10. ARGUMENTS](#10-arguments)
++ [11. Network](#11-network)
 
 ### 1. Что такое докер
 
@@ -173,6 +174,22 @@ CMD ["node", "server.js"]
 С помощью команды `--build-arg` можно задать значение аргументам<br>
 `docker build -t feedback-node:dev --build-arg DEFAULT_PORT=8000 .`
 
+
+### 11. Network
+Для обмена данными между контейнерами можно создать `docker network` в рамках которой несколько контейнеров смогут обмениваться данными между друг другом<br>
+Можно вручную настроить общение между докерами
+- Создать контейнер 1
+- Найти информацию об ip адресе контейнера 1 с помощью команды `docker container inspect {containerId/containerName}`
+- Создать контейнер 2, используя ip адрес первого контейнера
+
+При использовании `docker network` docker самостоятельно настроит ip адреса<br>
+Для обращения к другому контейнеру необходимо указать его имя вместо его ip
+```js
+mongoose.connect(
+  `mongodb://{containerName}:27017/course-goals`
+)
+```
+
 ## END ---------------- Core concepts ----------------
 
 
@@ -198,6 +215,7 @@ CMD ["node", "server.js"]
 + [18. docker volume inspect](#18-docker-volume-inspect)
 + [19. docker volume rm](#19-docker-volume-rm)
 + [20. docker volume prune](#20-docker-volume-prune)
++ [21. docker network](#21-docker-network)
 + [5. docker -(options)](#5-docker--options)
 
 
@@ -417,6 +435,10 @@ testcontainers/ryuk   0.5.1     ec913eeff75a   20 months ago   12.7MB
 `docker volume prune`
 
 
+### 21. docker network
+Создать внутреннюю сеть для докер контейнеров<br>
+`docker network create favorites-net`
+
 ### 5. docker -(options)
 
 #### docker ps
@@ -427,10 +449,11 @@ testcontainers/ryuk   0.5.1     ec913eeff75a   20 months ago   12.7MB
 `-p`: `docker run -p 3000:3000 -d ac8d5bf025fb71403ddbeac8984105dbd7a5580a20accb29b3779c44a23c03dd` открыть порт докера по определенному порту<br>
 `--rm`: `docker run -p 3000:3000 -d --rm ac8d5bf025fb71403ddbeac8984105dbd7a5580a20accb29b3779c44a23c03dd` удалить контейнер когда он остановится<br>
 `--name`: `docker run -p 3000:80 -d --rm --name goalsapp 122e98fcbfc4` назначить кастомное имя контейнеру<br>
-`-v`: `docker run -p 3000:80 -d --rm --name feedback-app -v feedback:/app/feedback feedback-node:volumes` создать named volume   
-`-v ...:ro`: `docker run -p 3000:80 -d --rm --name feedback-app -v feedback:/app/feedback:ro feedback-node:volumes` создать named read only volume   
-`--env` `-e`: `docker run -p 3000:8000 -d --rm --env PORT=8000 --name feedback-app -v feedback:/app/feedback feedback-node:volumes` Создать env переменные для контейнера
-`--env-file`: `docker run -p 3000:8000 --env-file ./.env  -d --rm --name feedback-app -v feedback:/app/feedback feedback-node:volumes` Создать env переменные из файла   
+`-v`: `docker run -p 3000:80 -d --rm --name feedback-app -v feedback:/app/feedback feedback-node:volumes` создать named volume   <br>
+`-v ...:ro`: `docker run -p 3000:80 -d --rm --name feedback-app -v feedback:/app/feedback:ro feedback-node:volumes` создать named read only volume   <br>
+`--env` `-e`: `docker run -p 3000:8000 -d --rm --env PORT=8000 --name feedback-app -v feedback:/app/feedback feedback-node:volumes` Создать env переменные для контейнера<br>
+`--env-file`: `docker run -p 3000:8000 --env-file ./.env  -d --rm --name feedback-app -v feedback:/app/feedback feedback-node:volumes` Создать env переменные из файла<br>
+`--network`: `docker run --name mongodb -d --network favorites-net mongo` запустить контейнер с определенным docker-network
 
 #### docker logs
 `-f`: `docker logs -f zealous_lehmann` продолжать слушать лог в runtime<br>
@@ -442,6 +465,9 @@ testcontainers/ryuk   0.5.1     ec913eeff75a   20 months ago   12.7MB
 
 ### docker build
 `-t`: ` docker build -t goals:latest .` Создать image с именем и тегом<br>
+
+### docker network
+`ls`: `docker network ls` Посмотреть список докер нетворков
 
 ## END ---------------- Commands ----------------
 
