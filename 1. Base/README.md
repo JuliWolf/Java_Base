@@ -32,6 +32,7 @@ https://github.com/johnivo/job4j/blob/master/interview_questions/Core.md#4-%D0%9
 + [Nginx](#Nginx)
 + [Java 8](#java-8)
 + [Аутентификация и авторизация](#аутентификация-и-авторизация)
++ [JIT компилятор](#jit-компилятор)
 + [JsonB](https://github.com/JuliWolf/Java_Base/blob/main/JsonB/README.md)
 + [Mockito & Junit](https://github.com/JuliWolf/Spring/blob/master/mockito/README.md)
 + [DDD](ddd.md)
@@ -3877,6 +3878,7 @@ public class Product {
 + [16. Уровни кешей](#16-уровни-кешей)
 + [17. Реализация составного ключа](#17-реализация-составного-ключа)
 + [18. Есть ли JPA для mongoDB](#18-есть-ли-jpa-для-mongodb)
++ [19. Аннотация EntityGraph](#19-аннотация-entitygraph)
 
 ### 1. Что такое Hibernate
 ORM - Object-relational mapping - это отображение объектов какого-либо объектно-ориентированного языка в структуры реляционных баз данных
@@ -4227,9 +4229,9 @@ Timestamp в hbm.xml
 - Кеш второго уровня (Second-level cache);
 - Кеш запросов (Query cache);
 
-1. Кеш первого уровня привязан к объекту сессии
-2. Кеш второго уровня привязан к объекту-фабрике сессий
-3. Кеш запросов привязан к параметрам запросаRfr
+1. Кеш первого уровня привязан к объекту сессии. Он хранит объекты, полученные из бд в рамках текущей сесии.
+2. Кеш второго уровня привязан к объекту-фабрике сессий. Общий кеш, который может использоваться между несколькими сессиями. 
+3. Кеш запросов привязан к параметрам запроса. Специальный кеш, который хранит результаты выполнения запросов к бд.
 
 ### 17. Реализация составного ключа
 ```java
@@ -4259,6 +4261,37 @@ public class House {
 - Spring Data MongoDB
 - Morphia
 - Java MongoDB Driver
+
+
+### 19. Аннотация EntityGraph
+`@EntityGraph` - улучшает производительность загрузки связанных сущностей.
+`@EntityGraph(attributePaths = {"comments"})` - граф будет включать в себя загрузку всех базовых полей пользователя, который создал пост, а также комментарии и их авторов
+```sql
+select
+        p1_0.id,
+        c1_0.post_id,
+        c1_0.id,
+        c1_0.reply,
+        c1_0.user_id,
+        p1_0.subject,
+        p1_0.user_id 
+    from
+        post p1_0 
+    left join
+        comment c1_0 
+            on p1_0.id=c1_0.post_id 
+    where
+        p1_0.subject=?
+```
+
+У самого `EntityGraph` есть 2 вида загрузки:
+- `EntityGraph.EntityGraphType.FETCH` - используется по умолчанию. Ассоциативные атрибуты, явно объявленные для загрузки, будут выгружены жадно `FetchType.EAGER`, остальные будут загружены лениво `FetchType.LAZY`
+- `EntityGraph.EntityGraphType.LOAD` - Выбранные атрибуты будут загружены жадно, а остальные атрибуты будут загружены в соотвествии с тем, какой FetchType указан в модели
+
+```
+@EntityGraph(attributePaths = {"comments"}, type = EntityGraph.EntityGraphType.LOAD)
+List<Post> findEntityGraphTypeLoadBySubject(String subject);
+```
 
 ## END ----------------- Hibernate & JPA -----------------
 
@@ -5403,7 +5436,15 @@ stringConverter.convert(2);
 
 ## END ---------------- Аутентификация и авторизация ----------------
 
+## JIT компилятор
 
++ [1. Что такое JIT компилятор](#1-аутентификация)
+
+
+### 1. Что такое JIT компилятор
+
+
+## END ---------------- JIT компилятор ----------------
 
 26. Можно ли увеличить размер массива после его инициализации?
 нет, только пересоздать новый массив

@@ -225,7 +225,9 @@ mongoose.connect(
 + [20. docker volume prune](#20-docker-volume-prune)
 + [21. docker network](#21-docker-network)
 + [22. docker compose up](#22-docker-compose-up)
-+ [23. docker compose down](#22-docker-compose-down)
++ [23. docker compose down](#23-docker-compose-down)
++ [24. docker compose build](#24-docker-compose-build)
++ [25. docker exec](#25-docker-exec)
 + [5. docker -(options)](#5-docker--options)
 
 
@@ -457,6 +459,17 @@ testcontainers/ryuk   0.5.1     ec913eeff75a   20 months ago   12.7MB
 ### 23. docker compose down
 Останавливает все контейнеры, описанные в файле `docker-compose`<br>
 `docker-compose down`
+
+
+### 24. docker compose build
+Только запускает создание всех не созданных images<br>
+`docker-compose build`
+
+
+### 25. docker exec
+Выполняет команды внутри консоли конкретного контейнера<br>
+`docker exec suspicious_brahmagupta npm init`
+Для того, чтобы коннект с консолью выбранного контейнера не терялся, нужно обавить параметр `-it`
 
 ### 5. docker -(options)
 
