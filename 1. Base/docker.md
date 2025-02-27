@@ -1,5 +1,6 @@
 + [Core concepts](#core-concepts)
 + [Commands](#commands)
++ [Kubernetes](#kubernetes)
 
 
 ## Core concepts
@@ -228,7 +229,8 @@ mongoose.connect(
 + [23. docker compose down](#23-docker-compose-down)
 + [24. docker compose build](#24-docker-compose-build)
 + [25. docker exec](#25-docker-exec)
-+ [5. docker -(options)](#5-docker--options)
++ [26. docker compose run](#26-docker-compose-run)
++ [27. docker -(options)](#27-docker--options)
 
 
 ### 1. docker build
@@ -456,6 +458,7 @@ testcontainers/ryuk   0.5.1     ec913eeff75a   20 months ago   12.7MB
 Стартует все контейнеры, описанные в файле `docker-compose`<br>
 `docker-compose up`
 
+
 ### 23. docker compose down
 Останавливает все контейнеры, описанные в файле `docker-compose`<br>
 `docker-compose down`
@@ -471,7 +474,14 @@ testcontainers/ryuk   0.5.1     ec913eeff75a   20 months ago   12.7MB
 `docker exec suspicious_brahmagupta npm init`
 Для того, чтобы коннект с консолью выбранного контейнера не терялся, нужно обавить параметр `-it`
 
-### 5. docker -(options)
+
+### 26. docker compose run
+Выполнить команду для докер контейнера описанного в файле<br>
+`docker-compose run {containerName} {command}`<br>
+Для того, чтобы контейнер был удален автоматически после использования надо добавить `--rm`<br>
+`docker-compose run --rm {containerName} {command}`
+
+### 27. docker -(options)
 
 #### docker ps
 `-a`: `docker ps -a` говорит о том, что мы хотим увидеть все контейнеры, которые когда либо были созданы, а не только активные
@@ -501,5 +511,59 @@ testcontainers/ryuk   0.5.1     ec913eeff75a   20 months ago   12.7MB
 ### docker network
 `ls`: `docker network ls` Посмотреть список докер нетворков
 
+### docker-compose
+`--build` `docker-compose up --build server` Активировать режим отслеживания изменений в docker image
+
 ## END ---------------- Commands ----------------
+
+## Kubernetes
+
++ [1. Какие проблемы решает Kubernetes](#1-что-такое-докер)
++ [2. Что означает Kubernetes](#1-что-такое-докер)
++ [3. Основные понятия](#1-что-такое-докер)
++ [4. Что нужно подготовить для начала работы](#1-что-такое-докер)
++ [5. Worker node](#1-что-такое-докер)
++ [6. Master node](#1-что-такое-докер)
+
+### 1. Какие проблемы решает Kubernetes
+- Оркестрация - автоматизация процессов управления контейнерами.
+- Самоисцеление -  автоматический перезапуск контейнеров при их сбоях
+- Скалирование - гибкое увеличение или уменьшение числа контейнеров в зависимости от текущей нагрузки.
+- Балансировка нагрузки - Распределение входящего трафика по контейнерам
+
+### 2. Что означает Kubernetes
+это открытая платформа для автоматизации развёртывания и масштабирования контейнеризированных приложений и управления ими.<br>
+Kubernetes не является cloud service провайдером<br>
+Может использоваться любым cloud service провайдером
+
+### 3. Основные понятия
+Worker node - Это отдельная физическая или виртуальная машина, на которой развёрнуты и выполняются контейнеры приложений.
+- Pod(Container) - Базовая единица для запуска и управления приложениями: один или несколько контейнеров, которым гарантирован запуск на одном узле, обеспечивается разделение ресурсов и межпроцессное взаимодействие.
+- Proxy/Config - Прокси для упаравления доступами к сети контейнера
+
+Master node - Контролирует все контейнеры. Удаляет если они не нужны, создает новые при увеличении нагрузки
+
+Cluster = Master node + Worker nodes 
+
+### 4. Что нужно подготовить для начала работы
+1. Создать кластер и ноды (Worker + Masker Node)
+2. Настроить API Server, kubelet и другие сервисы Kubernetes
+3. Создать другие провайдеры, которые могут быть необходимы для работы (Load Balancer, Filesystems etc)
+
+### 5. Worker node
+- Это компьютер/машина/виртуальная машина
+- Управляется Master Node
+  - Внутри находится один и более Pod
+    - Это одно или более контейнеров приложений и их ресурсов (IP, volume etc)
+    - Создаются и управляются Kubernetes (Master Node)
+  - Внутри должен быть установлен docker для запуска контейнеров
+  - Kubelet - приложение для взаимодействия master node с worker node
+  - Proxy - для обработки входящих и исходящих запросов
+
+### 6. Master node
+- Внутри работает API Server для взаимодействия с Worker node
+- Scheduler - Наблюдает за подами, выбирает worker node, на котором запустить Pod
+- Kube-Controller Manager - контролирует и наблюдает за Worker node, меняет количество подов
+- Cloud-Controller Manager - Тоже самое что Kube-Controller Manager только специфичен для конкретного cloud provider. Переводит инструкции для конкретного провайдера
+## END ---------------- Kubernetes ----------------
 
