@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+  <changeSet id="1695641671829-1" author="JuliWolf">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="group"/>
+      </not>
+    </preConditions>
+
+    <rollback>
+      <dropTable tableName="group" cascadeConstraints="true"/>
+    </rollback>
+
+    <createTable schemaName="public" tableName="group">
+        <column name="group_id" type="UUID">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_group"/>
+        </column>
+        <column name="group_name" type="VARCHAR(255)"/>
+        <column name="group_description" type="VARCHAR(255)"/>
+        <column name="group_email" type="VARCHAR(255)"/>
+        <column name="group_messenger" type="VARCHAR(255)"/>
+        <column name="created_on" type="DATETIME"/>
+        <column name="create_by" type="UUID"/>
+        <column name="last_modified_on" type="DATETIME"/>
+        <column name="last_modified_by" type="UUID"/>
+        <column defaultValueBoolean="false" name="deleted_flag" type="boolean"/>
+        <column name="deleted_on" type="DATETIME"/>
+        <column name="deleted_by" type="UUID"/>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="create_by" baseTableName="group" baseTableSchemaName="public" constraintName="FK_GROUP_ON_CREATE_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="group" baseTableSchemaName="public" constraintName="FK_GROUP_ON_DELETED_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="last_modified_by" baseTableName="group" baseTableSchemaName="public" constraintName="FK_GROUP_ON_LAST_MODIFIED_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1695641770563-1" author="JuliWolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <columnExists tableName="group" columnName="group_name"/>
+
+      <columnExists tableName="group" columnName="deleted_flag"/>
+    </preConditions>
+
+    <sql splitStatements="true" stripComments="true" endDelimiter="\nGO">
+      CREATE UNIQUE INDEX idx_unique_group_name_deleted_flag ON "group" (group_name, deleted_flag)
+        WHERE deleted_flag = false
+    </sql>
+  </changeSet>
+</databaseChangeLog>

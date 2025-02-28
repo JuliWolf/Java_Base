@@ -1,0 +1,6 @@
+
+:
+
+Dockerfile,6/6/6651ddff6eb82c840ced7c1dddee15c6e1913dd4
+•
+esrc/test/java/ru/leroymerlin/datamanagement/spring/data_catalog_backend/services/LDAPServiceTest.java,9/c/9c4c59e23de3c9e1162f464b80359154fc822171

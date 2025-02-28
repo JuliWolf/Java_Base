@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd"
+    objectQuotingStrategy="QUOTE_ALL_OBJECTS"
+>
+  <changeSet id="1701951599369-1" author="JuliWolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <columnExists tableName="responsibility" columnName="asset_id"/>
+      <columnExists tableName="responsibility" columnName="role_id"/>
+      <columnExists tableName="responsibility" columnName="responsible_type"/>
+      <columnExists tableName="responsibility" columnName="user_id"/>
+      <columnExists tableName="responsibility" columnName="group_id"/>
+      <columnExists tableName="responsibility" columnName="relation_id"/>
+
+      <columnExists tableName="responsibility" columnName="deleted_flag"/>
+    </preConditions>
+
+    <sql splitStatements="true" stripComments="true" endDelimiter="\nGO">
+      DROP INDEX idx_unique_responsibility_asset_role_type_group_deleted_flag;
+      DROP INDEX idx_unique_responsibility_asset_role_type_user_deleted_flag;
+
+      CREATE UNIQUE INDEX idx_unique_responsibility_asset_role_type_group_deleted_flag ON "responsibility" (asset_id, role_id, responsible_type, user_id, deleted_flag)
+        WHERE deleted_flag = false and relation_id is null;
+
+      CREATE UNIQUE INDEX idx_unique_responsibility_asset_role_type_user_deleted_flag ON "responsibility" (asset_id, role_id, responsible_type, group_id, deleted_flag)
+        WHERE deleted_flag = false and relation_id is null;
+
+      CREATE UNIQUE INDEX idx_unique_resp_asset_role_type_user_relation_deleted_flag ON "responsibility" (asset_id, role_id, responsible_type, user_id, relation_id, deleted_flag)
+        WHERE deleted_flag = false;
+
+      CREATE UNIQUE INDEX idx_unique_resp_asset_role_type_group_relation_deleted_flag ON "responsibility" (asset_id, role_id, responsible_type, group_id, relation_id, deleted_flag)
+        WHERE deleted_flag = false
+    </sql>
+  </changeSet>
+</databaseChangeLog>

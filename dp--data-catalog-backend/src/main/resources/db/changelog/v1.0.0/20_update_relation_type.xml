@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd"
+    objectQuotingStrategy="QUOTE_ALL_OBJECTS"
+>
+
+  <changeSet id="1698848840520-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <columnExists tableName="relation_type" columnName="relation_type_asset_number"/>
+
+      <columnExists tableName="relation_type" columnName="is_inheritance"/>
+
+      <tableExists tableName="relation_type"/>
+    </preConditions>
+
+    <renameColumn tableName="relation_type" oldColumnName="relation_type_asset_number" newColumnName="component_number" schemaName="public"/>
+    <renameColumn tableName="relation_type" oldColumnName="is_inheritance" newColumnName="responsibility_inheritance_flag" schemaName="public"/>
+
+    <addColumn tableName="relation_type" schemaName="public">
+      <column name="hierarchy_flag" type="BOOLEAN"/>
+    </addColumn>
+  </changeSet>
+</databaseChangeLog>

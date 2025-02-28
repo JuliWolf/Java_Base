@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd"
+    objectQuotingStrategy="QUOTE_ALL_OBJECTS"
+>
+
+  <changeSet id="1699542030894-1" author="JuliWolf">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="responsibility"/>
+
+      <columnExists tableName="responsibility" columnName="responsible_id"/>
+    </preConditions>
+
+    <addColumn tableName="responsibility" schemaName="public">
+      <column name="group_id" type="UUID" />
+      <column name="asset_id" type="UUID" />
+      <column name="parent_responsibility_id" type="UUID"/>
+    </addColumn>
+
+    <renameColumn tableName="responsibility" oldColumnName="responsible_id" newColumnName="user_id" schemaName="public"/>
+    <dropNotNullConstraint tableName="responsibility" columnName="user_id" schemaName="public"/>
+
+    <addForeignKeyConstraint baseColumnNames="group_id" baseTableName="responsibility" baseTableSchemaName="public" constraintName="fk_responsibility_on_group_id" referencedColumnNames="group_id" referencedTableName="group" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="asset_id" baseTableName="responsibility" baseTableSchemaName="public" constraintName="fk_responsibility_on_asset_id" referencedColumnNames="asset_id" referencedTableName="asset" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="parent_responsibility_id" baseTableName="responsibility" baseTableSchemaName="public" constraintName="fk_responsibility_on_parentresponsibilityid" referencedColumnNames="responsibility_id" referencedTableName="responsibility" referencedTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1699546609570-1" author="JuliWolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <columnExists tableName="responsibility" columnName="asset_id"/>
+      <columnExists tableName="responsibility" columnName="role_id"/>
+      <columnExists tableName="responsibility" columnName="responsible_type"/>
+      <columnExists tableName="responsibility" columnName="user_id"/>
+      <columnExists tableName="responsibility" columnName="group_id"/>
+
+      <columnExists tableName="responsibility" columnName="deleted_flag"/>
+    </preConditions>
+
+    <sql splitStatements="true" stripComments="true" endDelimiter="\nGO">
+      CREATE UNIQUE INDEX idx_unique_responsibility_asset_role_type_user_deleted_flag ON "responsibility" (asset_id, role_id, responsible_type, user_id, deleted_flag)
+        WHERE deleted_flag = false;
+
+      CREATE UNIQUE INDEX idx_unique_responsibility_asset_role_type_group_deleted_flag ON "responsibility" (asset_id, role_id, responsible_type, group_id, deleted_flag)
+        WHERE deleted_flag = false
+    </sql>
+  </changeSet>
+</databaseChangeLog>

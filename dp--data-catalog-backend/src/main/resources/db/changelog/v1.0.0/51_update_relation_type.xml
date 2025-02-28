@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+  <changeSet id="1716292764470-1" author="juliwolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="relation_type"/>
+    </preConditions>
+
+    <addColumn tableName="relation_type" schemaName="public">
+      <column defaultValueBoolean="true" name="uniqueness_flag" type="boolean"/>
+    </addColumn>
+  </changeSet>
+</databaseChangeLog>

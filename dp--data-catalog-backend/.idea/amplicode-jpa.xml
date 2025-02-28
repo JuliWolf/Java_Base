@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AmplicodeJpaIdeaProjectConfig" ddlActionDbType="postgres">
+    <option name="liquibaseDirectory" value="db/changelog/v1.0.0" />
+    <option name="defaultUnitInitialized" value="true" />
+    <option name="renamerInitialized" value="true" />
+    <option name="includeToChangelogDirectory" value="" />
+  </component>
+</project>

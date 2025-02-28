@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+  <changeSet id="1732002202364-1" author="juliwolf">
+    <sqlFile path="db/changelog/extract_meta/v1.0.0/filter_criteria_types.sql" splitStatements="false"/>
+    <sqlFile path="db/changelog/extract_meta/v1.0.0/fn_get_filtered_asset_table.sql" splitStatements="false"/>
+    <sqlFile path="db/changelog/extract_meta/v1.0.0/fn_load_canon_object_meta_for_data_catalog.sql" splitStatements="false"/>
+  </changeSet>
+</databaseChangeLog>

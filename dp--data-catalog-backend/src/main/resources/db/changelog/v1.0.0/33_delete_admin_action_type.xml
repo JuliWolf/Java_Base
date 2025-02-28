@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd"
+    objectQuotingStrategy="QUOTE_ALL_OBJECTS"
+>
+
+  <changeSet id="1701347474034-1" author="juliwolf">
+    <sql>
+      DELETE FROM role_action
+      WHERE action_type_id = 'a2aab955-e4c8-456d-9a73-5af73ee6a4ec';
+
+      DELETE FROM action_type
+      WHERE action_type_id = 'a2aab955-e4c8-456d-9a73-5af73ee6a4ec'
+    </sql>
+  </changeSet>
+</databaseChangeLog>

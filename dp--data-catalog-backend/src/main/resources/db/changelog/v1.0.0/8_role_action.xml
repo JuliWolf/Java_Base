@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+
+  <changeSet id="1695047308551-1" author="JuliWolf">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="role_action"/>
+      </not>
+    </preConditions>
+
+    <rollback>
+      <dropTable tableName="role_action" cascadeConstraints="true"/>
+    </rollback>
+
+    <createTable schemaName="public" tableName="role_action">
+        <column name="role_action_id" type="UUID">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_role_action"/>
+        </column>
+        <column name="role_id" type="UUID">
+            <constraints nullable="false"/>
+        </column>
+        <column name="action_type_id" type="UUID">
+            <constraints nullable="false"/>
+        </column>
+        <column name="entity_type_id" type="UUID">
+            <constraints nullable="false"/>
+        </column>
+        <column name="asset_type_id" type="UUID">
+          <constraints nullable="true" />
+        </column>
+        <column name="role_type_id" type="UUID">
+          <constraints nullable="true"/>
+        </column>
+        <column name="attribute_type_id" type="UUID">
+          <constraints nullable="true"/>
+        </column>
+        <column name="relation_type_id" type="UUID">
+          <constraints nullable="true"/>
+        </column>
+        <column name="action_scope" type="VARCHAR(255)"/>
+        <column name="permission_type" type="VARCHAR(255)"/>
+        <column name="created_on" type="DATETIME"/>
+        <column name="create_by" type="UUID"/>
+        <column defaultValueBoolean="false" name="deleted_flag" type="boolean"/>
+        <column name="deleted_on" type="DATETIME"/>
+        <column name="deleted_by" type="UUID"/>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="action_type_id" baseTableName="role_action" baseTableSchemaName="public" constraintName="FK_ROLE_ACTION_ON_ACTION_TYPE" referencedColumnNames="action_type_id" referencedTableName="action_type" referencedTableSchemaName="public" onDelete="CASCADE"/>
+    <addForeignKeyConstraint baseColumnNames="asset_type_id" baseTableName="role_action" baseTableSchemaName="public" constraintName="FK_ROLE_ACTION_ON_ASSET_TYPE" referencedColumnNames="asset_type_id" referencedTableName="asset_type" referencedTableSchemaName="public" onDelete="CASCADE"/>
+    <addForeignKeyConstraint baseColumnNames="attribute_type_id" baseTableName="role_action" baseTableSchemaName="public" constraintName="FK_ROLE_ACTION_ON_ATTRIBUTE_TYPE" referencedColumnNames="attribute_type_id" referencedTableName="attribute_type" referencedTableSchemaName="public" onDelete="CASCADE"/>
+    <addForeignKeyConstraint baseColumnNames="create_by" baseTableName="role_action" baseTableSchemaName="public" constraintName="FK_ROLE_ACTION_ON_CREATE_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="role_action" baseTableSchemaName="public" constraintName="FK_ROLE_ACTION_ON_DELETED_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" />
+    <addForeignKeyConstraint baseColumnNames="entity_type_id" baseTableName="role_action" baseTableSchemaName="public" constraintName="FK_ROLE_ACTION_ON_ENTITY_TYPE" referencedColumnNames="entity_id" referencedTableName="entity" referencedTableSchemaName="public" onDelete="CASCADE"/>
+    <addForeignKeyConstraint baseColumnNames="relation_type_id" baseTableName="role_action" baseTableSchemaName="public" constraintName="FK_ROLE_ACTION_ON_RELATION_TYPE" referencedColumnNames="relation_type_id" referencedTableName="relation_type" referencedTableSchemaName="public" onDelete="CASCADE"/>
+    <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="role_action" baseTableSchemaName="public" constraintName="FK_ROLE_ACTION_ON_ROLE" referencedColumnNames="role_id" referencedTableName="role" referencedTableSchemaName="public" onDelete="CASCADE"/>
+    <addForeignKeyConstraint baseColumnNames="role_type_id" baseTableName="role_action" baseTableSchemaName="public" constraintName="FK_ROLE_ACTION_ON_ROLE_TYPE" referencedColumnNames="role_id" referencedTableName="role" referencedTableSchemaName="public" onDelete="CASCADE"/>
+  </changeSet>
+
+  <changeSet id="1695291139044-1" author="JuliWolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <columnExists tableName="role_action" columnName="role_id"/>
+      <columnExists tableName="role_action" columnName="action_type_id"/>
+      <columnExists tableName="role_action" columnName="entity_type_id"/>
+      <columnExists tableName="role_action" columnName="asset_type_id"/>
+      <columnExists tableName="role_action" columnName="role_type_id"/>
+      <columnExists tableName="role_action" columnName="attribute_type_id"/>
+      <columnExists tableName="role_action" columnName="relation_type_id"/>
+      <columnExists tableName="role_action" columnName="action_scope"/>
+
+      <columnExists tableName="role_action" columnName="deleted_flag"/>
+    </preConditions>
+
+    <sql splitStatements="true" stripComments="true" endDelimiter="\nGO">
+      CREATE UNIQUE INDEX uk_role_id_action_type_id_entity_type_id_action_scope
+        ON role_action (role_id, action_type_id, action_scope, entity_type_id)
+        WHERE deleted_flag = false;
+      CREATE UNIQUE INDEX uk_role_id_action_type_id_entity_type_id_action_scope_asset
+        ON role_action (role_id, action_type_id, action_scope, entity_type_id, asset_type_id)
+        WHERE deleted_flag = false;
+      CREATE UNIQUE INDEX uk_role_id_action_type_id_entity_type_id_action_scope_role_type
+        ON role_action (role_id, action_type_id, action_scope, entity_type_id, role_type_id)
+        WHERE deleted_flag = false;
+      CREATE UNIQUE INDEX uk_role_id_action_type_id_entity_type_id_action_scope_attribute
+        ON role_action (role_id, action_type_id, action_scope, entity_type_id, attribute_type_id)
+        WHERE deleted_flag = false;
+      CREATE UNIQUE INDEX uk_role_id_action_type_id_entity_type_id_action_scope_relation
+        ON role_action (role_id, action_type_id, action_scope, entity_type_id, relation_type_id)
+        WHERE deleted_flag = false;
+    </sql>
+  </changeSet>
+</databaseChangeLog>

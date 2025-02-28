@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+  <changeSet id="1709555812102-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="image_link_usage"/>
+      </not>
+    </preConditions>
+
+    <rollback>
+      <dropTable tableName="image_link_usage" cascadeConstraints="true"/>
+    </rollback>
+    <createTable schemaName="public" tableName="image_link_usage">
+        <column name="image_link_usage_id" type="UUID">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_image_link_usage"/>
+        </column>
+        <column name="image_name" type="VARCHAR(255)"/>
+        <column name="attribute_id" type="UUID"/>
+        <column name="created_on" type="DATETIME"/>
+        <column name="created_by" type="UUID"/>
+        <column defaultValueBoolean="false" name="deleted_flag" type="boolean"/>
+        <column name="deleted_on" type="DATETIME"/>
+        <column name="deleted_by" type="UUID"/>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="attribute_id" baseTableName="image_link_usage" baseTableSchemaName="public" constraintName="FK_IMAGE_LINK_USAGE_ON_ATTRIBUTE" referencedColumnNames="attribute_id" referencedTableName="attribute" referencedTableSchemaName="public" onDelete="CASCADE"/>
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="image_link_usage" baseTableSchemaName="public" constraintName="FK_IMAGE_LINK_USAGE_ON_CREATED_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="image_link_usage" baseTableSchemaName="public" constraintName="FK_IMAGE_LINK_USAGE_ON_DELETED_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+  </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+
+  <changeSet id="1740469905855-1" author="juliwolf">
+    <createTable schemaName="public" tableName="user_history">
+        <column name="user_history_id" type="UUID">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user_history"/>
+        </column>
+        <column name="user_id" type="UUID"/>
+        <column name="boss_k_pid" type="VARCHAR"/>
+        <column name="username" type="varchar(30)">
+            <constraints nullable="false"/>
+        </column>
+        <column name="email" type="varchar(60)"/>
+        <column name="first_name" type="varchar(255)"/>
+        <column name="last_name" type="varchar(255)"/>
+        <column name="source" type="varchar(10)"/>
+        <column name="messenger" type="varchar(255)"/>
+        <column name="struct_unit_id" type="UUID"/>
+        <column name="user_type" type="varchar(8)"/>
+        <column name="user_photo_link" type="jsonb"/>
+        <column name="user_work_status" type="varchar(8)"/>
+        <column name="source_language" type="UUID"/>
+        <column name="created_on" type="DATETIME"/>
+        <column name="created_by" type="UUID"/>
+        <column name="last_modified_on" type="DATETIME"/>
+        <column name="last_modified_by" type="UUID"/>
+        <column defaultValueBoolean="false" name="deleted_flag" type="boolean"/>
+        <column name="deleted_on" type="DATETIME"/>
+        <column name="deleted_by" type="UUID"/>
+        <column name="valid_from" type="DATETIME"/>
+        <column name="valid_to" type="DATETIME"/>
+    </createTable>
+    <createIndex indexName="idx_user_id_valid_from_valid_to" schemaName="public" tableName="user_history">
+        <column name="user_id"/>
+        <column name="valid_from"/>
+        <column name="valid_to"/>
+    </createIndex>
+  </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+
+  <changeSet id="1711467657564-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="relation_attribute"/>
+      </not>
+    </preConditions>
+
+    <rollback>
+      <dropTable tableName="relation_attribute" cascadeConstraints="true"/>
+    </rollback>
+    <createTable schemaName="public" tableName="relation_attribute">
+        <column name="relation_attribute_id" type="UUID">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_relation_attribute"/>
+        </column>
+        <column name="attribute_type_id" type="UUID"/>
+        <column name="relation_id" type="UUID"/>
+        <column name="value" type="text"/>
+        <column name="source_language" type="UUID"/>
+        <column name="integer_flag" type="BOOLEAN"/>
+        <column name="value_numeric" type="DOUBLE"/>
+        <column name="value_bool" type="BOOLEAN"/>
+        <column name="value_datetime" type="DATETIME"/>
+        <column name="created_on" type="DATETIME"/>
+        <column name="created_by" type="UUID"/>
+        <column name="last_modified_on" type="DATETIME"/>
+        <column name="last_modified_by" type="UUID"/>
+        <column defaultValueBoolean="false" name="deleted_flag" type="boolean"/>
+        <column name="deleted_on" type="DATETIME"/>
+        <column name="deleted_by" type="UUID"/>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="attribute_type_id" baseTableName="relation_attribute" baseTableSchemaName="public" constraintName="FK_RELATION_ATTRIBUTE_ON_ATTRIBUTE_TYPE" onDelete="CASCADE" referencedColumnNames="attribute_type_id" referencedTableName="attribute_type" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="relation_attribute" baseTableSchemaName="public" constraintName="FK_RELATION_ATTRIBUTE_ON_CREATED_BY" onDelete="SET NULL" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="relation_attribute" baseTableSchemaName="public" constraintName="FK_RELATION_ATTRIBUTE_ON_DELETED_BY" onDelete="SET NULL" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="last_modified_by" baseTableName="relation_attribute" baseTableSchemaName="public" constraintName="FK_RELATION_ATTRIBUTE_ON_LAST_MODIFIED_BY" onDelete="SET NULL" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="relation_id" baseTableName="relation_attribute" baseTableSchemaName="public" constraintName="FK_RELATION_ATTRIBUTE_ON_RELATION" onDelete="CASCADE" referencedColumnNames="relation_id" referencedTableName="relation" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="source_language" baseTableName="relation_attribute" baseTableSchemaName="public" constraintName="FK_RELATION_ATTRIBUTE_ON_SOURCE_LANGUAGE" onDelete="SET NULL" referencedColumnNames="language_id" referencedTableName="language" referencedTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1711467740755-1" author="juliwolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <columnExists tableName="subscrption" columnName="owner_user_id"/>
+      <columnExists tableName="subscrption" columnName="asset_id"/>
+
+      <columnExists tableName="subscrption" columnName="deleted_flag"/>
+    </preConditions>
+
+    <sql splitStatements="true" stripComments="true" endDelimiter="\nGO">
+      CREATE UNIQUE INDEX idx_unique_relation_attribute_relation_attribute_t_deleted_flag ON "relation_attribute" (relation_id, attribute_type_id, deleted_flag)
+        WHERE deleted_flag = false;
+    </sql>
+  </changeSet>
+
+  <changeSet id="1711469910239-1" author="juliwolf">
+    <sql>
+      insert into entity (entity_id, entity_name, deleted_flag) values ('85ba86eb-f55d-4635-aae7-7db72a6a29f1', 'RELATION_ATTRIBUTE', false) ON CONFLICT DO nothing;
+    </sql>
+  </changeSet>
+
+  <changeSet id="1711472799977-1" author="juliwolf" dbms="postgresql" context="production">
+    <sql>
+      INSERT INTO public.role_action (role_action_id, role_id, action_type_id, entity_type_id, asset_type_id, role_type_id, attribute_type_id, relation_type_id, action_scope, permission_type) VALUES('5da0b91d-f99d-42a9-a9bf-dfa53256f996', '2c057d40-4f72-4eb3-9a5e-276a9a98e1f8', 'c7f65d90-b311-4fac-9af3-68289a60e7e3', '85ba86eb-f55d-4635-aae7-7db72a6a29f1', NULL, NULL, NULL, NULL, 'ALL', 'ALLOW') ON CONFLICT DO nothing;
+
+      INSERT INTO public.role_action (role_action_id, role_id, action_type_id, entity_type_id, asset_type_id, role_type_id, attribute_type_id, relation_type_id, action_scope, permission_type) VALUES('487a9971-7447-41a1-b96f-31ec0a215dba', '486940b7-6a0b-4287-9fa8-ad9058861a91', 'b8eb41e4-e43f-4259-a198-81fc19e7e90a', '85ba86eb-f55d-4635-aae7-7db72a6a29f1', NULL, NULL, NULL, NULL, 'ALL', 'ALLOW') ON CONFLICT DO nothing;
+      INSERT INTO public.role_action (role_action_id, role_id, action_type_id, entity_type_id, asset_type_id, role_type_id, attribute_type_id, relation_type_id, action_scope, permission_type) VALUES('3f0069b6-b3a7-4b17-80f8-7d83894dcaf2', '486940b7-6a0b-4287-9fa8-ad9058861a91', 'c7f65d90-b311-4fac-9af3-68289a60e7e3', '85ba86eb-f55d-4635-aae7-7db72a6a29f1', NULL, NULL, NULL, NULL, 'ALL', 'ALLOW') ON CONFLICT DO nothing;
+      INSERT INTO public.role_action (role_action_id, role_id, action_type_id, entity_type_id, asset_type_id, role_type_id, attribute_type_id, relation_type_id, action_scope, permission_type) VALUES('10989b1c-5641-4f25-9cfc-e632605ccbf6', '486940b7-6a0b-4287-9fa8-ad9058861a91', '3b086c0e-d19e-4874-9c18-8e9daf952bee', '85ba86eb-f55d-4635-aae7-7db72a6a29f1', NULL, NULL, NULL, NULL, 'ALL', 'ALLOW') ON CONFLICT DO nothing;
+      INSERT INTO public.role_action (role_action_id, role_id, action_type_id, entity_type_id, asset_type_id, role_type_id, attribute_type_id, relation_type_id, action_scope, permission_type) VALUES('8a4c1835-6ad9-47fa-9f61-47944a200e9f', '486940b7-6a0b-4287-9fa8-ad9058861a91', '54d4330c-d08f-4fb2-b706-2ec3c022286d', '85ba86eb-f55d-4635-aae7-7db72a6a29f1', NULL, NULL, NULL, NULL, 'ALL', 'ALLOW') ON CONFLICT DO nothing;
+    </sql>
+  </changeSet>
+
+</databaseChangeLog>

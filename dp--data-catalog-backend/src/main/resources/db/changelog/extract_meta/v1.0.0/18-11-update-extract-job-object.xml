@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+  <changeSet id="1731929709227-1" author="juliwolf">
+    <dropColumn tableName="extract_job_object" schemaName="extract_meta">
+      <column name="topic_offset"/>
+      <column name="batches_count"/>
+      <column name="batch_size"/>
+    </dropColumn>
+  </changeSet>
+</databaseChangeLog>

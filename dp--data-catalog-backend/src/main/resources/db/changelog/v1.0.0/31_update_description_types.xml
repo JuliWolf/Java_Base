@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd"
+    objectQuotingStrategy="QUOTE_ALL_OBJECTS"
+>
+  <changeSet id="1701173045735-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="attribute"/>
+
+      <columnExists tableName="attribute" columnName="value"/>
+    </preConditions>
+    <modifyDataType tableName="attribute" columnName="value" newDataType="text" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1701173115425-1" author="juliwolf">
+    <modifyDataType tableName="asset_type" columnName="asset_type_description" newDataType="varchar(512)"
+                    schemaName="public"/>
+  </changeSet>
+  <changeSet id="1701173155155-1" author="juliwolf">
+    <modifyDataType tableName="relation_type" columnName="relation_type_description" newDataType="varchar(512)"
+                    schemaName="public"/>
+  </changeSet>
+  <changeSet id="1701173188589-1" author="juliwolf">
+    <modifyDataType tableName="attribute_type" columnName="attribute_type_description" newDataType="varchar(512)"
+                    schemaName="public"/>
+  </changeSet>
+  <changeSet id="1701173232239-1" author="juliwolf">
+    <modifyDataType tableName="relation_type_component" columnName="relation_type_component_description"
+                    newDataType="varchar(512)" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1701173255614-1" author="juliwolf">
+    <modifyDataType tableName="status" columnName="status_description" newDataType="varchar(512)" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1701173269975-1" author="juliwolf">
+    <modifyDataType tableName="role" columnName="role_description" newDataType="varchar(512)" schemaName="public"/>
+  </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd"
+    objectQuotingStrategy="QUOTE_ALL_OBJECTS"
+>
+
+  <changeSet id="1702388301377-1" author="JuliWolf">
+    <sql>
+      insert into entity (entity_id, entity_name, deleted_flag) values ('004ba3ec-2b19-482b-b39d-fcf3f6a58e1c', 'USER', false) ON CONFLICT DO nothing;
+      insert into entity (entity_id, entity_name, deleted_flag) values ('7111c0aa-ed81-45d9-8f59-155e9e5f2788', 'GROUP', false) ON CONFLICT DO nothing;
+      insert into entity (entity_id, entity_name, deleted_flag) values ('c7c5febf-6712-449c-a5a4-97e1da4a104a', 'RESPONSIBILITY_GLOBAL', false) ON CONFLICT DO nothing;
+      insert into entity (entity_id, entity_name, deleted_flag) values ('f55aa87a-d324-4d1e-891d-26ee931bcd14', 'RESPONSIBILITY', false) ON CONFLICT DO nothing;
+      insert into entity (entity_id, entity_name, deleted_flag) values ('f2d482f5-fe31-45c8-856d-512a9aa56fde', 'ASSET', false) ON CONFLICT DO nothing;
+      insert into entity (entity_id, entity_name, deleted_flag) values ('18abdf45-f906-4fc3-bb2a-f8c05bf536b6', 'ATTRIBUTE', false) ON CONFLICT DO nothing;
+      insert into entity (entity_id, entity_name, deleted_flag) values ('551048d8-4a63-47fa-af63-9c8b46e22da5', 'STATUS', false) ON CONFLICT DO nothing;
+      insert into entity (entity_id, entity_name, deleted_flag) values ('2de5a051-0568-4aef-857c-8d377f8aaec1', 'RELATION', false) ON CONFLICT DO nothing;
+    </sql>
+  </changeSet>
+</databaseChangeLog>

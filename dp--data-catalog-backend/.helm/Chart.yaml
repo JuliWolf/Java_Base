@@ -1,0 +1,4 @@
+apiVersion: v1
+name: Datacatalog-Backend
+version: 1.0.0
+description: Chart for datacatalog backend

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd"
+    objectQuotingStrategy="QUOTE_ALL_OBJECTS"
+>
+  <changeSet id="1700686688662-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="user"/>
+
+      <columnExists tableName="user" columnName="created_date_time"/>
+    </preConditions>
+
+    <renameColumn tableName="user" oldColumnName="created_date_time" newColumnName="created_on" schemaName="public"/>
+
+    <addColumn tableName="user" schemaName="public">
+      <column name="created_by" type="UUID"/>
+      <column name="messenger" type="VARCHAR(255)"/>
+      <column name="last_modified_on" type="DATETIME"/>
+      <column name="last_modified_by" type="UUID"/>
+    </addColumn>
+
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="user" baseTableSchemaName="public" constraintName="fk_user_on_created_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="last_modified_by" baseTableName="user" baseTableSchemaName="public" constraintName="fk_user_on_last_modified_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+  </changeSet>
+</databaseChangeLog>

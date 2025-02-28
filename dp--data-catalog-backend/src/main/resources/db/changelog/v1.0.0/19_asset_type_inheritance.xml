@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+  <changeSet id="1698318573581-1" author="JuliWolf">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="asset_type_inheritance"/>
+      </not>
+    </preConditions>
+
+    <rollback>
+      <dropTable tableName="asset_type_inheritance" cascadeConstraints="true"/>
+    </rollback>
+    <createTable schemaName="public" tableName="asset_type_inheritance">
+        <column name="inheritance_id" type="UUID">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_asset_type_inheritance"/>
+        </column>
+        <column name="parent_asset_type_id" type="UUID"/>
+        <column name="child_asset_type_id" type="UUID"/>
+        <column name="created_on" type="DATETIME"/>
+        <column name="create_by" type="UUID"/>
+        <column defaultValueBoolean="false" name="deleted_flag" type="boolean"/>
+        <column name="deleted_on" type="DATETIME"/>
+        <column name="deleted_by" type="UUID"/>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="child_asset_type_id" baseTableName="asset_type_inheritance" baseTableSchemaName="public" constraintName="FK_ASSET_TYPE_INHERITANCE_ON_CHILD_ASSET_TYPE" referencedColumnNames="asset_type_id" referencedTableName="asset_type" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="create_by" baseTableName="asset_type_inheritance" baseTableSchemaName="public" constraintName="FK_ASSET_TYPE_INHERITANCE_ON_CREATE_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="asset_type_inheritance" baseTableSchemaName="public" constraintName="FK_ASSET_TYPE_INHERITANCE_ON_DELETED_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="parent_asset_type_id" baseTableName="asset_type_inheritance" baseTableSchemaName="public" constraintName="FK_ASSET_TYPE_INHERITANCE_ON_PARENT_ASSET_TYPE" referencedColumnNames="asset_type_id" referencedTableName="asset_type" referencedTableSchemaName="public"/>
+    <addUniqueConstraint tableName="asset_type_inheritance" columnNames="parent_asset_type_id, child_asset_type_id" constraintName="asset_type_inheritance_parent_child" schemaName="public"/>
+  </changeSet>
+</databaseChangeLog>

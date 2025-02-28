@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+  <changeSet id="1723108185907-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="extract_job" schemaName="extract_meta"/>
+      </not>
+    </preConditions>
+    <createTable schemaName="extract_meta" tableName="extract_job">
+        <column name="job_id" type="UUID">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_extract_job"/>
+        </column>
+        <column name="kafka_topic" type="varchar(255)"/>
+        <column name="tables_count" type="INT"/>
+        <column name="source_type" type="varchar(15)"/>
+        <column name="source_name" type="text"/>
+        <column name="job_status" type="varchar(20)"/>
+        <column name="job_error" type="varchar(4000)"/>
+        <column name="source_asset_id" type="UUID"/>
+        <column name="created_datetime" type="DATETIME"/>
+        <column name="filter_criteria" type="jsonb"/>
+        <column defaultValueBoolean="false" name="job_error_flag" type="boolean"/>
+        <column name="full_meta_flag" type="BOOLEAN"/>
+        <column name="last_status_change_datetime" type="DATETIME"/>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="source_asset_id" baseTableName="extract_job" baseTableSchemaName="extract_meta" constraintName="FK_EXTRACT_JOB_ON_SOURCE_ASSET" onDelete="SET NULL" referencedColumnNames="asset_id" referencedTableName="asset" referencedTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1729680013809-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="extract_job_object" schemaName="extract_meta"/>
+      </not>
+    </preConditions>
+    <createTable schemaName="extract_meta" tableName="extract_job_object">
+        <column name="job_object_id" type="UUID">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_extract_job_object"/>
+        </column>
+        <column name="job_id" type="UUID"/>
+        <column name="table_name" type="varchar(255)"/>
+        <column name="table_stage_name" type="varchar(255)"/>
+        <column name="topic_offset" type="bigint"/>
+        <column name="batches_count" type="integer"/>
+        <column name="batch_size" type="integer"/>
+        <column name="job_object_status" type="varchar(12)"/>
+        <column name="job_object_error" type="text"/>
+        <column name="created_datetime" type="DATETIME"/>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="job_id" baseTableName="extract_job_object" baseTableSchemaName="extract_meta" constraintName="FK_EXTRACT_JOB_OBJECT_ON_JOB" onDelete="CASCADE" referencedColumnNames="job_id" referencedTableName="extract_job" referencedTableSchemaName="extract_meta"/>
+  </changeSet>
+</databaseChangeLog>

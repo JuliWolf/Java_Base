@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+  <changeSet id="1733219925198-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="asset_type"/>
+
+      <not>
+        <columnExists columnName="asset_name_validation_mask" tableName="asset_type"/>
+        <columnExists columnName="asset_name_validation_mask_example" tableName="asset_type"/>
+      </not>
+    </preConditions>
+
+    <addColumn tableName="asset_type" schemaName="public">
+      <column name="asset_name_validation_mask" type="varchar(1000)"/>
+      <column name="asset_name_validation_mask_example" type="text"/>
+    </addColumn>
+  </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd"
+    objectQuotingStrategy="QUOTE_ALL_OBJECTS"
+>
+  <changeSet id="1702640606213-1" author="juliwolf">
+    <modifyDataType tableName="user" columnName="username" newDataType="varchar(30)" schemaName="public"/>
+    <modifyDataType tableName="user" columnName="source" newDataType="varchar(10)" schemaName="public"/>
+    <modifyDataType tableName="user" columnName="email" newDataType="varchar(60)" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1702640677192-1" author="juliwolf">
+    <modifyDataType tableName="responsibility" columnName="responsible_type" newDataType="varchar(10)" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1702640701272-1" author="juliwolf">
+    <modifyDataType tableName="relation_component" columnName="hierarchy_role" newDataType="varchar(10)" schemaName="public"/>
+    <modifyDataType tableName="relation_component" columnName="responsibility_inheritance_role" newDataType="varchar(10)" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1702640746701-1" author="juliwolf">
+    <modifyDataType tableName="language" columnName="language" newDataType="varchar(20)" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1702640764190-1" author="juliwolf">
+    <modifyDataType tableName="group" columnName="group_email" newDataType="varchar(60)" schemaName="public"/>
+    <modifyDataType tableName="group" columnName="group_messenger" newDataType="varchar(60)" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1702640814736-1" author="juliwolf">
+    <modifyDataType tableName="global_responsibility" columnName="responsible_type" newDataType="varchar(10)" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1702640838321-1" author="juliwolf">
+    <modifyDataType tableName="entity" columnName="entity_name" newDataType="varchar(30)" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1702640855402-1" author="juliwolf">
+    <modifyDataType tableName="role_action" columnName="action_scope" newDataType="varchar(10)" schemaName="public"/>
+    <modifyDataType tableName="role_action" columnName="permission_type" newDataType="varchar(10)" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1702640878420-1" author="juliwolf">
+    <modifyDataType tableName="attribute_type" columnName="attribute_kind" newDataType="varchar(25)" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1702640901541-1" author="juliwolf">
+    <modifyDataType tableName="asset_type_status_assignment" columnName="status_type" newDataType="varchar(20)" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1702640931102-1" author="juliwolf">
+    <modifyDataType tableName="asset_type" columnName="asset_type_acronym" newDataType="varchar(10)" schemaName="public"/>
+    <modifyDataType tableName="asset_type" columnName="asset_type_color" newDataType="varchar(10)" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1702640955007-1" author="juliwolf">
+    <modifyDataType tableName="action_type" columnName="action_type_name" newDataType="varchar(10)" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1702643199971-1" author="juliwolf">
+    <modifyDataType tableName="relation_type_component" columnName="hierarchy_role" newDataType="varchar(10)" schemaName="public"/>
+    <modifyDataType tableName="relation_type_component" columnName="responsibility_inheritance_role" newDataType="varchar(10)" schemaName="public"/>
+  </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+  <changeSet id="1694100997694-1" author="JuliWolf">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="language"/>
+        <tableExists tableName="user"/>
+      </not>
+    </preConditions>
+
+    <rollback>
+      <dropTable tableName="language" cascadeConstraints="true"/>
+      <dropTable tableName="user" cascadeConstraints="true"/>
+    </rollback>
+
+    <createTable schemaName="public" tableName="language">
+      <column name="language_id" type="UUID">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="pk_language"/>
+      </column>
+      <column name="language" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <addUniqueConstraint columnNames="language" constraintName="uc_language_language" schemaName="public" tableName="language"/>
+
+    <insert tableName="language" schemaName="public">
+      <column name="language_id" value="79670280-ac58-4591-9b0d-7df12f14e448"/>
+      <column name="language" value="ru"/>
+    </insert>
+
+    <createTable schemaName="public" tableName="user">
+        <column name="user_id" type="UUID">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user"/>
+        </column>
+        <column name="username" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+        </column>
+        <column name="email" type="VARCHAR(255)"/>
+        <column name="first_name" type="VARCHAR(255)"/>
+        <column name="last_name" type="VARCHAR(255)"/>
+        <column name="source" type="VARCHAR(255)"/>
+        <column name="language_id" type="UUID"/>
+        <column name="created_date_time" type="DATETIME"/>
+        <column name="last_login_datetime" type="DATETIME"/>
+        <column defaultValueBoolean="false" name="deleted_flag" type="boolean"/>
+        <column name="deleted_on" type="DATETIME"/>
+        <column name="deleted_by" type="UUID"/>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="user" baseTableSchemaName="public" constraintName="FK_USER_ON_DELETED_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="language_id" baseTableName="user" baseTableSchemaName="public" constraintName="FK_USER_ON_LANGUAGE" referencedColumnNames="language_id" referencedTableName="language" referencedTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1696149420632-1" author="JuliWolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <columnExists tableName="user" columnName="username"/>
+
+      <columnExists tableName="user" columnName="deleted_flag"/>
+    </preConditions>
+
+    <sql splitStatements="true" stripComments="true" endDelimiter="\nGO">
+      CREATE UNIQUE INDEX idx_unique_username_deletedFlag ON "user" (username, deleted_flag)
+        WHERE deleted_flag = false
+    </sql>
+  </changeSet>
+</databaseChangeLog>

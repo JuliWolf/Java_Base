@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+  <changeSet id="1698850799277-1" author="JuliWolf">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="relation_type_component"/>
+      </not>
+    </preConditions>
+
+    <rollback>
+      <dropTable tableName="relation_type_component" cascadeConstraints="true"/>
+    </rollback>
+    <createTable schemaName="public" tableName="relation_type_component">
+        <column name="relation_type_component_id" type="UUID">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_relation_type_component"/>
+        </column>
+        <column name="relation_type_component_name" type="VARCHAR(255)"/>
+        <column name="relation_type_component_description" type="VARCHAR(255)"/>
+        <column name="responsibility_inheritance_role" type="VARCHAR(255)"/>
+        <column name="hierarchy_role" type="VARCHAR(255)"/>
+        <column name="source_language" type="UUID"/>
+        <column name="relation_type_id" type="UUID"/>
+        <column name="created_on" type="DATETIME"/>
+        <column name="create_by" type="UUID"/>
+        <column name="last_modified_on" type="DATETIME"/>
+        <column name="last_modified_by" type="UUID"/>
+        <column defaultValueBoolean="false" name="deleted_flag" type="boolean"/>
+        <column name="deleted_on" type="DATETIME"/>
+        <column name="deleted_by" type="UUID"/>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="create_by" baseTableName="relation_type_component" baseTableSchemaName="public" constraintName="FK_RELATION_TYPE_COMPONENT_ON_CREATE_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="relation_type_component" baseTableSchemaName="public" constraintName="FK_RELATION_TYPE_COMPONENT_ON_DELETED_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="last_modified_by" baseTableName="relation_type_component" baseTableSchemaName="public" constraintName="FK_RELATION_TYPE_COMPONENT_ON_LAST_MODIFIED_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="relation_type_id" baseTableName="relation_type_component" baseTableSchemaName="public" constraintName="FK_RELATION_TYPE_COMPONENT_ON_RELATION_TYPE" referencedColumnNames="relation_type_id" referencedTableName="relation_type" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="source_language" baseTableName="relation_type_component" baseTableSchemaName="public" constraintName="FK_RELATION_TYPE_COMPONENT_ON_SOURCE_LANGUAGE" referencedColumnNames="language_id" referencedTableName="language" referencedTableSchemaName="public"/>
+  </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,31 @@
+package ru.leroymerlin.datamanagement.spring.data_catalog_backend.api.v1.assignments.relationTypeComponent.attributeTypes;
+
+import java.util.UUID;
+import ru.leroymerlin.datamanagement.spring.data_catalog_backend.repository.backend.model.User;
+import ru.leroymerlin.datamanagement.spring.data_catalog_backend.api.v1.assignments.relationTypeComponent.attributeTypes.models.get.GetRelationTypeComponentAssetTypesUsageCountParams;
+import ru.leroymerlin.datamanagement.spring.data_catalog_backend.api.v1.assignments.relationTypeComponent.attributeTypes.models.get.GetRelationTypeComponentsAttributeTypesUsageCountResponse;
+import ru.leroymerlin.datamanagement.spring.data_catalog_backend.api.v1.assignments.relationTypeComponent.attributeTypes.exceptions.RelationTypeComponentAttributeTypeAssignmentNotFound;
+import ru.leroymerlin.datamanagement.spring.data_catalog_backend.api.v1.assignments.relationTypeComponent.attributeTypes.models.get.GetRelationTypeComponentAttributeTypesResponse;
+import ru.leroymerlin.datamanagement.spring.data_catalog_backend.api.v1.assignments.relationTypeComponent.attributeTypes.models.post.PostRelationTypeComponentAttributeTypesRequest;
+import ru.leroymerlin.datamanagement.spring.data_catalog_backend.api.v1.assignments.relationTypeComponent.attributeTypes.models.post.PostRelationTypeComponentAttributeTypesResponse;
+import ru.leroymerlin.datamanagement.spring.data_catalog_backend.api.v1.relationTypes.exceptions.RelationTypeComponentNotFoundException;
+
+/**
+ * @author juliwolf
+ */
+
+public interface RelationTypeComponentAttributeTypesAssignmentsService {
+  PostRelationTypeComponentAttributeTypesResponse createRelationTypeComponentAttributeTypesAssignments (
+    UUID relationTypeComponentId,
+    PostRelationTypeComponentAttributeTypesRequest assignmentsRequest,
+    User user
+  ) throws RelationTypeComponentNotFoundException;
+
+  GetRelationTypeComponentAttributeTypesResponse getRelationTypeComponentAttributeTypesAssignments (
+    UUID relationTypeComponentId
+  ) throws RelationTypeComponentNotFoundException;
+
+  void deleteRelationTypeComponentAttributeTypeAssignment (UUID relationTypeComponentAttributeTypeAssignmentId, User user) throws RelationTypeComponentAttributeTypeAssignmentNotFound;
+
+  GetRelationTypeComponentsAttributeTypesUsageCountResponse getRelationTypeComponentAttributeTypesWithUsageCount (GetRelationTypeComponentAssetTypesUsageCountParams params);
+}

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+  <changeSet id="1724228701542-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="stage_asset"/>
+      </not>
+    </preConditions>
+    <createTable schemaName="extract_delta" tableName="stage_asset">
+        <column autoIncrement="true" name="stage_asset_id" type="BIGINT">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_stage_asset"/>
+        </column>
+        <column name="job_id" type="UUID"/>
+        <column name="nk" type="text"/>
+        <column name="instance_id" type="UUID"/>
+        <column name="asset_name" type="text"/>
+        <column name="asset_type_id" type="UUID"/>
+        <column name="asset_displayname" type="text"/>
+        <column name="lifecycle_status" type="UUID"/>
+        <column name="stewardship_status" type="UUID"/>
+        <column name="inserted_datetime" type="DATETIME"/>
+        <column name="action_decision" type="varchar(1)"/>
+        <column name="action_decision_datetime" type="DATETIME"/>
+        <column name="action_process_status" type="varchar(25)"/>
+        <column name="matched_asset_id" type="UUID"/>
+        <column name="action_processed_datetime" type="DATETIME"/>
+        <column name="filter_criteria" type="varchar(3)"/>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="job_id" baseTableName="stage_asset" baseTableSchemaName="extract_delta" constraintName="FK_STAGE_ASSET_ON_JOB" onDelete="CASCADE" referencedColumnNames="job_id" referencedTableName="extract_job" referencedTableSchemaName="extract_meta"/>
+  </changeSet>
+
+  <changeSet id="1724228711841-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="stage_attribute"/>
+      </not>
+    </preConditions>
+    <createTable schemaName="extract_delta" tableName="stage_attribute">
+        <column autoIncrement="true" name="stage_attribute_id" type="BIGINT">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_stage_attribute"/>
+        </column>
+        <column name="job_id" type="UUID"/>
+        <column name="nk" type="text"/>
+        <column name="asset_nk" type="text"/>
+        <column name="instance_id" type="UUID"/>
+        <column name="asset_id" type="UUID"/>
+        <column name="attribute_type_id" type="UUID"/>
+        <column name="value" type="text"/>
+        <column name="inserted_datetime" type="DATETIME"/>
+        <column name="action_decision" type="varchar(1)"/>
+        <column name="action_decision_datetime" type="DATETIME"/>
+        <column name="action_process_status" type="VARCHAR(255)"/>
+        <column name="matched_attribute_id" type="UUID"/>
+        <column name="action_processed_datetime" type="DATETIME"/>
+        <column name="filter_criteria" type="varchar(3)"/>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="job_id" baseTableName="stage_attribute" baseTableSchemaName="extract_delta" constraintName="FK_STAGE_ATTRIBUTE_ON_JOB" onDelete="CASCADE" referencedColumnNames="job_id" referencedTableName="extract_job" referencedTableSchemaName="extract_meta"/>
+  </changeSet>
+
+  <changeSet id="1724228720952-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="stage_relation"/>
+      </not>
+    </preConditions>
+    <createTable schemaName="extract_delta" tableName="stage_relation">
+        <column autoIncrement="true" name="stage_relation_id" type="BIGINT">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_stage_relation"/>
+        </column>
+        <column name="job_id" type="UUID"/>
+        <column name="nk" type="text"/>
+        <column name="instance_id" type="UUID"/>
+        <column name="relation_type_id" type="UUID"/>
+        <column name="relation_type_component_1_id" type="UUID"/>
+        <column name="asset_1_id" type="UUID"/>
+        <column name="asset_1_nk" type="text"/>
+        <column name="relation_type_component_2_id" type="UUID"/>
+        <column name="asset_2_id" type="UUID"/>
+        <column name="asset_2_nk" type="text"/>
+        <column name="inserted_datetime" type="DATETIME"/>
+        <column name="action_decision" type="varchar(1)"/>
+        <column name="action_decision_datetime" type="DATETIME"/>
+        <column name="action_process_status" type="VARCHAR(255)"/>
+        <column name="matched_relation_id" type="UUID"/>
+        <column name="action_processed_datetime" type="DATETIME"/>
+        <column name="filter_criteria" type="varchar(3)"/>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="job_id" baseTableName="stage_relation" baseTableSchemaName="extract_delta" constraintName="FK_STAGE_RELATION_ON_JOB" onDelete="CASCADE" referencedColumnNames="job_id" referencedTableName="extract_job" referencedTableSchemaName="extract_meta"/>
+  </changeSet>
+</databaseChangeLog>

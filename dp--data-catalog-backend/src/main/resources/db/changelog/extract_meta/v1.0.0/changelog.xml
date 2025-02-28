@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+  <changeSet id="0" author="JuliWolf">
+    <tagDatabase tag="v.1.0.0"/>
+  </changeSet>
+
+  <include file="05-10-schemas.xml" relativeToChangelogFile="true"/>
+  <include file="08-10-extract_job.xml" relativeToChangelogFile="true"/>
+  <include file="15-10-extract_delta.xml" relativeToChangelogFile="true"/>
+  <include file="30-10-update-extract-job.xml" relativeToChangelogFile="true"/>
+  <include file="12-11-update-extract_delta.xml" relativeToChangelogFile="true"/>
+  <include file="18-11-update-extract-job-object.xml" relativeToChangelogFile="true"/>
+  <include file="19-11-procedures.xml" relativeToChangelogFile="true"/>
+  <include file="19-11-scheduler-user.xml" relativeToChangelogFile="true"/>
+  <include file="25-11-24-changelog.xml" relativeToChangelogFile="true"/>
+  <include file="02-12-24-shedlock.xml" relativeToChangelogFile="true"/>
+  <include file="06-12-24-update-extract-job.xml" relativeToChangelogFile="true"/>
+  <include file="24.12.2024-stage-responsibilities.xml" relativeToChangelogFile="true"/>
+</databaseChangeLog>

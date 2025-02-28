@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+  <changeSet id="1733834376521-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="asset_history"/>
+      </not>
+    </preConditions>
+
+    <rollback>
+      <dropTable tableName="asset_history" cascadeConstraints="true"/>
+    </rollback>
+    <createTable schemaName="public" tableName="asset_history">
+        <column name="asset_history_id" type="UUID">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_asset_history"/>
+        </column>
+        <column name="asset_id" type="UUID"/>
+        <column name="asset_name" type="VARCHAR(255)"/>
+        <column name="asset_type_id" type="UUID"/>
+        <column name="asset_displayname" type="VARCHAR(255)"/>
+        <column name="source_language" type="UUID"/>
+        <column name="lifecycle_status" type="UUID"/>
+        <column name="stewardship_status" type="UUID"/>
+        <column name="created_on" type="DATETIME"/>
+        <column name="created_by" type="UUID"/>
+        <column name="last_modified_on" type="DATETIME"/>
+        <column name="last_modified_by" type="UUID"/>
+        <column name="deleted_flag" type="BOOLEAN"/>
+        <column name="deleted_on" type="DATETIME"/>
+        <column name="deleted_by" type="UUID"/>
+        <column name="valid_from" type="DATETIME"/>
+        <column name="valid_to" type="DATETIME"/>
+    </createTable>
+    <createIndex indexName="idx_asset_id_valid_from_valid_to" schemaName="public" tableName="asset_history">
+        <column name="asset_id"/>
+        <column name="valid_from"/>
+        <column name="valid_to"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet id="1733834501126-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="attribute_history"/>
+      </not>
+    </preConditions>
+
+    <rollback>
+      <dropTable tableName="attribute_history" cascadeConstraints="true"/>
+    </rollback>
+    <createTable schemaName="public" tableName="attribute_history">
+        <column name="attribute_history_id" type="UUID">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_attribute_history"/>
+        </column>
+        <column name="attribute_id" type="UUID"/>
+        <column name="attribute_type_id" type="UUID"/>
+        <column name="asset_id" type="UUID"/>
+        <column name="value" type="text"/>
+        <column name="integer_flag" type="BOOLEAN"/>
+        <column name="value_numeric" type="DOUBLE"/>
+        <column name="value_bool" type="BOOLEAN"/>
+        <column name="value_datetime" type="DATETIME"/>
+        <column name="source_language" type="UUID"/>
+        <column name="created_on" type="DATETIME"/>
+        <column name="created_by" type="UUID"/>
+        <column name="last_modified_on" type="DATETIME"/>
+        <column name="last_modified_by" type="UUID"/>
+        <column name="deleted_flag" type="BOOLEAN"/>
+        <column name="deleted_on" type="DATETIME"/>
+        <column name="deleted_by" type="UUID"/>
+        <column name="valid_from" type="DATETIME"/>
+        <column name="valid_to" type="DATETIME"/>
+    </createTable>
+    <createIndex indexName="idx_attribute_asset_id_valid_from_valid_to" schemaName="public" tableName="attribute_history">
+        <column name="asset_id"/>
+        <column name="valid_from"/>
+        <column name="valid_to"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet id="1733834516356-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="relation_attribute_history"/>
+      </not>
+    </preConditions>
+
+    <rollback>
+      <dropTable tableName="relation_attribute_history" cascadeConstraints="true"/>
+    </rollback>
+    <createTable schemaName="public" tableName="relation_attribute_history">
+        <column name="relation_attribute_history_id" type="UUID">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_relation_attribute_history"/>
+        </column>
+        <column name="relation_attribute_id" type="UUID"/>
+        <column name="attribute_type_id" type="UUID"/>
+        <column name="relation_id" type="UUID"/>
+        <column name="value" type="text"/>
+        <column name="source_language" type="UUID"/>
+        <column name="integer_flag" type="BOOLEAN"/>
+        <column name="value_numeric" type="DOUBLE"/>
+        <column name="value_bool" type="BOOLEAN"/>
+        <column name="value_datetime" type="DATETIME"/>
+        <column name="created_on" type="DATETIME"/>
+        <column name="created_by" type="UUID"/>
+        <column name="last_modified_on" type="DATETIME"/>
+        <column name="last_modified_by" type="UUID"/>
+        <column name="deleted_flag" type="BOOLEAN"/>
+        <column name="deleted_on" type="DATETIME"/>
+        <column name="deleted_by" type="UUID"/>
+        <column name="valid_from" type="DATETIME"/>
+        <column name="valid_to" type="DATETIME"/>
+    </createTable>
+    <createIndex indexName="idx_relation_id_valid_from_valid_to" schemaName="public" tableName="relation_attribute_history">
+        <column name="relation_id"/>
+        <column name="valid_from"/>
+        <column name="valid_to"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet id="1733834564894-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="relation_component_attribute_history"/>
+      </not>
+    </preConditions>
+
+    <rollback>
+      <dropTable tableName="relation_component_attribute_history" cascadeConstraints="true"/>
+    </rollback>
+    <createTable schemaName="public" tableName="relation_component_attribute_history">
+        <column name="relation_component_attribute_history_id" type="UUID">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_relation_component_attribute_history"/>
+        </column>
+        <column name="relation_component_attribute_id" type="UUID"/>
+        <column name="attribute_type_id" type="UUID"/>
+        <column name="relation_component_id" type="UUID"/>
+        <column name="value" type="text"/>
+        <column name="source_language" type="UUID"/>
+        <column name="integer_flag" type="BOOLEAN"/>
+        <column name="value_numeric" type="DOUBLE"/>
+        <column name="value_bool" type="BOOLEAN"/>
+        <column name="value_datetime" type="DATETIME"/>
+        <column name="created_on" type="DATETIME"/>
+        <column name="created_by" type="UUID"/>
+        <column name="last_modified_on" type="DATETIME"/>
+        <column name="last_modified_by" type="UUID"/>
+        <column name="deleted_flag" type="BOOLEAN"/>
+        <column name="deleted_on" type="DATETIME"/>
+        <column name="deleted_by" type="UUID"/>
+        <column name="valid_from" type="DATETIME"/>
+        <column name="valid_to" type="DATETIME"/>
+    </createTable>
+    <createIndex indexName="idx_relation_component_id_valid_from_valid_to" schemaName="public" tableName="relation_component_attribute_history">
+        <column name="relation_component_id"/>
+        <column name="valid_from"/>
+        <column name="valid_to"/>
+    </createIndex>
+  </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+
+  <changeSet id="1711701356561-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="relation_type_component_attribute_type_assignment"/>
+      </not>
+    </preConditions>
+
+    <rollback>
+      <dropTable tableName="relation_type_component_attribute_type_assignment" cascadeConstraints="true"/>
+    </rollback>
+
+    <createTable schemaName="public" tableName="relation_type_component_attribute_type_assignment">
+        <column name="relation_type_component_attribute_type_assignment_id" type="UUID">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_relation_type_component_attribute_type_assignment"/>
+        </column>
+        <column name="relation_type_component_id" type="UUID"/>
+        <column name="attribute_type_id" type="UUID"/>
+        <column name="created_on" type="DATETIME"/>
+        <column name="created_by" type="UUID"/>
+        <column defaultValueBoolean="false" name="deleted_flag" type="boolean"/>
+        <column name="deleted_on" type="DATETIME"/>
+        <column name="deleted_by" type="UUID"/>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="relation_type_component_attribute_type_assignment" baseTableSchemaName="public" constraintName="FK_RELATIONTYPECOMPONENTATTRIBUTETYPEASSIGNMENT_ON_CREATEDBY" onDelete="SET NULL" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="relation_type_component_attribute_type_assignment" baseTableSchemaName="public" constraintName="FK_RELATIONTYPECOMPONENTATTRIBUTETYPEASSIGNMENT_ON_DELETEDBY" onDelete="SET NULL" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="attribute_type_id" baseTableName="relation_type_component_attribute_type_assignment" baseTableSchemaName="public" constraintName="FK_RELATIONTYPECOMPONENTATTRIBUTETYPEASSIGNMEN_ON_ATTRIBUTETYPE" onDelete="CASCADE" referencedColumnNames="attribute_type_id" referencedTableName="attribute_type" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="relation_type_component_id" baseTableName="relation_type_component_attribute_type_assignment" baseTableSchemaName="public" constraintName="FK_RELATIONTYPECOMPONENTATTRIBUTETYPEA_ON_RELATIONTYPECOMPONENT" onDelete="CASCADE" referencedColumnNames="relation_type_component_id" referencedTableName="relation_type_component" referencedTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1711701508143-1" author="juliwolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <columnExists tableName="relation_type_component_attribute_type_assignment" columnName="relation_type_component_id"/>
+      <columnExists tableName="relation_type_component_attribute_type_assignment" columnName="attribute_type_id"/>
+
+      <columnExists tableName="relation_type_component_attribute_type_assignment" columnName="deleted_flag"/>
+    </preConditions>
+
+    <sql splitStatements="true" stripComments="true" endDelimiter="\nGO">
+      CREATE UNIQUE INDEX idx_unique_rel_comp_assign_comp_attribute_t_deleted_flag ON "relation_type_component_attribute_type_assignment" (relation_type_component_id, attribute_type_id, deleted_flag)
+        WHERE deleted_flag = false;
+    </sql>
+  </changeSet>
+</databaseChangeLog>

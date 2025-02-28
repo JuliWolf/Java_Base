@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+  <changeSet id="1736436509527-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="struct_unit"/>
+      </not>
+    </preConditions>
+    <rollback>
+      <dropTable tableName="struct_unit" cascadeConstraints="true"/>
+    </rollback>
+    <createTable schemaName="public" tableName="struct_unit">
+        <column name="struct_unit_id" type="UUID">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_struct_unit"/>
+        </column>
+        <column name="struct_unit_source_system_id" type="int(4)"/>
+        <column name="struct_unit_name" type="varchar(255)"/>
+        <column name="struct_unit_level" type="int(4)"/>
+        <column name="parent_struct_unit_id" type="UUID"/>
+        <column name="struct_unit_source_firm_id" type="int(4)"/>
+        <column name="created_on" type="DATETIME"/>
+        <column name="created_by" type="UUID"/>
+        <column name="last_modified_on" type="DATETIME"/>
+        <column name="last_modified_by" type="UUID"/>
+        <column name="last_login_datetime" type="DATETIME"/>
+        <column defaultValueBoolean="false" name="deleted_flag" type="boolean"/>
+        <column name="deleted_on" type="DATETIME"/>
+        <column name="deleted_by" type="UUID"/>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="struct_unit" baseTableSchemaName="public" constraintName="FK_STRUCT_UNIT_ON_CREATED_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="struct_unit" baseTableSchemaName="public" constraintName="FK_STRUCT_UNIT_ON_DELETED_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="last_modified_by" baseTableName="struct_unit" baseTableSchemaName="public" constraintName="FK_STRUCT_UNIT_ON_LAST_MODIFIED_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="parent_struct_unit_id" baseTableName="struct_unit" baseTableSchemaName="public" constraintName="FK_STRUCT_UNIT_ON_PARENT_STRUCT_UNIT" onDelete="SET NULL" referencedColumnNames="struct_unit_id" referencedTableName="struct_unit" referencedTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1736508902470-1" author="juliwolf">
+    <addColumn tableName="user" schemaName="public">
+      <column name="boss_k_pid" type="VARCHAR"/>
+      <column name="struct_unit_id" type="UUID"/>
+      <column name="user_type" type="varchar(8)"/>
+      <column name="user_photo_link" type="jsonb"/>
+      <column name="user_work_status" type="varchar(8)"/>
+    </addColumn>
+    <addForeignKeyConstraint baseColumnNames="struct_unit_id" baseTableName="user" baseTableSchemaName="public" constraintName="FK_USER_ON_STRUCT_UNIT" referencedColumnNames="struct_unit_id" referencedTableName="struct_unit" referencedTableSchemaName="public"/>
+  </changeSet>
+</databaseChangeLog>

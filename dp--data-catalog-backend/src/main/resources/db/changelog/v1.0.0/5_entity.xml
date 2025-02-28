@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+  <changeSet id="1695047133052-1" author="JuliWolf">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="entity"/>
+      </not>
+    </preConditions>
+
+    <rollback>
+      <dropTable tableName="entity" cascadeConstraints="true"/>
+    </rollback>
+
+    <createTable schemaName="public" tableName="entity">
+        <column name="entity_id" type="UUID">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_entity"/>
+        </column>
+        <column name="entity_name" type="VARCHAR(255)"/>
+        <column defaultValueBoolean="false" name="deleted_flag" type="boolean"/>
+    </createTable>
+  </changeSet>
+
+  <changeSet id="1695213555365-1" author="JuliWolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <columnExists tableName="entity" columnName="entity_name"/>
+
+      <columnExists tableName="entity" columnName="deleted_flag"/>
+    </preConditions>
+
+    <sql splitStatements="true" stripComments="true" endDelimiter="\nGO">
+      CREATE UNIQUE INDEX idx_unique_entity_name_deleted_flag ON entity (entity_name, deleted_flag)
+        WHERE deleted_flag = false
+    </sql>
+  </changeSet>
+
+  <changeSet id="1695221555224-1" author="JuliWolf">
+    <insert tableName="entity" schemaName="public">
+      <column name="entity_id" value="b8abfa30-b1ad-4e07-8f8a-c2cf40a723bf"/>
+      <column name="entity_name" value="ASSET_TYPE"/>
+    </insert>
+
+    <insert tableName="entity" schemaName="public">
+      <column name="entity_id" value="360ef840-5c19-424b-a86f-b3e24c2fcc2f"/>
+      <column name="entity_name" value="ROLE"/>
+    </insert>
+    <insert tableName="entity" schemaName="public">
+      <column name="entity_id" value="c4dbe5b6-98dc-431e-807f-a5109a19ee9d"/>
+      <column name="entity_name" value="ATTRIBUTE_TYPE"/>
+    </insert>
+    <insert tableName="entity" schemaName="public">
+      <column name="entity_id" value="b1c5eb66-b777-4ee8-8a39-6ad9e43f447f"/>
+      <column name="entity_name" value="RELATION_TYPE"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>

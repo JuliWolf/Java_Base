@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+    <changeSet id="1704967555149-1" author="JuliWolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <columnExists tableName="role_action" columnName="role_id"/>
+      <columnExists tableName="role_action" columnName="action_type_id"/>
+      <columnExists tableName="role_action" columnName="entity_type_id"/>
+      <columnExists tableName="role_action" columnName="action_scope"/>
+
+      <columnExists tableName="role_action" columnName="deleted_flag"/>
+    </preConditions>
+
+    <sql splitStatements="true" stripComments="true" endDelimiter="\nGO">
+      DROP INDEX uk_role_id_action_type_id_entity_type_id_action_scope;
+
+      CREATE UNIQUE INDEX uk_role_id_action_type_id_entity_type_id_action_scope
+        ON role_action (role_id, action_type_id, action_scope, entity_type_id)
+        WHERE deleted_flag = false and action_scope = 'ALL';
+    </sql>
+  </changeSet>
+</databaseChangeLog>

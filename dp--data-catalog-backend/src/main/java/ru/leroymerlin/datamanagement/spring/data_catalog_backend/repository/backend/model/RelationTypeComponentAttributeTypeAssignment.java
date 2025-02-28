@@ -1,0 +1,70 @@
+package ru.leroymerlin.datamanagement.spring.data_catalog_backend.repository.backend.model;
+
+import java.util.UUID;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+/**
+ * @author juliwolf
+ */
+
+@jakarta.persistence.Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@Getter
+@Setter
+@Table(name = "relation_type_component_attribute_type_assignment", schema = "public")
+public class RelationTypeComponentAttributeTypeAssignment {
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  @Column(name = "relation_type_component_attribute_type_assignment_id", updatable = false, nullable = false)
+  private UUID relationTypeComponentAttributeTypeAssignmentId;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "relation_type_component_id", referencedColumnName = "relation_type_component_id")
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  @ToString.Exclude
+  private RelationTypeComponent relationTypeComponent;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "attribute_type_id", referencedColumnName = "attribute_type_id")
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  @ToString.Exclude
+  private AttributeType attributeType;
+
+  @Column(name = "created_on")
+  @CreationTimestamp
+  private java.sql.Timestamp createdOn;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "created_by", referencedColumnName = "user_id")
+  @OnDelete(action = OnDeleteAction.SET_NULL)
+  @ToString.Exclude
+  private User createdBy;
+
+  @Column(name="deleted_flag", columnDefinition = "boolean default false")
+  private Boolean isDeleted = false;
+
+  @Column(name = "deleted_on")
+  private java.sql.Timestamp deletedOn;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "deleted_by", referencedColumnName = "user_id")
+  @OnDelete(action = OnDeleteAction.SET_NULL)
+  @ToString.Exclude
+  private User deletedBy;
+
+  public UUID getCreatedByUUID () {
+    return createdBy != null ? createdBy.getUserId() : null;
+  }
+
+  public RelationTypeComponentAttributeTypeAssignment (RelationTypeComponent relationTypeComponent, AttributeType attributeType, User createdBy) {
+    this.relationTypeComponent = relationTypeComponent;
+    this.attributeType = attributeType;
+    this.createdBy = createdBy;
+  }
+}

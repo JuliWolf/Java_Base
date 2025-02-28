@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+  <changeSet id="1735144386166-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="metadata_extract"/>
+      </not>
+    </preConditions>
+    <rollback>
+      <dropTable tableName="metadata_extract" cascadeConstraints="true"/>
+    </rollback>
+
+    <createTable schemaName="public" tableName="metadata_extract">
+        <column name="metadata_extract_id" type="UUID">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_metadata_extract"/>
+        </column>
+        <column name="source_kind" type="varchar(12)"/>
+        <column name="source_type" type="varchar(12)"/>
+        <column name="root_asset_id" type="UUID"/>
+        <column name="kafka_topic" type="varchar(255)"/>
+        <column name="airflow_dag" type="varchar(100)"/>
+        <column name="connection_info" type="jsonb"/>
+        <column name="vault_secrets" type="jsonb"/>
+        <column name="full_meta_flag" type="BOOLEAN"/>
+        <column name="extract_schedule_cron" type="varchar(255)"/>
+        <column name="extract_status" type="varchar(3)"/>
+        <column name="created_on" type="DATETIME"/>
+        <column name="created_by" type="UUID"/>
+        <column name="last_modified_on" type="DATETIME"/>
+        <column name="last_modified_by" type="UUID"/>
+        <column defaultValueBoolean="false" name="deleted_flag" type="boolean"/>
+        <column name="deleted_on" type="DATETIME"/>
+        <column name="deleted_by" type="UUID"/>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="metadata_extract" baseTableSchemaName="public" constraintName="FK_METADATA_EXTRACT_ON_CREATED_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="metadata_extract" baseTableSchemaName="public" constraintName="FK_METADATA_EXTRACT_ON_DELETED_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="last_modified_by" baseTableName="metadata_extract" baseTableSchemaName="public" constraintName="FK_METADATA_EXTRACT_ON_LAST_MODIFIED_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="root_asset_id" baseTableName="metadata_extract" baseTableSchemaName="public" constraintName="FK_METADATA_EXTRACT_ON_ROOT_ASSET" referencedColumnNames="asset_id" referencedTableName="asset" referencedTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1735144420652-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="metadata_extract_filter"/>
+      </not>
+    </preConditions>
+    <rollback>
+      <dropTable tableName="metadata_extract_filter" cascadeConstraints="true"/>
+    </rollback>
+
+    <createTable schemaName="public" tableName="metadata_extract_filter">
+        <column name="metadata_exract_filter_id" type="UUID">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_metadata_extract_filter"/>
+        </column>
+        <column name="metadata_extract_id" type="UUID"/>
+        <column name="filter_type" type="varchar(10)"/>
+        <column name="object_type" type="varchar(10)"/>
+        <column name="condition_type" type="varchar(12)"/>
+        <column name="value" type="text"/>
+        <column name="created_on" type="DATETIME"/>
+        <column name="created_by" type="UUID"/>
+        <column name="last_modified_on" type="DATETIME"/>
+        <column name="last_modified_by" type="UUID"/>
+        <column defaultValueBoolean="false" name="deleted_flag" type="boolean"/>
+        <column name="deleted_on" type="DATETIME"/>
+        <column name="deleted_by" type="UUID"/>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="metadata_extract_filter" baseTableSchemaName="public" constraintName="FK_METADATA_EXTRACT_FILTER_ON_CREATED_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="metadata_extract_filter" baseTableSchemaName="public" constraintName="FK_METADATA_EXTRACT_FILTER_ON_DELETED_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="last_modified_by" baseTableName="metadata_extract_filter" baseTableSchemaName="public" constraintName="FK_METADATA_EXTRACT_FILTER_ON_LAST_MODIFIED_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="metadata_extract_id" baseTableName="metadata_extract_filter" baseTableSchemaName="public" constraintName="FK_METADATA_EXTRACT_FILTER_ON_METADATA_EXTRACT" referencedColumnNames="metadata_extract_id" referencedTableName="metadata_extract" referencedTableSchemaName="public"/>
+  </changeSet>
+</databaseChangeLog>

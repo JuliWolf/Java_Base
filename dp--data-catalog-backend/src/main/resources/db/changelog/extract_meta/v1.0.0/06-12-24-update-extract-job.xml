@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+
+  <changeSet id="1733481729570-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+        <tableExists schemaName="extract_meta" tableName="extract_job_object"/>
+        <columnExists columnName="partition_id" schemaName="extract_meta" tableName="extract_job_object"/>
+    </preConditions>
+
+    <dropColumn tableName="extract_job_object" schemaName="extract_meta" columnName="partition_id"/>
+  </changeSet>
+  <changeSet id="1733481823451-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <columnExists columnName="object_name" schemaName="extract_meta" tableName="extract_job_object"/>
+    </preConditions>
+
+    <renameColumn tableName="extract_job_object" oldColumnName="object_name" newColumnName="kafka_topic"
+                  schemaName="extract_meta"/>
+  </changeSet>
+</databaseChangeLog>

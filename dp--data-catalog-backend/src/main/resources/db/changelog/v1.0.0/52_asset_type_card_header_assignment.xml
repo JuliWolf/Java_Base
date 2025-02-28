@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+
+  <changeSet id="1718881767105-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="asset_type_card_header_assignment"/>
+      </not>
+    </preConditions>
+
+    <createTable schemaName="public" tableName="asset_type_card_header_assignment">
+        <column name="asset_type_card_header_assignment_id" type="UUID">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_asset_type_card_header_assignment"/>
+        </column>
+        <column name="asset_type_id" type="UUID"/>
+        <column name="description_field_attribute_type_id" type="UUID"/>
+        <column name="owner_field_role_id" type="UUID"/>
+        <column name="created_on" type="DATETIME"/>
+        <column name="created_by" type="UUID"/>
+        <column defaultValueBoolean="false" name="deleted_flag" type="boolean"/>
+        <column name="deleted_on" type="DATETIME"/>
+        <column name="deleted_by" type="UUID"/>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="description_field_attribute_type_id" baseTableName="asset_type_card_header_assignment" baseTableSchemaName="public" constraintName="FK_ASSETTYPECARDHEADERASSIGNMEN_ON_DESCRIPTIONFIELDATTRIBUTETYP" onDelete="CASCADE" referencedColumnNames="attribute_type_id" referencedTableName="attribute_type" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="asset_type_id" baseTableName="asset_type_card_header_assignment" baseTableSchemaName="public" constraintName="FK_ASSET_TYPE_CARD_HEADER_ASSIGNMENT_ON_ASSET_TYPE" onDelete="CASCADE" referencedColumnNames="asset_type_id" referencedTableName="asset_type" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="asset_type_card_header_assignment" baseTableSchemaName="public" constraintName="FK_ASSET_TYPE_CARD_HEADER_ASSIGNMENT_ON_CREATED_BY" onDelete="SET NULL" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="asset_type_card_header_assignment" baseTableSchemaName="public" constraintName="FK_ASSET_TYPE_CARD_HEADER_ASSIGNMENT_ON_DELETED_BY" onDelete="SET NULL" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="owner_field_role_id" baseTableName="asset_type_card_header_assignment" baseTableSchemaName="public" constraintName="FK_ASSET_TYPE_CARD_HEADER_ASSIGNMENT_ON_OWNER_FIELD_ROLE" onDelete="CASCADE" referencedColumnNames="role_id" referencedTableName="role" referencedTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1718882034543-1" author="juliwolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <columnExists tableName="asset_type_card_header_assignment" columnName="asset_type_id"/>
+
+      <columnExists tableName="asset_type_card_header_assignment" columnName="deleted_flag"/>
+    </preConditions>
+
+    <sql splitStatements="true" stripComments="true" endDelimiter="\nGO">
+      CREATE UNIQUE INDEX idx_unique_asset_type_card_header_asset_type_deleted_flag ON "asset_type_card_header_assignment" (asset_type_id, deleted_flag)
+        WHERE deleted_flag = false;
+    </sql>
+  </changeSet>
+</databaseChangeLog>

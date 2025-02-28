@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+  <changeSet id="1702902624394-1" author="juliwolf" dbms="postgresql">
+    <dropForeignKeyConstraint baseTableName="asset" constraintName="fk_asset_on_asset_type" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="asset_type_id" baseTableName="asset" baseTableSchemaName="public" constraintName="fk_asset_on_asset_type" referencedColumnNames="asset_type_id" referencedTableName="asset_type" referencedTableSchemaName="public" onDelete="CASCADE"/>
+
+    <dropForeignKeyConstraint baseTableName="asset" constraintName="fk_asset_on_create_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="asset" baseTableSchemaName="public" constraintName="fk_asset_on_create_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="asset" constraintName="fk_asset_on_deleted_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="asset" baseTableSchemaName="public" constraintName="fk_asset_on_deleted_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="asset" constraintName="fk_asset_on_last_modified_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="last_modified_by" baseTableName="asset" baseTableSchemaName="public" constraintName="fk_asset_on_last_modified_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="asset" constraintName="fk_asset_on_lifecycle_status" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="lifecycle_status" baseTableName="asset" baseTableSchemaName="public" constraintName="fk_asset_on_lifecycle_status" referencedColumnNames="status_id" referencedTableName="status" referencedTableSchemaName="public" onDelete="CASCADE"/>
+
+    <dropForeignKeyConstraint baseTableName="asset" constraintName="fk_asset_on_source_language" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="source_language" baseTableName="asset" baseTableSchemaName="public" constraintName="fk_asset_on_source_language" referencedColumnNames="language_id" referencedTableName="language" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="asset" constraintName="fk_asset_on_stewardship_status" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="stewardship_status" baseTableName="asset" baseTableSchemaName="public" constraintName="fk_asset_on_stewardship_status" referencedColumnNames="status_id" referencedTableName="status" referencedTableSchemaName="public" onDelete="CASCADE"/>
+  </changeSet>
+
+  <changeSet id="1702986437557-1" author="juliwolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <foreignKeyConstraintExists foreignKeyName="fk_asset_hierarchy_on_child_asset"/>
+    </preConditions>
+
+    <dropForeignKeyConstraint baseTableName="asset_hierarchy" constraintName="fk_asset_hierarchy_on_child_asset" baseTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1702986448190-1" author="juliwolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <foreignKeyConstraintExists foreignKeyName="fk_asset_hierarchy_on_create_by"/>
+    </preConditions>
+
+    <dropForeignKeyConstraint baseTableName="asset_hierarchy" constraintName="fk_asset_hierarchy_on_create_by" baseTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1702986458958-1" author="juliwolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <foreignKeyConstraintExists foreignKeyName="fk_asset_hierarchy_on_deleted_by"/>
+    </preConditions>
+
+    <dropForeignKeyConstraint baseTableName="asset_hierarchy" constraintName="fk_asset_hierarchy_on_deleted_by" baseTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1702986469831-1" author="juliwolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <foreignKeyConstraintExists foreignKeyName="fk_asset_hierarchy_on_parent_asset"/>
+    </preConditions>
+
+    <dropForeignKeyConstraint baseTableName="asset_hierarchy" constraintName="fk_asset_hierarchy_on_parent_asset" baseTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1702986479782-1" author="juliwolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <foreignKeyConstraintExists foreignKeyName="fk_asset_hierarchy_on_relation"/>
+    </preConditions>
+
+    <dropForeignKeyConstraint baseTableName="asset_hierarchy" constraintName="fk_asset_hierarchy_on_relation" baseTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1702903117250-1" author="juliwolf" dbms="postgresql">
+    <addForeignKeyConstraint baseColumnNames="child_asset_id" baseTableName="asset_hierarchy" baseTableSchemaName="public" constraintName="fk_asset_hierarchy_on_child_asset" referencedColumnNames="asset_id" referencedTableName="asset" referencedTableSchemaName="public" onDelete="CASCADE"/>
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="asset_hierarchy" baseTableSchemaName="public" constraintName="fk_asset_hierarchy_on_create_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="asset_hierarchy" baseTableSchemaName="public" constraintName="fk_asset_hierarchy_on_deleted_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+    <addForeignKeyConstraint baseColumnNames="parent_asset_id" baseTableName="asset_hierarchy" baseTableSchemaName="public" constraintName="fk_asset_hierarchy_on_parent_asset" referencedColumnNames="asset_id" referencedTableName="asset" referencedTableSchemaName="public" onDelete="CASCADE"/>
+    <addForeignKeyConstraint baseColumnNames="relation_id" baseTableName="asset_hierarchy" baseTableSchemaName="public" constraintName="fk_asset_hierarchy_on_relation" referencedColumnNames="relation_id" referencedTableName="relation" referencedTableSchemaName="public" onDelete="CASCADE"/>
+  </changeSet>
+
+  <changeSet id="1702904636407-1" author="juliwolf" dbms="postgresql">
+    <dropForeignKeyConstraint baseTableName="asset_type" constraintName="fk_asset_type_on_create_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="asset_type" baseTableSchemaName="public" constraintName="fk_asset_type_on_create_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="asset_type" constraintName="fk_asset_type_on_deleted_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="asset_type" baseTableSchemaName="public" constraintName="fk_asset_type_on_deleted_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="asset_type" constraintName="fk_asset_type_on_last_modified_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="last_modified_by" baseTableName="asset_type" baseTableSchemaName="public" constraintName="fk_asset_type_on_last_modified_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="asset_type" constraintName="fk_asset_type_on_source_language" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="source_language" baseTableName="asset_type" baseTableSchemaName="public" constraintName="fk_asset_type_on_source_language" referencedColumnNames="language_id" referencedTableName="language" referencedTableSchemaName="public" onDelete="SET NULL"/>
+  </changeSet>
+
+  <changeSet id="1702905829513-1" author="juliwolf" dbms="postgresql">
+    <dropForeignKeyConstraint baseTableName="asset_type_attribute_type_assignment" constraintName="fk_asset_type_attribute_type_assignment_on_asset_type" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="asset_type_id" baseTableName="asset_type_attribute_type_assignment" baseTableSchemaName="public" constraintName="fk_asset_type_attribute_type_assignment_on_asset_type" referencedColumnNames="asset_type_id" referencedTableName="asset_type" referencedTableSchemaName="public" onDelete="CASCADE"/>
+
+    <dropForeignKeyConstraint baseTableName="asset_type_attribute_type_assignment" constraintName="fk_asset_type_attribute_type_assignment_on_attribute_type" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="attribute_type_id" baseTableName="asset_type_attribute_type_assignment" baseTableSchemaName="public" constraintName="fk_asset_type_attribute_type_assignment_on_attribute_type" referencedColumnNames="attribute_type_id" referencedTableName="attribute_type" referencedTableSchemaName="public" onDelete="CASCADE"/>
+
+    <dropForeignKeyConstraint baseTableName="asset_type_attribute_type_assignment" constraintName="fk_asset_type_attribute_type_assignment_on_create_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="asset_type_attribute_type_assignment" baseTableSchemaName="public" constraintName="fk_asset_type_attribute_type_assignment_on_create_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="asset_type_attribute_type_assignment" constraintName="fk_asset_type_attribute_type_assignment_on_deleted_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="asset_type_attribute_type_assignment" baseTableSchemaName="public" constraintName="fk_asset_type_attribute_type_assignment_on_deleted_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="asset_type_attribute_type_assignment" constraintName="fk_asset_type_attribute_type_assignment_on_parent_asset_type" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="parent_asset_type_id" baseTableName="asset_type_attribute_type_assignment" baseTableSchemaName="public" constraintName="fk_asset_type_attribute_type_assignment_on_parent_asset_type" referencedColumnNames="asset_type_id" referencedTableName="asset_type" referencedTableSchemaName="public" onDelete="CASCADE"/>
+  </changeSet>
+
+  <changeSet id="1702905946574-1" author="juliwolf" dbms="postgresql">
+    <dropForeignKeyConstraint baseTableName="asset_type_inheritance" constraintName="fk_asset_type_inheritance_on_child_asset_type" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="child_asset_type_id" baseTableName="asset_type_inheritance" baseTableSchemaName="public" constraintName="fk_asset_type_inheritance_on_child_asset_type" referencedColumnNames="asset_type_id" referencedTableName="asset_type" referencedTableSchemaName="public" onDelete="CASCADE"/>
+
+    <dropForeignKeyConstraint baseTableName="asset_type_inheritance" constraintName="fk_asset_type_inheritance_on_create_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="asset_type_inheritance" baseTableSchemaName="public" constraintName="fk_asset_type_inheritance_on_create_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="asset_type_inheritance" constraintName="fk_asset_type_inheritance_on_deleted_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="asset_type_inheritance" baseTableSchemaName="public" constraintName="fk_asset_type_inheritance_on_deleted_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="asset_type_inheritance" constraintName="fk_asset_type_inheritance_on_parent_asset_type" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="parent_asset_type_id" baseTableName="asset_type_inheritance" baseTableSchemaName="public" constraintName="fk_asset_type_inheritance_on_parent_asset_type" referencedColumnNames="asset_type_id" referencedTableName="asset_type" referencedTableSchemaName="public" onDelete="CASCADE"/>
+  </changeSet>
+
+  <changeSet id="1702906045010-1" author="juliwolf" dbms="postgresql">
+    <dropForeignKeyConstraint baseTableName="asset_type_status_assignment" constraintName="fk_asset_type_status_assignment_on_asset_type" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="asset_type_id" baseTableName="asset_type_status_assignment" baseTableSchemaName="public" constraintName="fk_asset_type_status_assignment_on_asset_type" referencedColumnNames="asset_type_id" referencedTableName="asset_type" referencedTableSchemaName="public" onDelete="CASCADE"/>
+
+    <dropForeignKeyConstraint baseTableName="asset_type_status_assignment" constraintName="fk_asset_type_status_assignment_on_create_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="asset_type_status_assignment" baseTableSchemaName="public" constraintName="fk_asset_type_status_assignment_on_create_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="asset_type_status_assignment" constraintName="fk_asset_type_status_assignment_on_deleted_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="asset_type_status_assignment" baseTableSchemaName="public" constraintName="fk_asset_type_status_assignment_on_deleted_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="asset_type_status_assignment" constraintName="fk_asset_type_status_assignment_on_parent_asset_type" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="parent_asset_type_id" baseTableName="asset_type_status_assignment" baseTableSchemaName="public" constraintName="fk_asset_type_status_assignment_on_parent_asset_type" referencedColumnNames="asset_type_id" referencedTableName="asset_type" referencedTableSchemaName="public" onDelete="CASCADE"/>
+
+    <dropForeignKeyConstraint baseTableName="asset_type_status_assignment" constraintName="fk_asset_type_status_assignment_on_status" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="status_id" baseTableName="asset_type_status_assignment" baseTableSchemaName="public" constraintName="fk_asset_type_status_assignment_on_status" referencedColumnNames="status_id" referencedTableName="status" referencedTableSchemaName="public" onDelete="CASCADE"/>
+  </changeSet>
+
+  <changeSet id="1702906096772-1" author="juliwolf" dbms="postgresql">
+    <dropForeignKeyConstraint baseTableName="attribute" constraintName="fk_attribute_on_asset" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="asset_id" baseTableName="attribute" baseTableSchemaName="public" constraintName="fk_attribute_on_asset" referencedColumnNames="asset_id" referencedTableName="asset" referencedTableSchemaName="public" onDelete="CASCADE"/>
+
+    <dropForeignKeyConstraint baseTableName="attribute" constraintName="fk_attribute_on_attribute_type" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="attribute_type_id" baseTableName="attribute" baseTableSchemaName="public" constraintName="fk_attribute_on_attribute_type" referencedColumnNames="attribute_type_id" referencedTableName="attribute_type" referencedTableSchemaName="public" onDelete="CASCADE"/>
+
+    <dropForeignKeyConstraint baseTableName="attribute" constraintName="fk_attribute_on_create_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="attribute" baseTableSchemaName="public" constraintName="fk_attribute_on_create_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="attribute" constraintName="fk_attribute_on_deleted_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="attribute" baseTableSchemaName="public" constraintName="fk_attribute_on_deleted_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="attribute" constraintName="fk_attribute_on_last_modified_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="last_modified_by" baseTableName="attribute" baseTableSchemaName="public" constraintName="fk_attribute_on_last_modified_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="attribute" constraintName="fk_attribute_on_source_language" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="source_language" baseTableName="attribute" baseTableSchemaName="public" constraintName="fk_attribute_on_source_language" referencedColumnNames="language_id" referencedTableName="language" referencedTableSchemaName="public" onDelete="SET NULL"/>
+  </changeSet>
+
+  <changeSet id="1702906295581-1" author="juliwolf" dbms="postgresql">
+    <dropForeignKeyConstraint baseTableName="attribute_type" constraintName="fk_attribute_type_on_create_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="attribute_type" baseTableSchemaName="public" constraintName="fk_attribute_type_on_create_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="attribute_type" constraintName="fk_attribute_type_on_deleted_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="attribute_type" baseTableSchemaName="public" constraintName="fk_attribute_type_on_deleted_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="attribute_type" constraintName="fk_attribute_type_on_last_modified_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="last_modified_by" baseTableName="attribute_type" baseTableSchemaName="public" constraintName="fk_attribute_type_on_last_modified_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="attribute_type" constraintName="fk_attribute_type_on_source_language" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="source_language" baseTableName="attribute_type" baseTableSchemaName="public" constraintName="fk_attribute_type_on_source_language" referencedColumnNames="language_id" referencedTableName="language" referencedTableSchemaName="public" onDelete="SET NULL"/>
+  </changeSet>
+
+  <changeSet id="1702906500613-1" author="juliwolf" dbms="postgresql">
+    <dropForeignKeyConstraint baseTableName="attribute_type_allowed_value" constraintName="fk_attribute_type_allowed_value_on_create_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="attribute_type_allowed_value" baseTableSchemaName="public" constraintName="fk_attribute_type_allowed_value_on_create_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="attribute_type_allowed_value" constraintName="fk_attribute_type_allowed_value_on_deleted_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="attribute_type_allowed_value" baseTableSchemaName="public" constraintName="fk_attribute_type_allowed_value_on_deleted_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="attribute_type_allowed_value" constraintName="fk_attribute_type_allowed_value_on_source_language" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="source_language" baseTableName="attribute_type_allowed_value" baseTableSchemaName="public" constraintName="fk_attribute_type_allowed_value_on_source_language" referencedColumnNames="language_id" referencedTableName="language" referencedTableSchemaName="public" onDelete="SET NULL"/>
+  </changeSet>
+
+  <changeSet id="1702906512358-1" author="juliwolf" dbms="postgresql">
+    <dropForeignKeyConstraint baseTableName="global_responsibility" constraintName="fk_global_responsibility_on_create_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="global_responsibility" baseTableSchemaName="public" constraintName="fk_global_responsibility_on_create_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="global_responsibility" constraintName="fk_global_responsibility_on_deleted_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="global_responsibility" baseTableSchemaName="public" constraintName="fk_global_responsibility_on_deleted_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="global_responsibility" constraintName="fk_global_responsibility_on_group" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="group_id" baseTableName="global_responsibility" baseTableSchemaName="public" constraintName="fk_global_responsibility_on_group" referencedColumnNames="group_id" referencedTableName="group" referencedTableSchemaName="public" onDelete="CASCADE"/>
+
+    <dropForeignKeyConstraint baseTableName="global_responsibility" constraintName="fk_global_responsibility_on_role" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="global_responsibility" baseTableSchemaName="public" constraintName="fk_global_responsibility_on_role" referencedColumnNames="role_id" referencedTableName="role" referencedTableSchemaName="public" onDelete="CASCADE"/>
+
+    <dropForeignKeyConstraint baseTableName="global_responsibility" constraintName="fk_global_responsibility_on_user" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="global_responsibility" baseTableSchemaName="public" constraintName="fk_global_responsibility_on_user" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="CASCADE"/>
+  </changeSet>
+
+  <changeSet id="1702911979117-1" author="juliwolf" dbms="postgresql">
+    <dropForeignKeyConstraint baseTableName="group" constraintName="fk_group_on_create_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="group" baseTableSchemaName="public" constraintName="fk_group_on_create_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="group" constraintName="fk_group_on_deleted_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="group" baseTableSchemaName="public" constraintName="fk_group_on_deleted_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="group" constraintName="fk_group_on_last_modified_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="last_modified_by" baseTableName="group" baseTableSchemaName="public" constraintName="fk_group_on_last_modified_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+  </changeSet>
+
+  <changeSet id="1702986668358-1" author="juliwolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <foreignKeyConstraintExists foreignKeyName="fk_relation_on_create_by"/>
+    </preConditions>
+
+    <dropForeignKeyConstraint baseTableName="relation" constraintName="fk_relation_on_create_by" baseTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1702986677559-1" author="juliwolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <foreignKeyConstraintExists foreignKeyName="fk_relation_on_deleted_by"/>
+    </preConditions>
+
+    <dropForeignKeyConstraint baseTableName="relation" constraintName="fk_relation_on_deleted_by" baseTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1702986686680-1" author="juliwolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <foreignKeyConstraintExists foreignKeyName="fk_relation_on_relation_type"/>
+    </preConditions>
+
+    <dropForeignKeyConstraint baseTableName="relation" constraintName="fk_relation_on_relation_type" baseTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1702912060033-1" author="juliwolf" dbms="postgresql">
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="relation" baseTableSchemaName="public" constraintName="fk_relation_on_create_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="relation" baseTableSchemaName="public" constraintName="fk_relation_on_deleted_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+    <addForeignKeyConstraint baseColumnNames="relation_type_id" baseTableName="relation" baseTableSchemaName="public" constraintName="fk_relation_on_relation_type" referencedColumnNames="relation_type_id" referencedTableName="relation_type" referencedTableSchemaName="public" onDelete="CASCADE"/>
+  </changeSet>
+
+  <changeSet id="1702986820755-1" author="juliwolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <foreignKeyConstraintExists foreignKeyName="fk_relation_component_on_asset"/>
+    </preConditions>
+
+    <dropForeignKeyConstraint baseTableName="relation_component" constraintName="fk_relation_component_on_asset" baseTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1702986829549-1" author="juliwolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <foreignKeyConstraintExists foreignKeyName="fk_relation_component_on_create_by"/>
+    </preConditions>
+
+    <dropForeignKeyConstraint baseTableName="relation_component" constraintName="fk_relation_component_on_create_by" baseTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1702986838212-1" author="juliwolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <foreignKeyConstraintExists foreignKeyName="fk_relation_component_on_deleted_by"/>
+    </preConditions>
+
+    <dropForeignKeyConstraint baseTableName="relation_component" constraintName="fk_relation_component_on_deleted_by" baseTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1702986846285-1" author="juliwolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <foreignKeyConstraintExists foreignKeyName="fk_relation_component_on_last_modified_by"/>
+    </preConditions>
+
+    <dropForeignKeyConstraint baseTableName="relation_component" constraintName="fk_relation_component_on_last_modified_by" baseTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1702986855597-1" author="juliwolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <foreignKeyConstraintExists foreignKeyName="fk_relation_component_on_relation"/>
+    </preConditions>
+
+    <dropForeignKeyConstraint baseTableName="relation_component" constraintName="fk_relation_component_on_relation" baseTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1702986864525-1" author="juliwolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <foreignKeyConstraintExists foreignKeyName="fk_relation_component_on_relation_type_component"/>
+    </preConditions>
+
+    <dropForeignKeyConstraint baseTableName="relation_component" constraintName="fk_relation_component_on_relation_type_component" baseTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1702912157957-1" author="juliwolf" dbms="postgresql">
+    <addForeignKeyConstraint baseColumnNames="asset_id" baseTableName="relation_component" baseTableSchemaName="public" constraintName="fk_relation_component_on_asset" referencedColumnNames="asset_id" referencedTableName="asset" referencedTableSchemaName="public" onDelete="CASCADE"/>
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="relation_component" baseTableSchemaName="public" constraintName="fk_relation_component_on_create_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="relation_component" baseTableSchemaName="public" constraintName="fk_relation_component_on_deleted_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+    <addForeignKeyConstraint baseColumnNames="last_modified_by" baseTableName="relation_component" baseTableSchemaName="public" constraintName="fk_relation_component_on_last_modified_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+    <addForeignKeyConstraint baseColumnNames="relation_id" baseTableName="relation_component" baseTableSchemaName="public" constraintName="fk_relation_component_on_relation" referencedColumnNames="relation_id" referencedTableName="relation" referencedTableSchemaName="public" onDelete="CASCADE"/>
+    <addForeignKeyConstraint baseColumnNames="relation_type_component_id" baseTableName="relation_component" baseTableSchemaName="public" constraintName="fk_relation_component_on_relation_type_component" referencedColumnNames="relation_type_component_id" referencedTableName="relation_type_component" referencedTableSchemaName="public" onDelete="CASCADE"/>
+  </changeSet>
+
+  <changeSet id="1702912506541-1" author="juliwolf" dbms="postgresql">
+    <dropForeignKeyConstraint baseTableName="relation_type" constraintName="fk_relation_type_on_create_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="relation_type" baseTableSchemaName="public" constraintName="fk_relation_type_on_create_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="relation_type" constraintName="fk_relation_type_on_deleted_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="relation_type" baseTableSchemaName="public" constraintName="fk_relation_type_on_deleted_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="relation_type" constraintName="fk_relation_type_on_last_modified_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="last_modified_by" baseTableName="relation_type" baseTableSchemaName="public" constraintName="fk_relation_type_on_last_modified_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="relation_type" constraintName="fk_relation_type_on_source_language" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="source_language" baseTableName="relation_type" baseTableSchemaName="public" constraintName="fk_relation_type_on_source_language" referencedColumnNames="language_id" referencedTableName="language" referencedTableSchemaName="public" onDelete="SET NULL"/>
+  </changeSet>
+
+  <changeSet id="1702912742631-1" author="juliwolf" dbms="postgresql">
+    <dropForeignKeyConstraint baseTableName="relation_type_attribute_type_assignment" constraintName="fk_relation_type_attribute_type_assignment_on_attribute_type" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="attribute_type_id" baseTableName="relation_type_attribute_type_assignment" baseTableSchemaName="public" constraintName="fk_relation_type_attribute_type_assignment_on_attribute_type" referencedColumnNames="attribute_type_id" referencedTableName="attribute_type" referencedTableSchemaName="public" onDelete="CASCADE"/>
+
+    <dropForeignKeyConstraint baseTableName="relation_type_attribute_type_assignment" constraintName="fk_relation_type_attribute_type_assignment_on_create_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="relation_type_attribute_type_assignment" baseTableSchemaName="public" constraintName="fk_relation_type_attribute_type_assignment_on_create_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="relation_type_attribute_type_assignment" constraintName="fk_relation_type_attribute_type_assignment_on_deleted_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="relation_type_attribute_type_assignment" baseTableSchemaName="public" constraintName="fk_relation_type_attribute_type_assignment_on_deleted_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="relation_type_attribute_type_assignment" constraintName="fk_relation_type_attribute_type_assignment_on_relation_type" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="relation_type_id" baseTableName="relation_type_attribute_type_assignment" baseTableSchemaName="public" constraintName="fk_relation_type_attribute_type_assignment_on_relation_type" referencedColumnNames="relation_type_id" referencedTableName="relation_type" referencedTableSchemaName="public" onDelete="CASCADE"/>
+  </changeSet>
+
+  <changeSet id="1702973193593-1" author="juliwolf" dbms="postgresql">
+    <dropForeignKeyConstraint baseTableName="relation_type_component" constraintName="fk_relation_type_component_on_create_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="relation_type_component" baseTableSchemaName="public" constraintName="fk_relation_type_component_on_create_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="relation_type_component" constraintName="fk_relation_type_component_on_deleted_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="relation_type_component" baseTableSchemaName="public" constraintName="fk_relation_type_component_on_deleted_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="relation_type_component" constraintName="fk_relation_type_component_on_last_modified_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="last_modified_by" baseTableName="relation_type_component" baseTableSchemaName="public" constraintName="fk_relation_type_component_on_last_modified_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="relation_type_component" constraintName="fk_relation_type_component_on_relation_type" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="relation_type_id" baseTableName="relation_type_component" baseTableSchemaName="public" constraintName="fk_relation_type_component_on_relation_type" referencedColumnNames="relation_type_id" referencedTableName="relation_type" referencedTableSchemaName="public" onDelete="CASCADE"/>
+
+    <dropForeignKeyConstraint baseTableName="relation_type_component" constraintName="fk_relation_type_component_on_source_language" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="source_language" baseTableName="relation_type_component" baseTableSchemaName="public" constraintName="fk_relation_type_component_on_source_language" referencedColumnNames="language_id" referencedTableName="language" referencedTableSchemaName="public" onDelete="SET NULL"/>
+  </changeSet>
+
+  <changeSet id="1702912926055-1" author="juliwolf" dbms="postgresql">
+    <dropForeignKeyConstraint baseTableName="relation_type_component_asset_type_assignment" constraintName="fk_relationtypecomponentassettypeassignment_on_parentassettype" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="parent_asset_type_id" baseTableName="relation_type_component_asset_type_assignment" baseTableSchemaName="public" constraintName="fk_relationtypecomponentassettypeassignment_on_parentassettype" referencedColumnNames="asset_type_id" referencedTableName="asset_type" referencedTableSchemaName="public" onDelete="CASCADE"/>
+
+    <dropForeignKeyConstraint baseTableName="relation_type_component_asset_type_assignment" constraintName="fk_relationtypecomponentassettypeassig_on_relationtypecomponent" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="relation_type_component_id" baseTableName="relation_type_component_asset_type_assignment" baseTableSchemaName="public" constraintName="fk_relationtypecomponentassettypeassig_on_relationtypecomponent" referencedColumnNames="relation_type_component_id" referencedTableName="relation_type_component" referencedTableSchemaName="public" onDelete="CASCADE"/>
+
+    <dropForeignKeyConstraint baseTableName="relation_type_component_asset_type_assignment" constraintName="fk_relation_type_component_asset_type_assignment_on_asset_type" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="asset_type_id" baseTableName="relation_type_component_asset_type_assignment" baseTableSchemaName="public" constraintName="fk_relation_type_component_asset_type_assignment_on_asset_type" referencedColumnNames="asset_type_id" referencedTableName="asset_type" referencedTableSchemaName="public" onDelete="CASCADE"/>
+
+    <dropForeignKeyConstraint baseTableName="relation_type_component_asset_type_assignment" constraintName="fk_relation_type_component_asset_type_assignment_on_create_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="relation_type_component_asset_type_assignment" baseTableSchemaName="public" constraintName="fk_relation_type_component_asset_type_assignment_on_create_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="relation_type_component_asset_type_assignment" constraintName="fk_relation_type_component_asset_type_assignment_on_deleted_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="relation_type_component_asset_type_assignment" baseTableSchemaName="public" constraintName="fk_relation_type_component_asset_type_assignment_on_deleted_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+  </changeSet>
+
+  <changeSet id="1702985066385-1" author="juliwolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <foreignKeyConstraintExists foreignKeyName="fk_responsibility_on_responsible"/>
+    </preConditions>
+
+    <dropForeignKeyConstraint baseTableName="responsibility" constraintName="fk_responsibility_on_responsible" baseTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1702986998059-1" author="juliwolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <foreignKeyConstraintExists foreignKeyName="fk_responsibility_on_asset_id"/>
+    </preConditions>
+
+    <dropForeignKeyConstraint baseTableName="responsibility" constraintName="fk_responsibility_on_asset_id" baseTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1702987006715-1" author="juliwolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <foreignKeyConstraintExists foreignKeyName="fk_responsibility_on_group_id"/>
+    </preConditions>
+
+    <dropForeignKeyConstraint baseTableName="responsibility" constraintName="fk_responsibility_on_group_id" baseTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1702987016516-1" author="juliwolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <foreignKeyConstraintExists foreignKeyName="fk_responsibility_on_parentresponsibilityid"/>
+    </preConditions>
+
+    <dropForeignKeyConstraint baseTableName="responsibility" constraintName="fk_responsibility_on_parentresponsibilityid" baseTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1702987025980-1" author="juliwolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <foreignKeyConstraintExists foreignKeyName="fk_responsibility_on_relation"/>
+    </preConditions>
+
+    <dropForeignKeyConstraint baseTableName="responsibility" constraintName="fk_responsibility_on_relation" baseTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1702913088759-1" author="juliwolf" dbms="postgresql">
+    <dropForeignKeyConstraint baseTableName="responsibility" constraintName="fk_responsibility_on_create_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="responsibility" baseTableSchemaName="public" constraintName="fk_responsibility_on_create_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="responsibility" constraintName="fk_responsibility_on_deleted_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="responsibility" baseTableSchemaName="public" constraintName="fk_responsibility_on_deleted_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="responsibility" constraintName="fk_responsibility_on_role" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="responsibility" baseTableSchemaName="public" constraintName="fk_responsibility_on_role" referencedColumnNames="role_id" referencedTableName="role" referencedTableSchemaName="public" onDelete="CASCADE"/>
+
+    <addForeignKeyConstraint baseColumnNames="group_id" baseTableName="responsibility" baseTableSchemaName="public" constraintName="fk_responsibility_on_group_id" referencedColumnNames="group_id" referencedTableName="group" referencedTableSchemaName="public" onDelete="CASCADE"/>
+    <addForeignKeyConstraint baseColumnNames="asset_id" baseTableName="responsibility" baseTableSchemaName="public" constraintName="fk_responsibility_on_asset_id" referencedColumnNames="asset_id" referencedTableName="asset" referencedTableSchemaName="public" onDelete="CASCADE"/>
+    <addForeignKeyConstraint baseColumnNames="parent_responsibility_id" baseTableName="responsibility" baseTableSchemaName="public" constraintName="fk_responsibility_on_parentresponsibilityid" referencedColumnNames="responsibility_id" referencedTableName="responsibility" referencedTableSchemaName="public" onDelete="CASCADE"/>
+    <addForeignKeyConstraint baseColumnNames="relation_id" baseTableName="responsibility" baseTableSchemaName="public" constraintName="fk_responsibility_on_relation" referencedColumnNames="relation_id" referencedTableName="relation" referencedTableSchemaName="public" onDelete="CASCADE"/>
+  </changeSet>
+
+  <changeSet id="1702913269942-1" author="juliwolf" dbms="postgresql">
+    <dropForeignKeyConstraint baseTableName="role" constraintName="fk_role_on_create_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="role" baseTableSchemaName="public" constraintName="fk_role_on_create_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="role" constraintName="fk_role_on_deleted_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="role" baseTableSchemaName="public" constraintName="fk_role_on_deleted_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="role" constraintName="fk_role_on_last_modified_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="last_modified_by" baseTableName="role" baseTableSchemaName="public" constraintName="fk_role_on_last_modified_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="role" constraintName="fk_role_on_source_language" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="source_language" baseTableName="role" baseTableSchemaName="public" constraintName="fk_role_on_source_language" referencedColumnNames="language_id" referencedTableName="language" referencedTableSchemaName="public" onDelete="SET NULL"/>
+  </changeSet>
+
+  <changeSet id="1702913368874-1" author="juliwolf" dbms="postgresql">
+    <dropForeignKeyConstraint baseTableName="role_action" constraintName="fk_role_action_on_create_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="role_action" baseTableSchemaName="public" constraintName="fk_role_action_on_create_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="role_action" constraintName="fk_role_action_on_deleted_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="role_action" baseTableSchemaName="public" constraintName="fk_role_action_on_deleted_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+  </changeSet>
+
+  <changeSet id="1702913417668-1" author="juliwolf" dbms="postgresql">
+    <dropForeignKeyConstraint baseTableName="status" constraintName="fk_status_on_create_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="status" baseTableSchemaName="public" constraintName="fk_status_on_create_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="status" constraintName="fk_status_on_deleted_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="status" baseTableSchemaName="public" constraintName="fk_status_on_deleted_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="status" constraintName="fk_status_on_last_modified_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="last_modified_by" baseTableName="status" baseTableSchemaName="public" constraintName="fk_status_on_last_modified_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="status" constraintName="fk_status_on_source_language" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="source_language" baseTableName="status" baseTableSchemaName="public" constraintName="fk_status_on_source_language" referencedColumnNames="language_id" referencedTableName="language" referencedTableSchemaName="public" onDelete="SET NULL"/>
+  </changeSet>
+
+  <changeSet id="1702987087375-1" author="juliwolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <foreignKeyConstraintExists foreignKeyName="FK_USER_ON_CREATED_BY"/>
+    </preConditions>
+
+    <dropForeignKeyConstraint baseTableName="user" constraintName="FK_USER_ON_CREATED_BY" baseTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1702987093121-1" author="juliwolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <foreignKeyConstraintExists foreignKeyName="fk_user_on_created_by"/>
+    </preConditions>
+
+    <dropForeignKeyConstraint baseTableName="user" constraintName="fk_user_on_created_by" baseTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1702987097679-1" author="juliwolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <foreignKeyConstraintExists foreignKeyName="FK_USER_ON_LAST_MODIFIED_BY"/>
+    </preConditions>
+
+    <dropForeignKeyConstraint baseTableName="user" constraintName="FK_USER_ON_LAST_MODIFIED_BY" baseTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1702987101858-1" author="juliwolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <foreignKeyConstraintExists foreignKeyName="fk_user_on_last_modified_by"/>
+    </preConditions>
+
+    <dropForeignKeyConstraint baseTableName="user" constraintName="fk_user_on_last_modified_by" baseTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1702913547272-1" author="juliwolf" dbms="postgresql">
+    <dropForeignKeyConstraint baseTableName="user" constraintName="fk_user_on_deleted_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="user" baseTableSchemaName="public" constraintName="fk_user_on_deleted_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="user" constraintName="fk_user_on_language" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="language_id" baseTableName="user" baseTableSchemaName="public" constraintName="fk_user_on_language" referencedColumnNames="language_id" referencedTableName="language" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="user" baseTableSchemaName="public" constraintName="fk_user_on_created_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+    <addForeignKeyConstraint baseColumnNames="last_modified_by" baseTableName="user" baseTableSchemaName="public" constraintName="fk_user_on_last_modified_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+  </changeSet>
+
+  <changeSet id="1702913568561-1" author="juliwolf" dbms="postgresql">
+    <dropForeignKeyConstraint baseTableName="user_group" constraintName="fk_user_group_on_added_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="added_by" baseTableName="user_group" baseTableSchemaName="public" constraintName="fk_user_group_on_added_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="user_group" constraintName="fk_user_group_on_deleted_by" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="user_group" baseTableSchemaName="public" constraintName="fk_user_group_on_deleted_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="SET NULL"/>
+
+    <dropForeignKeyConstraint baseTableName="user_group" constraintName="fk_user_group_on_group" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="group_id" baseTableName="user_group" baseTableSchemaName="public" constraintName="fk_user_group_on_group" referencedColumnNames="group_id" referencedTableName="group" referencedTableSchemaName="public" onDelete="CASCADE"/>
+
+    <dropForeignKeyConstraint baseTableName="user_group" constraintName="fk_user_group_on_user" baseTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_group" baseTableSchemaName="public" constraintName="fk_user_group_on_user" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public" onDelete="CASCADE"/>
+  </changeSet>
+</databaseChangeLog>

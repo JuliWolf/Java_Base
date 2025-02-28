@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+  <changeSet id="1695288695456-1" author="JuliWolf">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="attribute_type"/>
+      </not>
+    </preConditions>
+
+    <rollback>
+      <dropTable tableName="attribute_type" cascadeConstraints="true"/>
+    </rollback>
+    <createTable schemaName="public" tableName="attribute_type">
+        <column name="attribute_type_id" type="UUID">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_attribute_type"/>
+        </column>
+        <column name="attribute_type_name" type="VARCHAR(255)"/>
+        <column name="attribute_type_description" type="VARCHAR(255)"/>
+        <column name="attribute_kind" type="VARCHAR(255)"/>
+        <column name="validation_mask" type="VARCHAR(255)"/>
+        <column name="rdm_table_id" type="VARCHAR(255)"/>
+        <column name="source_language" type="UUID"/>
+        <column name="created_on" type="DATETIME"/>
+        <column name="create_by" type="UUID"/>
+        <column name="last_modified_on" type="DATETIME"/>
+        <column name="last_modified_by" type="UUID"/>
+        <column defaultValueBoolean="false" name="deleted_flag" type="boolean"/>
+        <column name="deleted_on" type="DATETIME"/>
+        <column name="deleted_by" type="UUID"/>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="create_by" baseTableName="attribute_type" baseTableSchemaName="public" constraintName="FK_ATTRIBUTE_TYPE_ON_CREATE_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="attribute_type" baseTableSchemaName="public" constraintName="FK_ATTRIBUTE_TYPE_ON_DELETED_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="last_modified_by" baseTableName="attribute_type" baseTableSchemaName="public" constraintName="FK_ATTRIBUTE_TYPE_ON_LAST_MODIFIED_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="source_language" baseTableName="attribute_type" baseTableSchemaName="public" constraintName="FK_ATTRIBUTE_TYPE_ON_SOURCE_LANGUAGE" referencedColumnNames="language_id" referencedTableName="language" referencedTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1695288703960-1" author="JuliWolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <columnExists tableName="attribute_type" columnName="attribute_type_name"/>
+
+      <columnExists tableName="attribute_type" columnName="deleted_flag"/>
+    </preConditions>
+
+    <sql splitStatements="true" stripComments="true" endDelimiter="\nGO">
+      CREATE UNIQUE INDEX idx_unique_attribute_type_name_deleted_flag ON attribute_type (attribute_type_name, deleted_flag)
+        WHERE deleted_flag = false
+    </sql>
+  </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+
+  <changeSet id="1696426800705-1" author="JuliWolf">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="status"/>
+      </not>
+    </preConditions>
+
+    <rollback>
+      <dropTable tableName="status" cascadeConstraints="true"/>
+    </rollback>
+
+    <createTable schemaName="public" tableName="status">
+        <column name="status_id" type="UUID">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_status"/>
+        </column>
+        <column name="status_name" type="VARCHAR(255)"/>
+        <column name="status_description" type="VARCHAR(255)"/>
+        <column name="source_language" type="UUID"/>
+        <column name="created_on" type="DATETIME"/>
+        <column name="create_by" type="UUID"/>
+        <column name="last_modified_on" type="DATETIME"/>
+        <column name="last_modified_by" type="UUID"/>
+        <column defaultValueBoolean="false" name="deleted_flag" type="boolean"/>
+        <column name="deleted_on" type="DATETIME"/>
+        <column name="deleted_by" type="UUID"/>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="create_by" baseTableName="status" baseTableSchemaName="public" constraintName="FK_STATUS_ON_CREATE_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="status" baseTableSchemaName="public" constraintName="FK_STATUS_ON_DELETED_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="last_modified_by" baseTableName="status" baseTableSchemaName="public" constraintName="FK_STATUS_ON_LAST_MODIFIED_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="source_language" baseTableName="status" baseTableSchemaName="public" constraintName="FK_STATUS_ON_SOURCE_LANGUAGE" referencedColumnNames="language_id" referencedTableName="language" referencedTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1696426817941-1" author="JuliWolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <columnExists tableName="status" columnName="status_name"/>
+
+      <columnExists tableName="status" columnName="deleted_flag"/>
+    </preConditions>
+
+    <sql splitStatements="true" stripComments="true" endDelimiter="\nGO">
+      CREATE UNIQUE INDEX idx_unique_status_name_deleted_flag ON "status" (status_name, deleted_flag)
+        WHERE deleted_flag = false
+    </sql>
+  </changeSet>
+</databaseChangeLog>

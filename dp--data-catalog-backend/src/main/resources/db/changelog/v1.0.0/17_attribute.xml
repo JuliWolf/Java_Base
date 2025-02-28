@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+  <changeSet id="1696612527524-1" author="JuliWolf">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="attribute"/>
+      </not>
+    </preConditions>
+
+    <rollback>
+      <dropTable tableName="attribute" cascadeConstraints="true"/>
+    </rollback>
+    <createTable schemaName="public" tableName="attribute">
+      <column name="attribute_id" type="UUID">
+          <constraints nullable="false" primaryKey="true" primaryKeyName="pk_attribute"/>
+      </column>
+      <column name="attribute_type_id" type="UUID"/>
+      <column name="asset_id" type="UUID"/>
+      <column name="value" type="VARCHAR(255)"/>
+      <column name="integer_flag" type="BOOLEAN"/>
+      <column name="value_numeric" type="DOUBLE"/>
+      <column name="value_bool" type="BOOLEAN"/>
+      <column name="value_datetime" type="DATETIME"/>
+      <column name="source_language" type="UUID"/>
+      <column name="created_on" type="DATETIME"/>
+      <column name="create_by" type="UUID"/>
+      <column name="last_modified_on" type="DATETIME"/>
+      <column name="last_modified_by" type="UUID"/>
+      <column defaultValueBoolean="false" name="deleted_flag" type="boolean"/>
+      <column name="deleted_on" type="DATETIME"/>
+      <column name="deleted_by" type="UUID"/>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="asset_id" baseTableName="attribute" baseTableSchemaName="public" constraintName="FK_ATTRIBUTE_ON_ASSET" referencedColumnNames="asset_id" referencedTableName="asset" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="attribute_type_id" baseTableName="attribute" baseTableSchemaName="public" constraintName="FK_ATTRIBUTE_ON_ATTRIBUTE_TYPE" referencedColumnNames="attribute_type_id" referencedTableName="attribute_type" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="create_by" baseTableName="attribute" baseTableSchemaName="public" constraintName="FK_ATTRIBUTE_ON_CREATE_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="attribute" baseTableSchemaName="public" constraintName="FK_ATTRIBUTE_ON_DELETED_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="last_modified_by" baseTableName="attribute" baseTableSchemaName="public" constraintName="FK_ATTRIBUTE_ON_LAST_MODIFIED_BY" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="source_language" baseTableName="attribute" baseTableSchemaName="public" constraintName="FK_ATTRIBUTE_ON_SOURCE_LANGUAGE" referencedColumnNames="language_id" referencedTableName="language" referencedTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1696612591219-1" author="JuliWolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <columnExists tableName="attribute" columnName="attribute_type_id"/>
+      <columnExists tableName="attribute" columnName="asset_id"/>
+
+      <columnExists tableName="attribute" columnName="deleted_flag"/>
+    </preConditions>
+
+    <sql splitStatements="true" stripComments="true" endDelimiter="\nGO">
+      CREATE UNIQUE INDEX idx_unique_attribute_attribute_type_id_value_deleted_flag ON "attribute" (attribute_type_id, asset_id, deleted_flag)
+        WHERE deleted_flag = false
+    </sql>
+  </changeSet>
+</databaseChangeLog>

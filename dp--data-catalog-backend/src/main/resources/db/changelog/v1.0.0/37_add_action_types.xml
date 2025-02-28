@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd"
+    objectQuotingStrategy="QUOTE_ALL_OBJECTS"
+>
+
+  <changeSet id="1702388301377-1" author="JuliWolf">
+    <sql>
+      insert into action_type (action_type_id, action_type_name) values ('d3bfacc2-9438-4296-a149-cfc6287e627d', 'GRANT') ON CONFLICT DO nothing;
+      insert into action_type (action_type_id, action_type_name) values ('5b197bb3-5140-4acf-b576-7870205b4342', 'REVOKE') ON CONFLICT DO nothing;
+    </sql>
+  </changeSet>
+</databaseChangeLog>

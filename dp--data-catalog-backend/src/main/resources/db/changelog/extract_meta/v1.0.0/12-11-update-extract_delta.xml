@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+    <changeSet id="1731406963240-1" author="juliwolf">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="stage_asset" schemaName="extract_delta"/>
+            <columnExists tableName="stage_asset" columnName="nk" schemaName="extract_delta"/>
+            <columnExists tableName="stage_asset" columnName="instance_id" schemaName="extract_delta"/>
+            <columnExists tableName="stage_asset" columnName="filter_criteria" schemaName="extract_delta"/>
+            <columnExists tableName="stage_asset" columnName="action_decision_datetime" schemaName="extract_delta"/>
+        </preConditions>
+
+        <dropColumn tableName="stage_asset" schemaName="extract_delta">
+            <column name="nk"/>
+            <column name="instance_id"/>
+            <column name="filter_criteria"/>
+            <column name="action_decision_datetime"/>
+        </dropColumn>
+
+        <addColumn tableName="stage_asset" schemaName="extract_delta">
+            <column name="created_asset_id" type="UUID"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="1731406963240-2" author="juliwolf">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="stage_asset" schemaName="extract_delta" constraintName="unq_stage_asset"/>
+            </not>
+        </preConditions>
+
+        <addUniqueConstraint tableName="stage_asset" columnNames="asset_name, job_id" constraintName="unq_stage_asset" schemaName="extract_delta"/>
+    </changeSet>
+
+    <changeSet id="1731407118684-1" author="juliwolf">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="stage_attribute" schemaName="extract_delta"/>
+            <columnExists tableName="stage_attribute" columnName="instance_id" schemaName="extract_delta"/>
+            <columnExists tableName="stage_attribute" columnName="filter_criteria" schemaName="extract_delta"/>
+            <columnExists tableName="stage_attribute" columnName="action_decision_datetime" schemaName="extract_delta"/>
+        </preConditions>
+
+        <dropColumn tableName="stage_attribute" schemaName="extract_delta">
+            <column name="instance_id"/>
+            <column name="filter_criteria"/>
+            <column name="action_decision_datetime"/>
+        </dropColumn>
+
+        <addColumn tableName="stage_attribute" schemaName="extract_delta">
+            <column name="created_attribute_id" type="UUID"/>
+        </addColumn>
+
+        <renameColumn tableName="stage_attribute" oldColumnName="asset_nk" newColumnName="asset_name_nk" schemaName="extract_delta"/>
+    </changeSet>
+
+    <changeSet id="1731407118684-2" author="juliwolf">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="stage_attribute" schemaName="extract_delta" constraintName="unq_stage_attribute"/>
+            </not>
+        </preConditions>
+
+        <addUniqueConstraint tableName="stage_attribute" columnNames="asset_name_nk, attribute_type_id, job_id"
+                             constraintName="unq_stage_attribute" schemaName="extract_delta"/>
+    </changeSet>
+
+
+    <changeSet id="1731407242490-1" author="juliwolf">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="stage_relation" schemaName="extract_delta"/>
+            <columnExists tableName="stage_relation" columnName="instance_id" schemaName="extract_delta"/>
+            <columnExists tableName="stage_relation" columnName="filter_criteria" schemaName="extract_delta"/>
+            <columnExists tableName="stage_relation" columnName="action_decision_datetime" schemaName="extract_delta"/>
+        </preConditions>
+
+        <dropColumn tableName="stage_relation" schemaName="extract_delta">
+            <column name="instance_id"/>
+            <column name="filter_criteria"/>
+            <column name="action_decision_datetime"/>
+        </dropColumn>
+
+        <addColumn tableName="stage_relation" schemaName="extract_delta">
+            <column name="created_relation_id" type="UUID"/>
+        </addColumn>
+
+        <renameColumn tableName="stage_relation" oldColumnName="asset_1_nk" newColumnName="asset_name_1_nk"
+                      schemaName="extract_delta"/>
+        <renameColumn tableName="stage_relation" oldColumnName="asset_2_nk" newColumnName="asset_name_2_nk"
+                      schemaName="extract_delta"/>
+
+    </changeSet>
+
+    <changeSet id="1731407242490-2" author="juliwolf">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="stage_relation" schemaName="extract_delta" constraintName="unq_stage_relation"/>
+            </not>
+        </preConditions>
+
+        <addUniqueConstraint tableName="stage_relation" columnNames="job_id, asset_name_1_nk, asset_name_2_nk"
+                             constraintName="unq_stage_relation" schemaName="extract_delta"/>
+    </changeSet>
+</databaseChangeLog>

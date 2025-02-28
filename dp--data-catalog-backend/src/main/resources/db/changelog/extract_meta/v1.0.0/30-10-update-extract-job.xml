@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+
+  <changeSet id="1730287249824-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="extract_job" schemaName="extract_meta"/>
+
+      <not>
+        <columnExists schemaName="extract_meta" tableName="extract_job" columnName="key_timestamp"/>
+      </not>
+    </preConditions>
+
+    <addColumn tableName="extract_job" schemaName="extract_meta">
+      <column name="key_timestamp" type="DATETIME"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet id="1730287288809-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <tableExists schemaName="extract_meta" tableName="extract_job_object"/>
+      <columnExists schemaName="extract_meta" tableName="extract_job_object" columnName="table_name"/>
+
+      <not>
+        <columnExists schemaName="extract_meta" tableName="extract_job_object" columnName="control_sum"/>
+        <columnExists schemaName="extract_meta" tableName="extract_job_object" columnName="key_timestamp"/>
+        <columnExists schemaName="extract_meta" tableName="extract_job_object" columnName="partition_id"/>
+      </not>
+    </preConditions>
+
+    <addColumn tableName="extract_job_object" schemaName="extract_meta">
+      <column name="key_timestamp" type="DATETIME"/>
+      <column name="partition_id" type="integer"/>
+      <column name="control_sum" type="bigint"/>
+    </addColumn>
+
+    <renameColumn tableName="extract_job_object" oldColumnName="table_name" newColumnName="object_name" schemaName="extract_meta"/>
+  </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,170 @@
+@Library("common-utils") _
+
+
+try {
+    node("lmru-dockerhost") {
+        checkout scm
+        prepareJenkinsEnvironment()
+        prepareJenkinsParams()
+        stage("Setup") {
+            getCertsFromVault()
+        }
+        Boolean isImageExist = stage("Run check image") {
+            isImageExist()
+
+        }
+        if(!isImageExist){
+            stage("Build project image") {
+                def revisionNumber = sh(returnStdout: true, script: "git rev-parse HEAD ").trim()
+
+                dockerUtils.buildImage([
+                        projectName                    : "dg",
+                        artifactoryImageName           : env.PROJECT_NAME_PARAM,
+                        imageTags                      : [env.DOCKER_IMAGE_TAG],
+                        shouldPromoteImageTagsToRelease: env.TAG_NAME ? true : false,
+                        customArgsList                 : "--label revisionNumber=\"$revisionNumber\"",
+                        applicationFilesDir            : './'
+                ])
+            }
+        }
+        if (params.shouldDeploy) {
+            stage("Deploy to k8s") {
+                deploy()
+            }
+        }
+    }
+} catch (err) {
+    println err
+}
+
+private void prepareJenkinsEnvironment() {
+    parseProjectPropertiesToEnv()
+    env.MVN_VERSION = "3.9.3"
+    env.GIT_HUB_CREDS = "ghe-svc-lmru-dataplatform-jenkins-integration"
+    env.DOMAIN_NAME_PARAM = "dg"
+    env.SERVICE_ACCOUNT = "lm-sa-${env.DOMAIN_NAME_PARAM}"
+    // Artifactory properties
+    env.ARTIFACTORY_URL = 'art.lmru.tech'
+
+    env.PRODUCT_DOCKER_REGISTRY_PREFIX = "docker-${env.DOMAIN_NAME_PARAM}"
+    env.PRODUCT_DOCKER_REGISTRY = "${env.PRODUCT_DOCKER_REGISTRY_PREFIX}.${env.ARTIFACTORY_URL}"
+    String gitCommit = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
+    // Docker properties
+    env.DOCKER_IMAGE_NAME = "${env.PRODUCT_DOCKER_REGISTRY}/${env.PROJECT_NAME_PARAM}"
+    env.DOCKER_IMAGE_TAG = "${env.BRANCH_NAME.replace('/', '-').toLowerCase()}-${gitCommit}"
+
+    // Git properties
+    env.GIT_REPO = scm.userRemoteConfigs[0].url
+
+}
+
+private void getCertsFromVault() {
+    List<String> certsList = ["YandexInternalRootCA.crt"]
+
+    for (cert in certsList) {
+        vaultUtils.secretToFile(vaultPath: 'dev/ca_certs',
+                appRoleCredential: 'approle-test-ro',
+                namespace: 'dg',
+                key: cert,
+                folder: "./keystores",
+                fileName: "${cert}"
+        )
+    }
+
+}
+
+private void prepareJenkinsParams() {
+    def deployProfiles = ["test", "dev"]
+
+    if (env.TAG_NAME) {
+        deployProfiles.add( "prod" )
+    }
+
+    def arrayParams = [
+            disableConcurrentBuilds(),
+    ]
+
+
+    arrayParams.add(
+            parameters([
+                    booleanParam(name: 'shouldDeploy', description: 'Deploy?', defaultValue: false),
+                    choice(name: 'profile', description: 'Application profile', choices: deployProfiles)
+            ])
+    )
+    properties(arrayParams)
+}
+
+private Boolean isImageExist(){
+    def art = Artifactory.newServer(url: "https://art.lmru.tech", credentialsId: "lm-sa-dg")
+    art.connection.timeout = 1200
+
+    def revisionNumber = sh(returnStdout: true, script: "git rev-parse HEAD").trim()
+
+    sh """#!/bin/bash -el
+          docker pull ${env.DOCKER_IMAGE_NAME}:${env.DOCKER_IMAGE_TAG} || echo image not found
+        """
+
+    String image_id = sh(script: "docker images -q ${env.DOCKER_IMAGE_NAME}:${env.DOCKER_IMAGE_TAG} --filter \"label=revisionNumber=$revisionNumber\"", returnStdout: true).trim()
+    env.IMAGE_EXISTS = !image_id.isEmpty()
+    println env.IMAGE_EXISTS == "true" ? "Image was found" : "Image was not found"
+
+    Boolean isExist = !image_id.isEmpty()
+
+    sh "docker rmi ${env.DOCKER_IMAGE_NAME}:${env.DOCKER_IMAGE_TAG} || echo there is noting to delete"
+
+    return isExist
+}
+
+private void deploy(){
+    String cluster = ""
+
+    if (params.profile != "prod"){
+        cluster += "chamaeleon-a-stage"
+    } else {
+        cluster = "shared"
+    }
+    
+    String helmRollbackReleaseAfter = "5m"
+    String kuberNamespace = "dg-${params.profile}"
+    String helmReleaseName = "dg.data-catalog-backend.${params.profile}"
+    String gitCommit = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
+    String ingressHostname = buildIngressHostname(cluster, env.PROJECT_NAME_PARAM)
+    getSecretsFromVault()
+
+    Closure helmScript = {
+        sh("helm3 upgrade --install --atomic --create-namespace " +
+                "--set profile=$params.profile " +
+                "--set ingress.hostName=$ingressHostname " +
+                "--set imageName=$env.DOCKER_IMAGE_NAME " +
+                "--set imageTag=$env.DOCKER_IMAGE_TAG " +
+                "--set sha=$gitCommit " +
+                "--timeout $helmRollbackReleaseAfter " +
+                "--namespace $kuberNamespace " +
+                "$helmReleaseName  ./.helm")
+    }
+
+    kubernetesUtils.withKuberDeployer([clusterName: cluster, lmSaCredentialsId: "lm-sa-dg"], helmScript)
+}
+
+private String buildIngressHostname(String cluster, String projectName) {
+    if (params.profile == 'prod') {
+        return "dg-${projectName}-${cluster}.apps.lmru.tech" // don't change !
+    }
+    return "dg-${projectName}-${params.profile}-${cluster}.apps.lmru.tech" // don't change !
+
+}
+
+private void getSecretsFromVault(){
+
+    def vaultSecrets = vaultUtils.getSecrets(
+            namespace: "dg",
+            appRoleCredential: "approle-test-ro",
+            vaultPath:  "${params.profile}/datacatalog/backend"
+    )
+
+    LinkedHashMap<String, String> valuesFileContent = readYaml(file: "./.helm/values.yaml")
+
+    valuesFileContent += [ "secrets": vaultSecrets ]
+
+    writeYaml(file: "./.helm/values.yaml", data: valuesFileContent, overwrite: true)
+}

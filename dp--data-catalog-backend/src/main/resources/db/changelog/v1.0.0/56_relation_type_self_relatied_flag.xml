@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+
+  <changeSet id="1723630321646-1" author="juliwolf">
+    <addColumn tableName="relation_type">
+      <column defaultValueBoolean="false" name="self_related_flag" type="boolean"/>
+    </addColumn>
+  </changeSet>
+</databaseChangeLog>

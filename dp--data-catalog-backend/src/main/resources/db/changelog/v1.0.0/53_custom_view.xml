@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+
+  <changeSet id="1718374997091-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="custom_view"/>
+      </not>
+    </preConditions>
+
+    <createTable schemaName="public" tableName="custom_view">
+        <column name="custom_view_id" type="UUID">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_custom_view"/>
+        </column>
+        <column name="asset_type_id" type="UUID"/>
+        <column name="custom_view_name" type="VARCHAR(255)"/>
+        <column name="header_row_names" type="jsonb"/>
+        <column name="header_prepare_query" type="text"/>
+        <column name="header_select_query" type="text"/>
+        <column name="header_clear_query" type="text"/>
+        <column name="table_column_names" type="jsonb"/>
+        <column name="table_prepare_query" type="text"/>
+        <column name="table_select_query" type="text"/>
+        <column name="table_clear_query" type="text"/>
+        <column name="role_id" type="UUID"/>
+        <column name="created_on" type="DATETIME"/>
+        <column name="created_by" type="UUID"/>
+        <column defaultValueBoolean="false" name="deleted_flag" type="boolean"/>
+        <column name="deleted_on" type="DATETIME"/>
+        <column name="deleted_by" type="UUID"/>
+        <column name="last_modified_on" type="DATETIME"/>
+        <column name="last_modified_by" type="UUID"/>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="asset_type_id" baseTableName="custom_view" baseTableSchemaName="public" constraintName="FK_CUSTOM_VIEW_ON_ASSET_TYPE" onDelete="CASCADE" referencedColumnNames="asset_type_id" referencedTableName="asset_type" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="created_by" baseTableName="custom_view" baseTableSchemaName="public" constraintName="FK_CUSTOM_VIEW_ON_CREATED_BY" onDelete="SET NULL" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="custom_view" baseTableSchemaName="public" constraintName="FK_CUSTOM_VIEW_ON_DELETED_BY" onDelete="SET NULL" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="last_modified_by" baseTableName="custom_view" baseTableSchemaName="public" constraintName="FK_CUSTOM_VIEW_ON_LAST_MODIFIED_BY" onDelete="SET NULL" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="custom_view" baseTableSchemaName="public" constraintName="FK_CUSTOM_VIEW_ON_ROLE" onDelete="CASCADE" referencedColumnNames="role_id" referencedTableName="role" referencedTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1711701508143-1" author="juliwolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <columnExists tableName="custom_view" columnName="custom_view_name"/>
+      <columnExists tableName="custom_view" columnName="asset_type_id"/>
+
+      <columnExists tableName="custom_view" columnName="deleted_flag"/>
+    </preConditions>
+
+    <sql splitStatements="true" stripComments="true" endDelimiter="\nGO">
+      CREATE UNIQUE INDEX idx_unique_custom_view_asset_type_name_deleted_flag ON "custom_view" (asset_type_id, custom_view_name, deleted_flag)
+        WHERE deleted_flag = false;
+    </sql>
+  </changeSet>
+
+  <changeSet id="1718378139236-1" author="juliwolf">
+    <sql>
+      insert into entity (entity_id, entity_name, deleted_flag) values ('6e1ae00a-2b61-47b0-8f73-d6b0fce1f97a', 'CUSTOM_VIEW', false) ON CONFLICT DO nothing;
+    </sql>
+  </changeSet>
+
+  <changeSet id="1718378212102-1" author="juliwolf" dbms="postgresql" context="production">
+    <sql>
+      INSERT INTO public.role_action (role_action_id, role_id, action_type_id, entity_type_id, asset_type_id, role_type_id, attribute_type_id, relation_type_id, action_scope, permission_type) VALUES('c89ef666-ad4c-43fe-a15c-74af55678774', '2c057d40-4f72-4eb3-9a5e-276a9a98e1f8', 'c7f65d90-b311-4fac-9af3-68289a60e7e3', '6e1ae00a-2b61-47b0-8f73-d6b0fce1f97a', NULL, NULL, NULL, NULL, 'ALL', 'ALLOW') ON CONFLICT DO nothing;
+
+      INSERT INTO public.role_action (role_action_id, role_id, action_type_id, entity_type_id, asset_type_id, role_type_id, attribute_type_id, relation_type_id, action_scope, permission_type) VALUES('b7c9ae38-9535-4b3f-b152-9b79bd639df8', '486940b7-6a0b-4287-9fa8-ad9058861a91', 'b8eb41e4-e43f-4259-a198-81fc19e7e90a', '6e1ae00a-2b61-47b0-8f73-d6b0fce1f97a', NULL, NULL, NULL, NULL, 'ALL', 'ALLOW') ON CONFLICT DO nothing;
+      INSERT INTO public.role_action (role_action_id, role_id, action_type_id, entity_type_id, asset_type_id, role_type_id, attribute_type_id, relation_type_id, action_scope, permission_type) VALUES('66cffc6f-d356-4938-bb80-8cc33e4352c0', '486940b7-6a0b-4287-9fa8-ad9058861a91', 'c7f65d90-b311-4fac-9af3-68289a60e7e3', '6e1ae00a-2b61-47b0-8f73-d6b0fce1f97a', NULL, NULL, NULL, NULL, 'ALL', 'ALLOW') ON CONFLICT DO nothing;
+      INSERT INTO public.role_action (role_action_id, role_id, action_type_id, entity_type_id, asset_type_id, role_type_id, attribute_type_id, relation_type_id, action_scope, permission_type) VALUES('2a7165c6-e0de-4e66-9485-8991f697a249', '486940b7-6a0b-4287-9fa8-ad9058861a91', '3b086c0e-d19e-4874-9c18-8e9daf952bee', '6e1ae00a-2b61-47b0-8f73-d6b0fce1f97a', NULL, NULL, NULL, NULL, 'ALL', 'ALLOW') ON CONFLICT DO nothing;
+      INSERT INTO public.role_action (role_action_id, role_id, action_type_id, entity_type_id, asset_type_id, role_type_id, attribute_type_id, relation_type_id, action_scope, permission_type) VALUES('22d07875-362a-4db8-bb8f-d7a011fe79b1', '486940b7-6a0b-4287-9fa8-ad9058861a91', '54d4330c-d08f-4fb2-b706-2ec3c022286d', '6e1ae00a-2b61-47b0-8f73-d6b0fce1f97a', NULL, NULL, NULL, NULL, 'ALL', 'ALLOW') ON CONFLICT DO nothing;
+    </sql>
+  </changeSet>
+</databaseChangeLog>

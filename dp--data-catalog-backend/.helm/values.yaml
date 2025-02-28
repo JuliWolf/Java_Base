@@ -1,0 +1,7 @@
+microservice: data-catalog-backend
+
+resourcesLimitsMemory: "1Gi"
+resourcesRequestsCpu: "0.1"
+
+port: 8080
+

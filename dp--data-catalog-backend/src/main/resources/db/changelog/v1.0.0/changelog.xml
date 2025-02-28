@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+  <changeSet id="0" author="JuliWolf">
+    <tagDatabase tag="v.1.0.0"/>
+  </changeSet>
+
+  <include file="1_user_and_language.xml" relativeToChangelogFile="true"/>
+  <include file="2_role.xml" relativeToChangelogFile="true"/>
+  <include file="3_action_type.xml" relativeToChangelogFile="true"/>
+  <include file="4_asset_type.xml" relativeToChangelogFile="true"/>
+  <include file="5_entity.xml" relativeToChangelogFile="true"/>
+  <include file="6_relation_type.xml" relativeToChangelogFile="true"/>
+  <include file="7_attribute_type.xml" relativeToChangelogFile="true"/>
+  <include file="8_role_action.xml" relativeToChangelogFile="true"/>
+  <include file="9_group.xml" relativeToChangelogFile="true"/>
+  <include file="10_responsibilities.xml" relativeToChangelogFile="true"/>
+  <include file="11_global_responsibilities.xml" relativeToChangelogFile="true"/>
+  <include file="12_user_group.xml" relativeToChangelogFile="true"/>
+  <include file="13_status.xml" relativeToChangelogFile="true"/>
+  <include file="14_asset.xml" relativeToChangelogFile="true"/>
+  <include file="15_attribute_type_allowed_value.xml" relativeToChangelogFile="true"/>
+  <include file="16_asset_type_status_assignment.xml" relativeToChangelogFile="true"/>
+  <include file="17_attribute.xml" relativeToChangelogFile="true"/>
+  <include file="18_asset_type_attribute_type_assignment.xml" relativeToChangelogFile="true"/>
+  <include file="19_asset_type_inheritance.xml" relativeToChangelogFile="true"/>
+  <include file="20_update_relation_type.xml" relativeToChangelogFile="true"/>
+  <include file="21_relation_type_component.xml" relativeToChangelogFile="true"/>
+  <include file="22_relation_type_attribute_type_assignment.xml" relativeToChangelogFile="true"/>
+  <include file="23_relation_type_component_asset_type_assignment.xml" relativeToChangelogFile="true"/>
+  <include file="24_update_responsibility.xml" relativeToChangelogFile="true"/>
+  <include file="25_relation.xml" relativeToChangelogFile="true"/>
+  <include file="26_relation_component.xml" relativeToChangelogFile="true"/>
+  <include file="27_update_responsibility.xml" relativeToChangelogFile="true"/>
+  <include file="28_asset_hierarchy.xml" relativeToChangelogFile="true"/>
+  <include file="29_update_created_by.xml" relativeToChangelogFile="true"/>
+  <include file="30_update_user.xml" relativeToChangelogFile="true"/>
+  <include file="31_update_description_types.xml" relativeToChangelogFile="true"/>
+  <include file="32_update_description_types_v2.xml" relativeToChangelogFile="true"/>
+  <include file="33_delete_admin_action_type.xml" relativeToChangelogFile="true"/>
+  <include file="34_add_default_user_role.xml" relativeToChangelogFile="true"/>
+  <include file="35_make_role_action_permission_type_not_null_column.xml" relativeToChangelogFile="true"/>
+  <include file="36_add_entities.xml" relativeToChangelogFile="true"/>
+  <include file="37_add_action_types.xml" relativeToChangelogFile="true"/>
+  <include file="38_update_unique_responsibility_keys.xml" relativeToChangelogFile="true"/>
+  <include file="39_update_max_values_length.xml" relativeToChangelogFile="true"/>
+  <include file="40_update_foreign_keys.xml" relativeToChangelogFile="true"/>
+  <include file="41_default_role_actions.xml" relativeToChangelogFile="true"/>
+  <include file="42_update_role_action_index.xml" relativeToChangelogFile="true"/>
+  <include file="43_asset_link_usage.xml" relativeToChangelogFile="true"/>
+  <include file="44_image_link_usage.xml" relativeToChangelogFile="true"/>
+  <include file="45_log.xml" relativeToChangelogFile="true"/>
+  <include file="46_subscription.xml" relativeToChangelogFile="true"/>
+  <include file="47_subscription_roles.xml" relativeToChangelogFile="true"/>
+  <include file="48_relation_attribute.xml" relativeToChangelogFile="true"/>
+  <include file="49_relation_type_component_attribute_type_assignment.xml" relativeToChangelogFile="true"/>
+  <include file="50_relation_component_attribute.xml" relativeToChangelogFile="true"/>
+  <include file="51_update_relation_type.xml" relativeToChangelogFile="true"/>
+  <include file="52_asset_type_card_header_assignment.xml" relativeToChangelogFile="true"/>
+  <include file="53_custom_view.xml" relativeToChangelogFile="true"/>
+  <include file="54_reports_sql.xml" relativeToChangelogFile="true"/>
+  <include file="55_custom_view_sql.xml" relativeToChangelogFile="true"/>
+  <include file="56_relation_type_self_relatied_flag.xml" relativeToChangelogFile="true"/>
+  <include file="03-12-24-asset_name_validation_mask.xml" relativeToChangelogFile="true"/>
+  <include file="10.12.2024_history.xml" relativeToChangelogFile="true"/>
+  <include file="25.12.2024-metadata-extract.xml" relativeToChangelogFile="true"/>
+  <include file="09.01.2025_update_user.xml" relativeToChangelogFile="true"/>
+  <include file="10.01.2024_update_relation_type_component.xml" relativeToChangelogFile="true"/>
+  <include file="25.02.2025_user_history.xml" relativeToChangelogFile="true"/>
+</databaseChangeLog>

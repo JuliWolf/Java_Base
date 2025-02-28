@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd"
+    objectQuotingStrategy="QUOTE_ALL_OBJECTS"
+>
+  <changeSet id="1700685900120-1" author="JuliWolf">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="asset"/>
+
+      <columnExists tableName="asset" columnName="create_by"/>
+    </preConditions>
+
+    <renameColumn tableName="asset" oldColumnName="create_by" newColumnName="created_by" schemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1700685939834-1" author="JuliWolf">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="asset_hierarchy"/>
+
+      <columnExists tableName="asset_hierarchy" columnName="create_by"/>
+    </preConditions>
+
+    <renameColumn tableName="asset_hierarchy" oldColumnName="create_by" newColumnName="created_by" schemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1700685978771-1" author="JuliWolf">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="asset_type"/>
+
+      <columnExists tableName="asset_type" columnName="create_by"/>
+    </preConditions>
+
+    <renameColumn tableName="asset_type" oldColumnName="create_by" newColumnName="created_by" schemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1700686014561-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="asset_type_attribute_type_assignment"/>
+
+      <columnExists tableName="asset_type_attribute_type_assignment" columnName="create_by"/>
+    </preConditions>
+
+    <renameColumn tableName="asset_type_attribute_type_assignment" oldColumnName="create_by" newColumnName="created_by" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1700686054043-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="asset_type_inheritance"/>
+
+      <columnExists tableName="asset_type_inheritance" columnName="create_by"/>
+    </preConditions>
+
+    <renameColumn tableName="asset_type_inheritance" oldColumnName="create_by" newColumnName="created_by" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1700686085772-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="asset_type_status_assignment"/>
+
+      <columnExists tableName="asset_type_status_assignment" columnName="create_by"/>
+    </preConditions>
+
+    <renameColumn tableName="asset_type_status_assignment" oldColumnName="create_by" newColumnName="created_by" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1700686113509-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="attribute"/>
+
+      <columnExists tableName="attribute" columnName="create_by"/>
+    </preConditions>
+
+    <renameColumn tableName="attribute" oldColumnName="create_by" newColumnName="created_by" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1700686146047-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="attribute_type"/>
+
+      <columnExists tableName="attribute_type" columnName="create_by"/>
+    </preConditions>
+
+    <renameColumn tableName="attribute_type" oldColumnName="create_by" newColumnName="created_by" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1700686172368-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="attribute_type_allowed_value"/>
+
+      <columnExists tableName="attribute_type_allowed_value" columnName="create_by"/>
+    </preConditions>
+
+    <renameColumn tableName="attribute_type_allowed_value" oldColumnName="create_by" newColumnName="created_by" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1700686199817-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="global_responsibility"/>
+
+      <columnExists tableName="global_responsibility" columnName="create_by"/>
+    </preConditions>
+
+    <renameColumn tableName="global_responsibility" oldColumnName="create_by" newColumnName="created_by" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1700686228786-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="group"/>
+
+      <columnExists tableName="group" columnName="create_by"/>
+    </preConditions>
+
+    <renameColumn tableName="group" oldColumnName="create_by" newColumnName="created_by" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1700686246331-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="relation"/>
+
+      <columnExists tableName="relation" columnName="create_by"/>
+    </preConditions>
+
+    <renameColumn tableName="relation" oldColumnName="create_by" newColumnName="created_by" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1700686275533-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="relation_component"/>
+
+      <columnExists tableName="relation_component" columnName="create_by"/>
+    </preConditions>
+
+    <renameColumn tableName="relation_component" oldColumnName="create_by" newColumnName="created_by" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1700686303038-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="relation_type"/>
+
+      <columnExists tableName="relation_type" columnName="create_by"/>
+    </preConditions>
+
+    <renameColumn tableName="relation_type" oldColumnName="create_by" newColumnName="created_by" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1700686338008-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="relation_type_attribute_type_assignment"/>
+
+      <columnExists tableName="relation_type_attribute_type_assignment" columnName="create_by"/>
+    </preConditions>
+
+    <renameColumn tableName="relation_type_attribute_type_assignment" oldColumnName="create_by" newColumnName="created_by" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1700686371105-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="relation_type_component"/>
+
+      <columnExists tableName="relation_type_component" columnName="create_by"/>
+    </preConditions>
+
+    <renameColumn tableName="relation_type_component" oldColumnName="create_by" newColumnName="created_by" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1700686396122-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="relation_type_component_asset_type_assignment"/>
+
+      <columnExists tableName="relation_type_component_asset_type_assignment" columnName="create_by"/>
+    </preConditions>
+
+    <renameColumn tableName="relation_type_component_asset_type_assignment" oldColumnName="create_by" newColumnName="created_by" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1700686416412-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="responsibility"/>
+
+      <columnExists tableName="responsibility" columnName="create_by"/>
+    </preConditions>
+
+    <renameColumn tableName="responsibility" oldColumnName="create_by" newColumnName="created_by" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1700686445300-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="role"/>
+
+      <columnExists tableName="role" columnName="create_by"/>
+    </preConditions>
+
+    <renameColumn tableName="role" oldColumnName="create_by" newColumnName="created_by" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1700686474261-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="role_action"/>
+
+      <columnExists tableName="role_action" columnName="create_by"/>
+    </preConditions>
+
+    <renameColumn tableName="role_action" oldColumnName="create_by" newColumnName="created_by" schemaName="public"/>
+  </changeSet>
+  <changeSet id="1700686498551-1" author="juliwolf">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="status"/>
+
+      <columnExists tableName="status" columnName="create_by"/>
+    </preConditions>
+
+    <renameColumn tableName="status" oldColumnName="create_by" newColumnName="created_by" schemaName="public"/>
+  </changeSet>
+</databaseChangeLog>

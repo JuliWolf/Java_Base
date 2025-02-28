@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+  <changeSet id="1711357842010-1" author="juliwolf">
+    <addColumn tableName="role_action" schemaName="public">
+      <column defaultValueBoolean="false" name="owner_user_only" type="boolean"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet id="1711357634489-1" author="juliwolf" dbms="postgresql" context="production">
+    <sql>
+      INSERT INTO public.role_action (role_action_id, role_id, action_type_id, entity_type_id, asset_type_id, role_type_id, attribute_type_id, relation_type_id, action_scope, permission_type, owner_user_only) VALUES('cfc3a42a-34e6-4067-872f-554d8608dc4a', '2c057d40-4f72-4eb3-9a5e-276a9a98e1f8', '3b086c0e-d19e-4874-9c18-8e9daf952bee', 'dd6be94c-a022-4553-9d2e-d09226cebe58', NULL, NULL, NULL, NULL, 'ALL', 'ALLOW', true) ON CONFLICT DO nothing;
+      INSERT INTO public.role_action (role_action_id, role_id, action_type_id, entity_type_id, asset_type_id, role_type_id, attribute_type_id, relation_type_id, action_scope, permission_type, owner_user_only) VALUES('020396a9-cc2b-45bb-9b32-c712fced9425', '2c057d40-4f72-4eb3-9a5e-276a9a98e1f8', 'b8eb41e4-e43f-4259-a198-81fc19e7e90a', 'dd6be94c-a022-4553-9d2e-d09226cebe58', NULL, NULL, NULL, NULL, 'ALL', 'ALLOW', true) ON CONFLICT DO nothing;
+      INSERT INTO public.role_action (role_action_id, role_id, action_type_id, entity_type_id, asset_type_id, role_type_id, attribute_type_id, relation_type_id, action_scope, permission_type, owner_user_only) VALUES('66b5a908-9782-40b8-91e9-6c42ca86149d', '2c057d40-4f72-4eb3-9a5e-276a9a98e1f8', '54d4330c-d08f-4fb2-b706-2ec3c022286d', 'dd6be94c-a022-4553-9d2e-d09226cebe58', NULL, NULL, NULL, NULL, 'ALL', 'ALLOW', true) ON CONFLICT DO nothing;
+    </sql>
+  </changeSet>
+</databaseChangeLog>

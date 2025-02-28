@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd"
+    objectQuotingStrategy="QUOTE_ALL_OBJECTS"
+>
+  <changeSet id="1700066868879-1" author="JuliWolf">
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="responsibility"/>
+    </preConditions>
+
+    <addColumn tableName="responsibility" schemaName="public">
+      <column name="relation_id" type="UUID"/>
+    </addColumn>
+
+    <addForeignKeyConstraint baseColumnNames="relation_id" baseTableName="responsibility" baseTableSchemaName="public" constraintName="fk_responsibility_on_relation" referencedColumnNames="relation_id" referencedTableName="relation" referencedTableSchemaName="public"/>
+  </changeSet>
+</databaseChangeLog>

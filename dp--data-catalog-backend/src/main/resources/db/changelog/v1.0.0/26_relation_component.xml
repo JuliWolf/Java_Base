@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd"
+    objectQuotingStrategy="QUOTE_ALL_OBJECTS"
+>
+  <changeSet id="1700066666095-1" author="JuliWolf">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="relation_component"/>
+      </not>
+    </preConditions>
+    <createTable schemaName="public" tableName="relation_component">
+        <column name="relation_component_id" type="UUID">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_relation_component"/>
+        </column>
+        <column name="relation_id" type="UUID"/>
+        <column name="relation_type_component_id" type="UUID"/>
+        <column name="asset_id" type="UUID"/>
+        <column name="hierarchy_role" type="VARCHAR(255)"/>
+        <column name="responsibility_inheritance_role" type="VARCHAR(255)"/>
+        <column name="created_on" type="DATETIME"/>
+        <column name="create_by" type="UUID"/>
+        <column name="last_modified_on" type="DATETIME"/>
+        <column name="last_modified_by" type="UUID"/>
+        <column defaultValueBoolean="false" name="deleted_flag" type="boolean"/>
+        <column name="deleted_on" type="DATETIME"/>
+        <column name="deleted_by" type="UUID"/>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="asset_id" baseTableName="relation_component" baseTableSchemaName="public" constraintName="fk_relation_component_on_asset" referencedColumnNames="asset_id" referencedTableName="asset" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="create_by" baseTableName="relation_component" baseTableSchemaName="public" constraintName="fk_relation_component_on_create_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="deleted_by" baseTableName="relation_component" baseTableSchemaName="public" constraintName="fk_relation_component_on_deleted_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="last_modified_by" baseTableName="relation_component" baseTableSchemaName="public" constraintName="fk_relation_component_on_last_modified_by" referencedColumnNames="user_id" referencedTableName="user" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="relation_id" baseTableName="relation_component" baseTableSchemaName="public" constraintName="fk_relation_component_on_relation" referencedColumnNames="relation_id" referencedTableName="relation" referencedTableSchemaName="public"/>
+    <addForeignKeyConstraint baseColumnNames="relation_type_component_id" baseTableName="relation_component" baseTableSchemaName="public" constraintName="fk_relation_component_on_relation_type_component" referencedColumnNames="relation_type_component_id" referencedTableName="relation_type_component" referencedTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1700149189087-1" author="JuliWolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <columnExists tableName="relation_component" columnName="relation_id"/>
+      <columnExists tableName="relation_component" columnName="asset_id"/>
+      <columnExists tableName="relation_component" columnName="relation_type_component_id"/>
+
+      <columnExists tableName="relation_component" columnName="deleted_flag"/>
+    </preConditions>
+
+    <sql splitStatements="true" stripComments="true" endDelimiter="\nGO">
+      CREATE UNIQUE INDEX idx_unique_relation_component_asset_relation_deleted_flag ON "relation_component" (relation_id, asset_id, relation_type_component_id, deleted_flag)
+        WHERE deleted_flag = false;
+    </sql>
+  </changeSet>
+</databaseChangeLog>

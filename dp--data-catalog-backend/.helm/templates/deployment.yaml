@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.microservice }}
+  labels:
+    app: {{ .Values.microservice }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.microservice }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.microservice }}
+      annotations:
+        sha: {{ .Values.sha | quote }}
+    spec:
+      containers:
+        - name: app
+          imagePullPolicy: Always
+          image: {{ .Values.imageName }}:{{ .Values.imageTag }}
+          ports:
+              - containerPort: {{ .Values.port }}
+          resources:
+            limits:
+              memory: {{ .Values.resourcesLimitsMemory | quote }}
+            requests:
+              memory: {{ .Values.resourcesLimitsMemory | quote }}
+              {{- if hasKey .Values "resourcesRequestsCpu" }}
+              cpu: {{ .Values.resourcesRequestsCpu | quote }}
+              {{- end }}
+          envFrom:
+            - secretRef:
+                name: {{.Values.microservice }}

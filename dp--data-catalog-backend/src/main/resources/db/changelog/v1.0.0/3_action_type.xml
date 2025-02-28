@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.18.xsd">
+
+  <changeSet id="1695047075859-1" author="JuliWolf">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="action_type"/>
+      </not>
+    </preConditions>
+
+    <rollback>
+      <dropTable tableName="action_type" cascadeConstraints="true"/>
+    </rollback>
+
+    <createTable schemaName="public" tableName="action_type">
+        <column name="action_type_id" type="UUID">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_action_type"/>
+        </column>
+        <column name="action_type_name" type="VARCHAR(255)"/>
+        <column name="action_type_description" type="VARCHAR(255)"/>
+        <column name="source_language" type="UUID"/>
+        <column defaultValueBoolean="false" name="deleted_flag" type="boolean"/>
+    </createTable>
+    <addForeignKeyConstraint baseColumnNames="source_language" baseTableName="action_type" baseTableSchemaName="public" constraintName="FK_ACTION_TYPE_ON_SOURCE_LANGUAGE" referencedColumnNames="language_id" referencedTableName="language" referencedTableSchemaName="public"/>
+  </changeSet>
+
+  <changeSet id="1695213403495-1" author="JuliWolf" dbms="postgresql">
+    <preConditions onFail="MARK_RAN">
+      <columnExists tableName="action_type" columnName="action_type_name"/>
+
+      <columnExists tableName="action_type" columnName="deleted_flag"/>
+    </preConditions>
+
+    <sql splitStatements="true" stripComments="true" endDelimiter="\nGO">
+      CREATE UNIQUE INDEX idx_unique_action_type_name_deleted_flag ON action_type (action_type_name, deleted_flag)
+        WHERE deleted_flag = false
+    </sql>
+  </changeSet>
+
+  <changeSet id="1695225894377-1" author="JuliWolf">
+    <insert tableName="action_type" schemaName="public">
+      <column name="action_type_id" value="54d4330c-d08f-4fb2-b706-2ec3c022286d"/>
+      <column name="action_type_name" value="ADD"/>
+    </insert>
+    <insert tableName="action_type" schemaName="public">
+      <column name="action_type_id" value="3b086c0e-d19e-4874-9c18-8e9daf952bee"/>
+      <column name="action_type_name" value="EDIT"/>
+    </insert>
+    <insert tableName="action_type" schemaName="public">
+      <column name="action_type_id" value="b8eb41e4-e43f-4259-a198-81fc19e7e90a"/>
+      <column name="action_type_name" value="DELETE"/>
+    </insert>
+    <insert tableName="action_type" schemaName="public">
+      <column name="action_type_id" value="c7f65d90-b311-4fac-9af3-68289a60e7e3"/>
+      <column name="action_type_name" value="VIEW"/>
+    </insert>
+    <insert tableName="action_type" schemaName="public">
+      <column name="action_type_id" value="a2aab955-e4c8-456d-9a73-5af73ee6a4ec"/>
+      <column name="action_type_name" value="ADMIN"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>
