@@ -576,6 +576,8 @@ Cluster = Master node + Worker nodes
 + [5. kubectl scale](#5-kubectl-scale)
 + [6. kubectl set](#6-kubectl-set)
 + [7. kubectl rollout](#7-kubectl-rollout)
++ [8. kubectl apply](#8-kubectl-apply)
++ [9. declarative setup](#9-declarative-setup)
 
 #### 1. kuberctl create
 Создать объект<br>
@@ -598,8 +600,8 @@ first-app-564775dddc-7qv52   0/1     ImagePullBackOff   0          60s
 ` kubectl expose deployment first-app --port 8080 --type=NodePort`<br>
 `--type` может иметь разные значения
   - `ClusterIp` - будет доступен только внутри кластера
-  - `NodePort` - Будет расшарен во вне с помощью workerNode
-  - `LoadBalancer` - С помощью `LoadBalancer` будет создан IP для доступа извне
+  - `NodePort` - Будет расшарен внутри workerNode
+  - `LoadBalancer` - будет создан IP для доступа извне
 
 ### 5. kubectl scale
 Увеличить количество желаемых реплик<br>
@@ -633,5 +635,51 @@ REVISION  CHANGE-CAUSE
 
 Откатить поды к определенному релизу<br>
 `kubectl rollout undo deployment/first-app --to-revision=1`
+
+### 8. kubectl apply
+Создать объект из конфигурационного файла/файлов<br>
+`kubectl apply -f=deployment.yaml`
+
+### 9. declarative setup
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  selector:
+    app: second-app
+  ports:
+    - protocol: 'TCP'
+      port: 80
+      targetPort: 8080
+    # - protocol: 'TCP'
+    #   port: 443
+    #   targetPort: 443
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: second-app-deployment
+spec:
+  selector:
+    matchLabels:
+      app: second-app
+      tier: second-app
+    # matchExpressions
+  replicas: 1
+  template:
+    metadata:
+      labels: 
+        app: second-app
+        tier: second-app
+    spec: 
+      containers:
+        - name: second-node
+          image: juliwolf/kub-first-app:2
+        # - name: ...
+        #   image: ...
+```
 ## END ---------------- Kubernetes ----------------
 
