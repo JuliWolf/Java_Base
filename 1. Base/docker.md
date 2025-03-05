@@ -569,13 +569,13 @@ Cluster = Master node + Worker nodes
 
 ### 7. Commands
 
-+ [1. kuberctl create]()
-+ [2. kuberctl get]()
-+ [3. kuberctl delete]()
-+ [4. kubectl expose]()
-+ [5. kubectl scale]()
-+ [6. kubectl set]()
-+ [7. kubectl rollout]()
++ [1. kuberctl create](#1-kuberctl-create)
++ [2. kuberctl get](#2-kuberctl-get)
++ [3. kuberctl delete](#3-kuberctl-delete)
++ [4. kubectl expose](#4-kubectl-expose)
++ [5. kubectl scale](#5-kubectl-scale)
++ [6. kubectl set](#6-kubectl-set)
++ [7. kubectl rollout](#7-kubectl-rollout)
 
 #### 1. kuberctl create
 Создать объект<br>
