@@ -524,6 +524,7 @@ testcontainers/ryuk   0.5.1     ec913eeff75a   20 months ago   12.7MB
 + [4. Что нужно подготовить для начала работы](#4-что-нужно-подготовить-для-начала-работы)
 + [5. Worker node](#5-worker-node)
 + [6. Master node](#6-master-node)
++ [7. Commands](#7-commands)
 
 ### 1. Какие проблемы решает Kubernetes
 - Оркестрация - автоматизация процессов управления контейнерами.
@@ -565,5 +566,72 @@ Cluster = Master node + Worker nodes
 - Scheduler - Наблюдает за подами, выбирает worker node, на котором запустить Pod
 - Kube-Controller Manager - контролирует и наблюдает за Worker node, меняет количество подов
 - Cloud-Controller Manager - Тоже самое что Kube-Controller Manager только специфичен для конкретного cloud provider. Переводит инструкции для конкретного провайдера
+
+### 7. Commands
+
++ [1. kuberctl create]()
++ [2. kuberctl get]()
++ [3. kuberctl delete]()
++ [4. kubectl expose]()
++ [5. kubectl scale]()
++ [6. kubectl set]()
++ [7. kubectl rollout]()
+
+#### 1. kuberctl create
+Создать объект<br>
+`kubectl create deployment first-app --image=juliwolf/kub-first-app`
+
+#### 2. kuberctl get
+Получить список объектов группы<br>
+`kubectl get pods`
+```
+NAME                         READY   STATUS             RESTARTS   AGE
+first-app-564775dddc-7qv52   0/1     ImagePullBackOff   0          60s
+```
+
+#### 3. kuberctl delete
+Удалить объект определенной группы<br>
+`kubectl delete deployment first-app`
+
+### 4. kubectl expose
+Расшарить Ip адрес <br>
+` kubectl expose deployment first-app --port 8080 --type=NodePort`<br>
+`--type` может иметь разные значения
+  - `ClusterIp` - будет доступен только внутри кластера
+  - `NodePort` - Будет расшарен во вне с помощью workerNode
+  - `LoadBalancer` - С помощью `LoadBalancer` будет создан IP для доступа извне
+
+### 5. kubectl scale
+Увеличить количество желаемых реплик<br>
+`kubectl scale deployment/first-app --replicas=3`<br>
+`--replicas`- говорит о том, сколько инстансов необходимо создать
+
+### 6. kubectl set
+Обновить image для пода<br>
+`kubectl set image deployment/first-app kub-first-app=juliwolf/kub-first-app`<br>
+image будет обновлен, только если будет иметь другой код или другой tag
+
+### 7. kubectl rollout
+Посмотреть состояние отката<br>
+`kubectl rollout status deployment/first-app`<br><br>
+
+`Waiting for deployment "first-app" rollout to finish: 1 out of 3 new replicas have been updated...`
+
+Отменить последний deployment<br>
+`kubectl rollout undo deployment/first-app`
+
+Посмотреть историю деплоев<br>
+`kubectl rollout history deployment/first-app`
+```
+deployment.apps/first-app 
+REVISION  CHANGE-CAUSE
+1         <none>
+3         <none>
+4         <none>
+
+```
+
+Откатить поды к определенному релизу<br>
+`kubectl rollout undo deployment/first-app --to-revision=1`
 ## END ---------------- Kubernetes ----------------
 
