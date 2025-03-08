@@ -525,6 +525,7 @@ testcontainers/ryuk   0.5.1     ec913eeff75a   20 months ago   12.7MB
 + [5. Worker node](#5-worker-node)
 + [6. Master node](#6-master-node)
 + [7. Commands](#7-commands)
++ [8. Declarative setup](#7-commands)
 
 ### 1. Какие проблемы решает Kubernetes
 - Оркестрация - автоматизация процессов управления контейнерами.
@@ -577,7 +578,6 @@ Cluster = Master node + Worker nodes
 + [6. kubectl set](#6-kubectl-set)
 + [7. kubectl rollout](#7-kubectl-rollout)
 + [8. kubectl apply](#8-kubectl-apply)
-+ [9. declarative setup](#9-declarative-setup)
 
 #### 1. kuberctl create
 Создать объект<br>
@@ -595,7 +595,7 @@ first-app-564775dddc-7qv52   0/1     ImagePullBackOff   0          60s
 Удалить объект определенной группы<br>
 `kubectl delete deployment first-app`
 
-### 4. kubectl expose
+#### 4. kubectl expose
 Расшарить Ip адрес <br>
 ` kubectl expose deployment first-app --port 8080 --type=NodePort`<br>
 `--type` может иметь разные значения
@@ -603,17 +603,17 @@ first-app-564775dddc-7qv52   0/1     ImagePullBackOff   0          60s
   - `NodePort` - Будет расшарен внутри workerNode
   - `LoadBalancer` - будет создан IP для доступа извне
 
-### 5. kubectl scale
+#### 5. kubectl scale
 Увеличить количество желаемых реплик<br>
 `kubectl scale deployment/first-app --replicas=3`<br>
 `--replicas`- говорит о том, сколько инстансов необходимо создать
 
-### 6. kubectl set
+#### 6. kubectl set
 Обновить image для пода<br>
 `kubectl set image deployment/first-app kub-first-app=juliwolf/kub-first-app`<br>
 image будет обновлен, только если будет иметь другой код или другой tag
 
-### 7. kubectl rollout
+#### 7. kubectl rollout
 Посмотреть состояние отката<br>
 `kubectl rollout status deployment/first-app`<br><br>
 
@@ -636,11 +636,19 @@ REVISION  CHANGE-CAUSE
 Откатить поды к определенному релизу<br>
 `kubectl rollout undo deployment/first-app --to-revision=1`
 
-### 8. kubectl apply
+#### 8. kubectl apply
 Создать объект из конфигурационного файла/файлов<br>
 `kubectl apply -f=deployment.yaml`
 
-### 9. declarative setup
+### 8. Declarative setup
+
++ [1. Setup example]()
++ [2. Проверка работоспособности контейнера]()
++ [3. Правила загрузки image для контейнера]()
++ [4. Конфигурация volume]()
++ [5. Типы volume]()
+
+#### 1. Setup
 ```yaml
 apiVersion: v1
 kind: Service
@@ -680,6 +688,59 @@ spec:
           image: juliwolf/kub-first-app:2
         # - name: ...
         #   image: ...
+```
+
+#### 2. Проверка работоспособности контейнера
+За проверку работоспособности контейнера отвечает свойство `livenessProbe`
+```yaml
+    spec: 
+      containers:
+        - name: second-node
+          image: juliwolf/kub-first-app:2
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            periodSeconds: 10
+            initialDelaySeconds: 5
+```
+
+#### 3. Правила загрузки image для контейнера
+Свойство `imagePullPolicy` настраивает правила загрузки версии image для контейнера
+- `IfNotPresent` Загружает новый image если локально его нет
+- `Always` каждый раз, когда создается контейнер, будет загружаться новый image
+- `Never` Кубер никогда не будет пытаться загрузить image, всегда будет использоваться локальный
+
+#### 4. Конфигурация volume
+Volume внутри pods кубера настраивается через `volumes`, где задается название и тип volume<br>
+Для контейнера дополнительно необходимо указать свойство `volumeMounts`, внутри которого указывается путь до папки для монтирования volume и название volume который будет использоваться
+```yaml
+    spec:
+      containers:
+        - name: story
+          image: juliwolf/kub-data-demo:1
+          volumeMounts:
+            - mountPath: /app/story
+              name: story-volume
+      volumes:
+        - name: story-volume
+          emptyDir: {}
+```
+
+#### 5. Типы volume
+1. `emptyDir` - Директория внутри пода (удаляется при перезагрузке пода). Не шарится между несколькими инстансами
+```yaml
+      volumes:
+        - name: story-volume
+          emptyDir: {}
+```
+2. `hostPath` - Место на кластере, который содержит под. Подходит для кейсов, кода есть несколько инстансов на одном кластере
+```yaml
+      volumes:
+        - name: story-volume
+          hostPath:
+            path: /data
+            type: DirectoryOrCreate
 ```
 ## END ---------------- Kubernetes ----------------
 
