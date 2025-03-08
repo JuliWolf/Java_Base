@@ -525,7 +525,7 @@ testcontainers/ryuk   0.5.1     ec913eeff75a   20 months ago   12.7MB
 + [5. Worker node](#5-worker-node)
 + [6. Master node](#6-master-node)
 + [7. Commands](#7-commands)
-+ [8. Declarative setup](#7-commands)
++ [8. Declarative setup](#8-declarative-setup)
 
 ### 1. Какие проблемы решает Kubernetes
 - Оркестрация - автоматизация процессов управления контейнерами.
@@ -642,11 +642,11 @@ REVISION  CHANGE-CAUSE
 
 ### 8. Declarative setup
 
-+ [1. Setup example]()
-+ [2. Проверка работоспособности контейнера]()
-+ [3. Правила загрузки image для контейнера]()
-+ [4. Конфигурация volume]()
-+ [5. Типы volume]()
++ [1. Setup example](#1-setup)
++ [2. Проверка работоспособности контейнера](#2-проверка-работоспособности-контейнера)
++ [3. Правила загрузки image для контейнера](#3-правила-загрузки-image-для-контейнера)
++ [4. Конфигурация volume](#4-конфигурация-volume)
++ [5. Типы volume](#5-типы-volume)
 
 #### 1. Setup
 ```yaml
