@@ -526,6 +526,9 @@ testcontainers/ryuk   0.5.1     ec913eeff75a   20 months ago   12.7MB
 + [6. Master node](#6-master-node)
 + [7. Commands](#7-commands)
 + [8. Declarative setup](#8-declarative-setup)
++ [9. Volumes](#9-volumes)
++ [10. Environment variables](#10-environment-variables)
++ [11. Networking](#11-networking)
 
 ### 1. Какие проблемы решает Kubernetes
 - Оркестрация - автоматизация процессов управления контейнерами.
@@ -645,8 +648,6 @@ REVISION  CHANGE-CAUSE
 + [1. Setup example](#1-setup)
 + [2. Проверка работоспособности контейнера](#2-проверка-работоспособности-контейнера)
 + [3. Правила загрузки image для контейнера](#3-правила-загрузки-image-для-контейнера)
-+ [4. Конфигурация volume](#4-конфигурация-volume)
-+ [5. Типы volume](#5-типы-volume)
 
 #### 1. Setup
 ```yaml
@@ -711,7 +712,14 @@ spec:
 - `Always` каждый раз, когда создается контейнер, будет загружаться новый image
 - `Never` Кубер никогда не будет пытаться загрузить image, всегда будет использоваться локальный
 
-#### 4. Конфигурация volume
+
+### 9. Volumes
+
++ [1. Конфигурация volume](#1-конфигурация-volume)
++ [2. Типы volume](#2-типы-volume)
++ [3. Persistent volume](#3-persistent-volume)
+
+#### 1. Конфигурация volume
 Volume внутри pods кубера настраивается через `volumes`, где задается название и тип volume<br>
 Для контейнера дополнительно необходимо указать свойство `volumeMounts`, внутри которого указывается путь до папки для монтирования volume и название volume который будет использоваться
 ```yaml
@@ -727,7 +735,8 @@ Volume внутри pods кубера настраивается через `vol
           emptyDir: {}
 ```
 
-#### 5. Типы volume
+#### 2. Типы volume
+https://kubernetes.io/docs/concepts/storage/volumes/#volume-types
 1. `emptyDir` - Директория внутри пода (удаляется при перезагрузке пода). Не шарится между несколькими инстансами
 ```yaml
       volumes:
@@ -742,5 +751,114 @@ Volume внутри pods кубера настраивается через `vol
             path: /data
             type: DirectoryOrCreate
 ```
+
+#### 3. Persistent volume
+https://kubernetes.io/docs/concepts/storage/persistent-volumes/<br>
+Это volume, который не зависит от конкретной ноды<br>
+Для настройки volume используется `kind: PersistentVolume`
+```yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: host-pv
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  storageClassName: standard
+  accessModes:
+    # read by single node (pods from one node can read)
+    - ReadWriteOnce
+    # read by multiple node (pods from multiple node can read)
+    - ReadOnlyMany
+    # read and write by multiple node (pods from multiple node can read and write)
+    - ReadWriteMany
+  hostPath: 
+    path: /data
+    type: DirectoryOrCreate
+```
+Для использования данного volume или какой-то его части необходимо создать `kind: PersistentVolumeClaim`
+
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: host-pvc
+spec:
+  volumeName: host-pv
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+```
+
+Для связи deployment и созданного `PersistentVolumeClaim` необходимо в volume указать `persistentVolumeClaim`
+```yaml
+...
+    spec:
+      containers:
+        - name: story
+          image: juliwolf/kub-data-demo:1
+          volumeMounts:
+            - mountPath: /app/story
+              name: story-volume
+      volumes:
+        - name: story-volume
+          persistentVolumeClaim:
+            claimName: host-pvc
+```
+
+### 10. Environment variables
+https://kubernetes.io/docs/concepts/containers/container-environment/ <br>
+1. Самый простой способ передать переменные контейнеру, это прописать их в настройке контейнера в `env`
+```yaml
+...
+    spec:
+      containers:
+        - name: story
+          image: juliwolf/kub-data-demo:2
+          env:
+            - name: STORY_FOLDER
+              value: 'story'
+          volumeMounts:
+            - mountPath: /app/story
+              name: story-volume
+      volumes:
+        - name: story-volume
+          persistentVolumeClaim:
+            claimName: host-pvc
+```
+
+2. Создание ConfigMap
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: data-store-env
+data:
+  folder: 'story'
+  # key: value...
+  
+```
+Использование
+```yaml
+...
+spec:
+  containers:
+    - name: story
+      image: juliwolf/kub-data-demo:2
+      env:
+        - name: STORY_FOLDER
+          valueFrom:
+            configMapKeyRef:
+              name: data-store-env
+              key: folder
+      volumeMounts:
+        - mountPath: /app/story
+          name: story-volume
+```
+
+### 11. Networking
 ## END ---------------- Kubernetes ----------------
 
