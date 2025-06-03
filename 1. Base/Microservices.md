@@ -1,13 +1,12 @@
-+ [Паттерны декомпозиции на микросервисы](#паттерны)
-+ [Паттерны управления данными](#паттерны)
++ [Паттерны декомпозиции на микросервисы](#паттерны-декомпозиции-на-микросервисы)
++ [Паттерны управления данными](#паттерны-управления-данными)
 + [Hexagonal architecture](#hexagonal-architecture)
 
 
 ## Паттерны декомпозиции на микросервисы
 
-+ [1. Шаблон «Разбиение по бизнес-возможностям» (Decompose By Business Capability)]()
-+ [2. Шаблон «Разбиение по поддоменам» (Domain-Driven Design, DDD)]()
-
++ [1. Шаблон «Разбиение по бизнес-возможностям» (Decompose By Business Capability)](#1-шаблон-разбиение-по-бизнес-возможностям-decompose-by-business-capability)
++ [2. Шаблон «Разбиение по поддоменам» (Domain-Driven Design, DDD)](#2-шаблон-разбиение-по-поддоменам-domain-driven-design-ddd)
 
 ### 1. Шаблон «Разбиение по бизнес-возможностям» (Decompose By Business Capability)
 Суть в выделении главных бизнес-возможностей приложения и создать отдельный микросервис для каждой из них<br>
@@ -24,24 +23,24 @@
 
 ## Паттерны управления данными
 
-+ [1. Service Registry (Реестр сервисов)]()
-+ [2. API Gateway (API-шлюз)]()
-+ [3. Circuit Breaker (Предохранитель)]()
-+ [4. Bulkhead (Отсек)]()
-+ [5. Saga Pattern (Сага)]()
-+ [6. Event Sourcing (Источник событий)]()
-+ [7. Command Query Responsibility Segregation (CQRS, Разделение команд и запросов)]()
-+ [8. Data Sharding (Шардинг данных)]()
-+ [9. Polyglot Persistence (Многовариантное хранение)]()
-+ [10. Retry (Повторная попытка)]()
-+ [11. Sidecar (Вспомогательный сервис)]()
-+ [12. Backends for Frontends (BFF, Бэкенды для фронтендов)]()
-+ [13. Shadow Deployment (Теневое развертывание)]()
-+ [14. Consumer-Driven Contracts (Контракты, определяемые потребителем)]()
-+ [15. Smart Endpoints, Dumb Pipes (Умные конечные точки, глупые каналы)]()
-+ [16. Database per Service (База данных для каждого сервиса)]()
-+ [17. Async Messaging (Асинхронный обмен сообщениями)]()
-+ [18. Stateless Services (Сервисы без состояния)]()
++ [1. Service Registry (Реестр сервисов)](#1-service-registry-реестр-сервисов)
++ [2. API Gateway (API-шлюз)](#2-api-gateway-api-шлюз)
++ [3. Circuit Breaker (Предохранитель)](#3-circuit-breaker-предохранитель)
++ [4. Bulkhead (Отсек)](#4-bulkhead-отсек)
++ [5. Saga Pattern (Сага)](#5-saga-pattern-сага)
++ [6. Event Sourcing (Источник событий)](#6-event-sourcing-источник-событий)
++ [7. Command Query Responsibility Segregation (CQRS, Разделение команд и запросов)](#7-command-query-responsibility-segregation-cqrs-разделение-команд-и-запросов)
++ [8. Data Sharding (Шардинг данных)](#8-data-sharding-шардинг-данных)
++ [9. Polyglot Persistence (Многовариантное хранение)](#9-polyglot-persistence-многовариантное-хранение)
++ [10. Retry (Повторная попытка)](#10-retry-повторная-попытка)
++ [11. Sidecar (Вспомогательный сервис)](#11-sidecar-вспомогательный-сервис)
++ [12. Backends for Frontends (BFF, Бэкенды для фронтендов)](#12-backends-for-frontends-bff-бэкенды-для-фронтендов)
++ [13. Shadow Deployment (Теневое развертывание)](#13-shadow-deployment-теневое-развертывание)
++ [14. Consumer-Driven Contracts (Контракты, определяемые потребителем)](#14-consumer-driven-contracts-контракты-определяемые-потребителем)
++ [15. Smart Endpoints, Dumb Pipes (Умные конечные точки, глупые каналы)](#15-smart-endpoints-dumb-pipes-умные-конечные-точки-глупые-каналы)
++ [16. Database per Service (База данных для каждого сервиса)](#16-database-per-service-база-данных-для-каждого-сервиса)
++ [17. Async Messaging (Асинхронный обмен сообщениями)](#17-async-messaging-асинхронный-обмен-сообщениями)
++ [18. Stateless Services (Сервисы без состояния)](#18-stateless-services-сервисы-без-состояния)
 
 ### 1. Service Registry (Реестр сервисов)
 Решает проблему обнаружения сервисов в распределенной системе. <br>
@@ -139,7 +138,7 @@
 
 ## Hexagonal architecture
 
-+ [1. Принципы архитектуры]()
++ [1. Принципы архитектуры](#1-принципы-архитектуры)
 
 ### 1. Принципы архитектуры
 
