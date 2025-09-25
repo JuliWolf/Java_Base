@@ -4,6 +4,7 @@ https://github.com/johnivo/job4j/blob/master/interview_questions/Core.md#4-%D0%9
 + [HTTP](#http)
 + [Основы](#основы)
 + [Garbage collector](#garbage-collector)
++ [JMM](#jmm)
 + [Classloader](#classloader)
 + [ООП](#ооп)
 + [Процедурная Java](#процедурная-java)
@@ -448,6 +449,41 @@ digit = null;
 После Java 7 string pool был перенесен в кучу, что соотвественно дает доступ GB
 
 ## END ---------------- Garbage collector ----------------
+
+## JMM
+
++ [1. Что обозначает JMM]()
++ [2. Зачем нужен JMM?]()
++ [3. Ключевые концепции JMM]()
+
+### 1. Что обозначает JMM
+JMM (Java Memory Model) — это спецификация, определяющая, как Java-программы взаимодействуют с памятью. <br>
+Она описывает правила видимости и упорядочения операций над переменными в многопоточных приложениях. <br>
+JMM — это абстракция, скрывающая от разработчика сложности взаимодействия с аппаратной памятью и кешами процессоров.
+
+
+### 2. Зачем нужен JMM?
+Без JMM, поведение многопоточных программ на разных платформах было бы непредсказуемым. <br>
+Разные процессоры и операционные системы имеют свои собственные модели памяти, и код, который работает корректно на одном компьютере, может давать сбои на другом. <br>
+JMM предоставляет единую модель памяти для всех платформ, обеспечивая переносимость и предсказуемость Java-приложений.
+
+
+### 3. Ключевые концепции JMM
+- Видимость (Visibility): Гарантирует, что изменения, внесенные одним потоком в переменную, будут видны другим потокам. <br>
+Без этой гарантии, один поток мог бы читать устаревшее значение переменной, даже если другой поток уже его изменил.
+- Упорядочение (Ordering): Определяет порядок выполнения операций над переменными.  <br>
+В однопоточной программе порядок операций обычно интуитивно понятен.  <br>
+Однако, в многопоточной программе, порядок выполнения операций может быть переупорядочен компилятором или процессором для повышения производительности.  <br>
+JMM гарантирует, что определенные операции будут выполняться в заданном порядке, предотвращая race conditions.
+- Happens-before: Это частичный порядок выполнения, который определяет, какие операции происходят до других. <br>
+Это ключевой механизм, обеспечивающий видимость и упорядочение. <br>
+Например, запись в переменную happens-before чтение этой же переменной другим потоком, если это чтение происходит после надлежащей синхронизации (например, использование volatile, synchronized или locks).
+- Операции памяти: JMM определяет абстрактные операции памяти, такие как read, load, use, assign, store, write. Эти операции отражают то, как данные перемещаются между основной памятью и кэшами процессоров.
+- Основные механизмы синхронизации: JMM полагается на механизмы синхронизации, такие как synchronized блоки, volatile переменные и <br>
+locks (например, из java.util.concurrent.locks пакета), для обеспечения правильной видимости и упорядочения. <br>
+Эти механизмы обеспечивают межпотоковые барьеры, гарантируя, что некоторые операции будут выполнены до других.
+
+## END ---------------- JMM ----------------
 
 ## Classloader
 
@@ -2408,18 +2444,84 @@ PostgreSQL использует многоуровневую систему бл
 ### 24. Виды блокировок
 **Блокировка на уровне таблиц:**
 - ACCESS SHARE. Позволяет читать таблицу, но не изменять её.
+```postgresql
+BEGIN;
+SELECT * FROM your_table;
+-- ACCESS SHARE блокировка установлена на your_table
+COMMIT;
+```
 - ROW SHARE. Используется для команд SELECT FOR UPDATE и SELECT FOR SHARE.
+```postgresql
+BEGIN;
+SELECT × FROM your_table WHERE id = 1 FOR UPDATE;
+-- ROW SHARE блокировка установлена на your_table
+COMMIT;
+
+BEGIN;
+SELECT × FROM your_table WHERE id = 1 FOR SHARE;
+-- ROW SHARE блокировка установлена на your_table
+COMMIT;
+```
 - ROW EXCLUSIVE. Применяется для команд, которые вносят изменения в таблицу (UPDATE, DELETE, INSERT).
+```postgresql
+BEGIN;
+INSERT INTO your_table (column1) VALUES ('value');
+-- ROW EXCLUSIVE блокировка установлена на your_table
+COMMIT;
+```
 - SHARE UPDATE EXCLUSIVE. Используется для команд VACUUM (без FULL), ANALYZE, CREATE INDEX CONCURRENTLY и некоторых видов ALTER INDEX и ALTER TABLE.<br>
+```postgresql
+BEGIN;
+VACUUM your_table;
+-- SHARE UPDATE EXCLUSIVE блокировка установлена на your_table
+COMMIT;sql
+BEGIN;
+ANALYZE your_table;
+-- SHARE UPDATE EXCLUSIVE блокировка установлена на your_table
+COMMIT;sql
+CREATE INDEX CONCURRENTLY idx_your_table_column1 ON your_table(column1);
+-- SHARE UPDATE EXCLUSIVE блокировка установлена на your_table на время создания индекса
+```
 
 * Блокировки на уровне таблиц устанавливаются автоматически системой базы данных, но их можно запросить явно с помощью команды LOCK.<br><br>
 
 
 **Блокировка на уровне строк:**
 - FOR UPDATE. Строки, выданные оператором SELECT, блокируются как для изменения.
+```postgresql
+BEGIN;
+SELECT * FROM your_table WHERE id IN (1, 2, 3) FOR UPDATE;
+-- Строки с id 1, 2 и 3 заблокированы FOR UPDATE
+UPDATE your_table SET column1 = 'new_value' WHERE id = 1; -- Это пройдет успешно
+COMMIT;
+```
 - FOR NO KEY UPDATE. Действует подобно FOR UPDATE, но блокировка слабее: не блокирует команды SELECT FOR KEY SHARE.
+```postgresql
+BEGIN;
+SELECT * FROM your_table WHERE id IN (1, 2, 3) FOR NO KEY UPDATE;
+-- Строки с id 1, 2 и 3 заблокированы FOR NO KEY UPDATE
+UPDATE your_table SET column1 = 'new_value' WHERE id = 1; -- Это пройдет успешно
+COMMIT;
+```
 - FOR SHARE. Для каждой из полученных строк запрашивается разделяемая, а не исключительная блокировка.
-- FOR KEY SHARE. Устанавливает более слабую блокировку: блокирует SELECT FOR UPDATE, но не SELECT FOR NO KEY UPDATE.<br><br>
+```postgresql
+BEGIN;
+SELECT * FROM your_table WHERE id IN (1, 2, 3) FOR SHARE;
+-- Строки с id 1, 2 и 3 заблокированы FOR SHARE
+SELECT * FROM your_table WHERE id = 1; -- Это пройдет успешно
+-- UPDATE your_table SET column1 = 'new_value' WHERE id = 1; -- Это будет заблокировано
+COMMIT;
+```
+- FOR KEY SHARE. Устанавливает более слабую блокировку: блокирует SELECT FOR UPDATE, но не SELECT FOR NO KEY UPDATE.
+```postgresql
+BEGIN;
+SELECT * FROM your_table WHERE id IN (1, 2, 3) FOR KEY SHARE;
+-- Строки с id 1, 2 и 3 заблокированы FOR KEY SHARE
+SELECT * FROM your_table WHERE id = 1 FOR KEY SHARE; -- Это пройдет успешно
+-- SELECT * FROM your_table WHERE id = 1 FOR UPDATE; -- Это будет заблокировано
+COMMIT;
+```
+<br><br>
 
 **Примеры использования блокировок:**
 - Защита данных при вставке внешнего ключа. Можно получить блокировку SHARE для таблицы первичного ключа, чтобы предотвратить одновременные изменения данных.
