@@ -21,7 +21,6 @@ https://github.com/johnivo/job4j/blob/master/interview_questions/Core.md#4-%D0%9
     + [1.1.11. Что такое идентификатор ресурса](#1111-что-такое-идентификатор-ресурса)
     + [1.1.12. Что такое многоуровневая система](#1112-что-такое-многоуровневая-система)
     </details>
-
 + [HTTP](#http)
     <details>
         <summary>Навигация</summary>
@@ -52,7 +51,6 @@ https://github.com/johnivo/job4j/blob/master/interview_questions/Core.md#4-%D0%9
     + [1.1.11. Что такое идентификатор ресурса](#1111-что-такое-идентификатор-ресурса)
     + [1.1.12. Что такое многоуровневая система](#1112-что-такое-многоуровневая-система)
     </details>
-
 + [1.2. HTTP](#12-http)
     <details>
         <summary>Навигация</summary>
