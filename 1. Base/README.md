@@ -218,6 +218,104 @@ https://github.com/johnivo/job4j/blob/master/interview_questions/Core.md#4-%D0%9
         + [2.7.7. Что такое рекурсивные дженерики?](#277-что-такое-рекурсивные-дженерики)
         + [2.7.8. Как работает super в дженериках?](#278-как-работает-super-в-дженериках)
       </details>
+
+    + [2.8. Коллекции](#28)
+      <details>
+      	<summary>Навигация</summary>
+
+        + [2.8.1. Что такое коллекция?](#281-что-такое-коллекция)
+        + [2.8.2. Расскажите про иерархию коллекций?](#282-расскажите-про-иерархию-коллекций)
+        + [2.8.3. Почему Map - это не Collection, в то время как List и Set являются Collection?](#283-почему-map---это-не-collection-в-то-время-как-list-и-set-являются-collection)
+        + [2.8.4. В чем разница между классами java.util.Collection и java.util.Collections?](#284-в-чем-разница-между-классами-javautilcollection-и-javautilcollections)
+        + [2.8.5. Что такое «fail-fast поведение»?](#285-что-такое-fail-fast-поведение)
+        + [2.8.6. Какая разница между fail-fast и fail-safe?](#286-какая-разница-между-fail-fast-и-fail-safe)
+        + [2.8.7. Чем различается Enumeration и Iterator?](#287-чем-различается-enumeration-и-iterator)
+        + [2.8.8. Как между собой связаны Iterable, Iterator и «for-each»?](#288-как-между-собой-связаны-iterable-iterator-и-for-each)
+        + [2.8.9. Сравните Iterator и ListIterator.](#289-сравните-iterator-и-listiterator)
+        + [2.8.10. Как поведёт себя коллекция, если вызвать iterator.remove()?](#2810-как-поведёт-себя-коллекция-если-вызвать-iteratorremove)
+        + [2.8.11. Чем Set отличается от List?](#2811-чем-set-отличается-от-list)
+        + [2.8.12. Расскажите про интерфейс Set](#2812-расскажите-про-интерфейс-set)
+        + [2.8.13. Что будет если добавлять элементы в TreeSet по возрастанию?](#2813-что-будет-если-добавлять-элементы-в-treeset-по-возрастанию)
+        + [2.8.14. Как устроен HashSet, сложность основных операций](#2814-как-устроен-hashset-сложность-основных-операций)
+        + [2.8.15. Как устроен LinkedHashSet сложность основных операций](#2815-как-устроен-linkedhashset-сложность-основных-операций)
+        + [2.8.16. Как устроен TreeSet сложность основных операций](#2816-как-устроен-treeset-сложность-основных-операций)
+        + [2.8.17. Расскажите про интерфейс List](#2817-расскажите-про-интерфейс-list)
+        + [2.8.18. Как устроен ArrayList сложность основных операций](#2818-как-устроен-arraylist-сложность-основных-операций)
+        + [2.8.19. Как устроен LinkedList сложность основных операций](#2819-как-устроен-linkedlist-сложность-основных-операций)
+        + [2.8.20. Почему LinkedList реализует и List и Deque](#2820-почему-linkedlist-реализует-и-list-и-deque)
+        + [2.8.21. Как перестроить Связанный список в HashTable](#2821-как-перестроить-связанный-список-в-hashtable)
+        + [2.8.22. Существуют ли какие-нибудь требованию к объектам, используемым в качестве ключа в HashMap?](#2822-существуют-ли-какие-нибудь-требованию-к-объектам-используемым-в-качестве-ключа-в-hashmap)
+        + [2.8.23. Как работает HashMap?](#2823-как-работает-hashmap)
+        + [2.8.24. Как строиться красное-черное дерево?](#2824-как-строиться-красное-черное-дерево)
+        + [2.8.25. На чем основана HashSet?](#2825-на-чем-основана-hashset)
+        + [2.8.26. Какая структура подходит для хранения большого количества данных](#2826-какая-структура-подходит-для-хранения-большого-количества-данных)
+        + [2.8.27. Что может быть ключем в HashMap?](#2827-что-может-быть-ключем-в-hashmap)
+        + [2.8.28. Параметры ArrayList](#2828-параметры-arraylist)
+        + [2.8.29. Stack](#2829-stack)
+        + [2.8.30. Comparator vs Comparable](#2830-comparator-vs-comparable)
+        + [2.8.31. Какие есть конкурентные коллекции в Java?](#2831-какие-есть-конкурентные-коллекции-в-java)
+        + [2.8.32. Как работает Stream API с коллекциями?](#2832-как-работает-stream-api-с-коллекциями)
+      </details>
+
++ [3. Memory Management](#3-memory-management)
+  <details>
+  	<summary>Навигация</summary>
+
+    + [3.1. Garbage Collection](#31-garbage-collection)
+      <details>
+      	<summary>Навигация</summary>
+
+        + [3.1.1. Как устроена память в Java?](#311-как-устроена-память-в-java)
+        + [3.1.2. Что является мусором (garbage) в Java?](#312-что-является-мусором-garbage-в-java)
+        + [3.1.3. Этапы сборки мусора](#313-этапы-сборки-мусора)
+        + [3.1.4. Что означают поколения объектов?](#314-что-означают-поколения-объектов)
+        + [3.1.5. Зачем нужны поколения объектов?](#315-зачем-нужны-поколения-объектов)
+        + [3.1.6. Как происходит заполнение областей памяти?](#316-как-происходит-заполнение-областей-памяти)
+        + [3.1.7. Какие есть сборщики мусора в Java?](#317-какие-есть-сборщики-мусора-в-java)
+        + [3.1.8. Как работает сборщик CMS GC (Concurrent Mark Sweep)?](#318-как-работает-сборщик-cms-gc-concurrent-mark-sweep)
+        + [3.1.9. Как работает G1 GC (Garbage First)?](#319-как-работает-g1-gc-garbage-first)
+        + [3.1.10. Что такое Minor GC и Major GC?](#3110-что-такое-minor-gc-и-major-gc)
+        + [3.1.11. Как настроить параметры сборки мусора?](#3111-как-настроить-параметры-сборки-мусора)
+        + [3.1.12. Какие бывают ссылки в Java и в чем их отличия?](#3112-какие-бывают-ссылки-в-java-и-в-чем-их-отличия)
+        + [3.1.13. Чистит ли GC String Pool?](#3113-чистит-ли-gc-string-pool)
+      </details>
+
+    + [3.2. Java Memory Model (JMM)](#32-java-memory-model-jmm)
+      <details>
+      	<summary>Навигация</summary>
+
+        + [3.2.1. Что обозначает JMM?](#321-что-обозначает-jmm)
+        + [3.2.2. Зачем нужен JMM?](#322-зачем-нужен-jmm)
+        + [3.2.3. Ключевые концепции JMM](#323-ключевые-концепции-jmm)
+        + [3.2.4. Что такое happens-before в JMM?](#324-что-такое-happens-before-в-jmm)
+        + [3.2.5. Как избежать race conditions с помощью JMM?](#325-как-избежать-race-conditions-с-помощью-jmm)
+        + [3.2.6. Что такое volatile в контексте JMM?](#326-что-такое-volatile-в-контексте-jmm)
+        + [3.2.7. Как JMM влияет на производительность?](#327-как-jmm-влияет-на-производительность)
+      </details>
+
+    + [3.3. Ссылки и Области Памяти](#33-ссылки-и-области-памяти)
+      <details>
+      	<summary>Навигация</summary>
+
+        + [3.3.1. Какие бывают ссылки в Java и в чем их отличия?](#331-какие-бывают-ссылки-в-java-и-в-чем-их-отличия)
+        + [3.3.2. Что такое soft, weak, phantom ссылки?](#332-что-такое-soft-weak-phantom-ссылки)
+        + [3.3.3. Чистит ли GC String Pool?](#333-чистит-ли-gc-string-pool)
+        + [3.3.4. Что такое Heap, Stack и Metaspace?](#334-что-такое-heap-stack-и-metaspace)
+        + [3.3.5. Как происходит переполнение стека (StackOverflowError)?](#335-как-происходит-переполнение-стека-stackoverflowerror)
+        + [3.3.6. Что такое ReferenceQueue и зачем она нужна?](#336-что-такое-referencequeue-и-зачем-она-нужна)
+        + [3.3.7. Как области памяти влияют на производительность и GC?](#337-как-области-памяти-влияют-на-производительность-и-gc)
+      </details>
+
+    + [3.4. Профилирование и Мониторинг](#34-профилирование-и-мониторинг)
+      <details>
+      	<summary>Навигация</summary>
+
+        + [3.4.1. Какие инструменты для профилирования памяти в Java?](#341-какие-инструменты-для-профилирования-памяти-в-java)
+        + [3.4.2. Как выявить утечку памяти?](#342-как-выявить-утечку-памяти)
+        + [3.4.3. Что такое heap dump и как его анализировать?](#343-что-такое-heap-dump-и-как-его-анализировать)
+        + [3.4.4. Что такое JFR (Java Flight Recorder) и как его использовать?](#344-что-такое-jfr-java-flight-recorder-и-как-его-использовать)
+        + [3.4.5. Как мониторить JVM с помощью JMX?](#345-как-мониторить-jvm-с-помощью-jmx)
+      </details>
   </details>
 
 ## 1. Протоколы
@@ -1878,15 +1976,714 @@ super в wildcards (? super T) означает, что тип — T или ег
 
 ### END ---------------- 2.7. Дженерики (Generics) ----------------
 
+### 2.8. Коллекции
+
++ [2.8.1. Что такое коллекция?](#281-что-такое-коллекция)
++ [2.8.2. Расскажите про иерархию коллекций?](#282-расскажите-про-иерархию-коллекций)
++ [2.8.3. Почему Map - это не Collection, в то время как List и Set являются Collection?](#283-почему-map---это-не-collection-в-то-время-как-list-и-set-являются-collection)
++ [2.8.4. В чем разница между классами java.util.Collection и java.util.Collections?](#284-в-чем-разница-между-классами-javautilcollection-и-javautilcollections)
++ [2.8.5. Что такое «fail-fast поведение»?](#285-что-такое-fail-fast-поведение)
++ [2.8.6. Какая разница между fail-fast и fail-safe?](#286-какая-разница-между-fail-fast-и-fail-safe)
++ [2.8.7. Чем различается Enumeration и Iterator?](#287-чем-различается-enumeration-и-iterator)
++ [2.8.8. Как между собой связаны Iterable, Iterator и «for-each»?](#288-как-между-собой-связаны-iterable-iterator-и-for-each)
++ [2.8.9. Сравните Iterator и ListIterator.](#289-сравните-iterator-и-listiterator)
++ [2.8.10. Как поведёт себя коллекция, если вызвать iterator.remove()?](#2810-как-поведёт-себя-коллекция-если-вызвать-iteratorremove)
++ [2.8.11. Чем Set отличается от List?](#2811-чем-set-отличается-от-list)
++ [2.8.12. Расскажите про интерфейс Set](#2812-расскажите-про-интерфейс-set)
++ [2.8.13. Что будет если добавлять элементы в TreeSet по возрастанию?](#2813-что-будет-если-добавлять-элементы-в-treeset-по-возрастанию)
++ [2.8.14. Как устроен HashSet, сложность основных операций](#2814-как-устроен-hashset-сложность-основных-операций)
++ [2.8.15. Как устроен LinkedHashSet сложность основных операций](#2815-как-устроен-linkedhashset-сложность-основных-операций)
++ [2.8.16. Как устроен TreeSet сложность основных операций](#2816-как-устроен-treeset-сложность-основных-операций)
++ [2.8.17. Расскажите про интерфейс List](#2817-расскажите-про-интерфейс-list)
++ [2.8.18. Как устроен ArrayList сложность основных операций](#2818-как-устроен-arraylist-сложность-основных-операций)
++ [2.8.19. Как устроен LinkedList сложность основных операций](#2819-как-устроен-linkedlist-сложность-основных-операций)
++ [2.8.20. Почему LinkedList реализует и List и Deque](#2820-почему-linkedlist-реализует-и-list-и-deque)
++ [2.8.21. Как перестроить Связанный список в HashTable](#2821-как-перестроить-связанный-список-в-hashtable)
++ [2.8.22. Существуют ли какие-нибудь требованию к объектам, используемым в качестве ключа в HashMap?](#2822-существуют-ли-какие-нибудь-требованию-к-объектам-используемым-в-качестве-ключа-в-hashmap)
++ [2.8.23. Как работает HashMap?](#2823-как-работает-hashmap)
++ [2.8.24. Как строиться красное-черное дерево?](#2824-как-строиться-красное-черное-дерево)
++ [2.8.25. На чем основана HashSet?](#2825-на-чем-основана-hashset)
++ [2.8.26. Какая структура подходит для хранения большого количества данных](#2826-какая-структура-подходит-для-хранения-большого-количества-данных)
++ [2.8.27. Что может быть ключем в HashMap?](#2827-что-может-быть-ключем-в-hashmap)
++ [2.8.28. Параметры ArrayList](#2828-параметры-arraylist)
++ [2.8.29. Stack](#2829-stack)
++ [2.8.30. Comparator vs Comparable](#2830-comparator-vs-comparable)
++ [2.8.31. Какие есть конкурентные коллекции в Java?](#2831-какие-есть-конкурентные-коллекции-в-java)
++ [2.8.32. Как работает Stream API с коллекциями?](#2832-как-работает-stream-api-с-коллекциями)
+
+#### 2.8.1. Что такое коллекция?
+Коллекция — это объект, представляющий группу объектов (элементов) как единое целое. В Java Collections Framework (JCF) коллекции позволяют хранить, манипулировать и обрабатывать группы объектов динамически. <br>
+Основные интерфейсы: Collection (корневой), List, Set, Queue, Map. <br>
+Для junior: Коллекции — это как массивы, но без фиксированного размера. Вы можете добавлять и удалять элементы, не заботясь о длине. Например, ArrayList растет автоматически. Начните с простых примеров: создать List<String> и добавить строки. Это поможет понять базовую работу без углубления в производительность. <br>
+Senior: JCF — фундаментальная часть Java для структур данных. Используйте generics для type-safety и избегайте raw types. В Java 9+ применяйте factory methods вроде List.of() для создания immutable коллекций, что полезно для защиты от изменений. Помните о выборе коллекции по сценарию: для частых вставок — LinkedList, для поиска — HashMap. Также учитывайте memory footprint и сериализацию.
+
+#### 2.8.2. Расскажите про иерархию коллекций?
+Иерархия делится на две ветви: Collection и Map. <br>
+Collection (расширяет Iterable): <br>
+- Set: Уникальные элементы (HashSet, LinkedHashSet, TreeSet). <br>
+- List: Упорядоченные, допускают дубликаты (ArrayList, LinkedList, Vector). <br>
+- Queue: Очереди (PriorityQueue, LinkedList как Deque). <br>
+  Map: Пары ключ-значение (HashMap, LinkedHashMap, TreeMap, Hashtable). <br>
+  Для junior: Collection — для групп, Map — для словарей. Senior: Выбирайте по сложности (HashMap O(1), TreeMap O(log n)); в Java 21+ Sequenced Collections для ordered access; избегайте legacy (Vector/Hashtable).
+
+Для junior: Представьте Collection как группу вещей, где List — список покупок (с повторами и порядком), Set — набор уникальных инструментов (без дубликатов), Queue — очередь в магазин (первый вошел — первый вышел). Map — словарь, где ключ — слово, значение — перевод. Начните с ArrayList для простоты, потом перейдите к HashSet для уникальности. <br>
+Senior: Иерархия оптимизирована для разных случаев: HashMap для O(1) lookups, TreeMap для sorted keys. В Java 21+ Sequenced Collections добавляют методы для ordered access (first/last). Избегайте legacy классов вроде Vector/Hashtable из-за синхронизации и низкой производительности. Для concurrent сценариев выбирайте concurrent реализации. Анализируйте trade-offs: HashSet быстр, но unordered; TreeSet sorted, но медленнее.
+
+#### 2.8.3. Почему Map - это не Collection, в то время как List и Set являются Collection?
+Map не является Collection, потому что представляет пары ключ-значение, а не одиночные элементы. Collection фокусируется на элементах, Map — на ассоциациях. <br>
+Однако Map.values() возвращает Collection значений. <br>
+Для junior: Map — "словарь", Collection — "список". Senior: Map.entrySet() дает Set<Map.Entry>; в streams Map ведет себя как Collection через entries.
+
+Для junior: Collection — это контейнер для одиночных вещей, как коробка с яблоками. Map — это как книжка с адресами: ключ (имя) связан со значением (адрес). List и Set — виды коробок, но Map — отдельный шкаф. Не пытайтесь добавить Map в цикл for-each напрямую, используйте entrySet(). <br>
+Senior: Хотя Map не наследует Collection, он интегрируется через методы вроде keySet(), values(), entrySet(), которые возвращают Collection-подобные views. В streams Map обрабатывается как источник entries. Это дизайн-решение для разделения concerns: Collection для групп элементов, Map для ассоциаций. В custom реализациях следуйте этому паттерну.
+
+#### 2.8.4. В чем разница между классами java.util.Collection и java.util.Collections?
+java.util.Collection — интерфейс, корень иерархии (методы add, remove, size). <br>
+java.util.Collections — утилитный класс со статическими методами (sort, unmodifiableList, singleton). <br>
+Для junior: Collection — интерфейс для коллекций, Collections — хелпер. Senior: Collections.synchronizedList() для thread-safety; в Java 9+ List.of() вместо Collections.emptyList().
+
+Для junior: Collection — это "что" (интерфейс для списков, множеств), Collections — "как" (класс с полезными функциями, как сортировка). Например, Collections.sort(list) отсортирует ваш ArrayList. Не путайте: один — интерфейс, другой — utility. <br>
+Senior: Collections предоставляет алгоритмы для манипуляций: binarySearch, reverse, shuffle. Методы вроде synchronizedList() оборачивают для thread-safety, но лучше использовать concurrent коллекции. В Java 9+ List.of() — immutable factory, предпочтительнее Collections.emptyList(). Помните, что Collections — final класс без экземпляров.
+
+#### 2.8.5. Что такое «fail-fast поведение»?
+Fail-fast: Итераторы выбрасывают ConcurrentModificationException при модификации коллекции во время итерации (чтобы предотвратить inconsistency). <br>
+Реализовано через modCount: Итератор проверяет изменения. <br>
+Примеры: ArrayList, HashMap. <br>
+Для junior: "Быстро падает" при изменениях. Senior: Не fail-safe; для concurrent используйте CopyOnWriteArrayList; в streams избегайте модификаций.
+
+Для junior: Fail-fast значит "быстро сломаться", если вы меняете коллекцию во время чтения. Например, в цикле for-each добавление элемента вызовет ошибку. Это защита от багов, но требует осторожности. Начните с простых итераций без изменений. <br>
+Senior: ModCount — счетчик модификаций; итератор snapshot-ит его и сравнивает. Не fail-safe, как ConcurrentHashMap. В многопоточных средах используйте CopyOnWriteArrayList для read-heavy. В streams избегайте модификаций; для bulk operations — removeIf().
+
+#### 2.8.6. Какая разница между fail-fast и fail-safe?
+Fail-fast: Выбрасывает исключение при concurrent модификации (ArrayList). <br>
+Fail-safe: Работает с копией, не выбрасывает (ConcurrentHashMap, CopyOnWriteArrayList). <br>
+Пример fail-fast: 
+```java
+List<String> list = new ArrayList<>();
+list.add("a");
+for (String s : list) {
+  list.add("b"); // ConcurrentModificationException
+}
+```
+Fail-safe:
+```java
+ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
+map.put("k", "v");
+for (String key : map.keySet()) {
+  map.put(key + "2", "v2"); // OK, работает с snapshot
+}
+```
+Для junior: Fail-fast — "строгий", fail-safe — "терпимый". Senior: Fail-safe медленнее (копирование); ConcurrentHashMap сегментирован для partial locking.
+
+Для junior: Fail-fast — строгий, бросает ошибку при изменениях во время чтения. Fail-safe — терпимый, работает даже если что-то меняется. Используйте fail-safe для многопоточных программ, но помните о производительности. <br>
+Senior: Fail-safe использует snapshots или segmented locking, медленнее из-за overhead. ConcurrentHashMap сегментирован, позволяя partial updates. CopyOnWrite копирует весь массив на write. Выбирайте по сценарию: для frequent writes — fail-fast с synchronized; для reads — fail-safe.
+
+#### 2.8.7. Чем различается Enumeration и Iterator?
+Enumeration: Устаревший (Vector, Hashtable), методы hasMoreElements/nextElement, read-only. <br>
+Iterator: Современный, hasNext/next/remove, позволяет модификацию. <br>
+Для junior: Iterator — новый, с remove. Senior: Enumeration deprecated; используйте Iterator в loops; ListIterator для Lists.
+
+Для junior: Enumeration — старый способ перебирать, как древний телевизор. Iterator — новый, с возможностью удаления. В коде используйте Iterator для современных коллекций; Enumeration только для legacy Vector. <br>
+Senior: Enumeration не поддерживает remove, что ограничивает. Iterator универсален для всех Collection. В Java переходите на Iterator; для Lists — ListIterator. Помните о fail-fast в обоих.
+
+#### 2.8.8. Как между собой связаны Iterable, Iterator и «for-each»?
+Iterable: Интерфейс с iterator() — возвращает Iterator. <br>
+Iterator: Для перебора (hasNext/next/remove). <br>
+For-each: Синтаксис for (T item : collection) использует Iterable.iterator(). <br>
+Для junior: Iterable — "перебираемый", for-each — упрощает. Senior: Custom Iterable для своих структур; в Java 14+ records могут реализовывать Iterable.
+
+Для junior: Iterable — "то, что можно перебрать", Iterator — инструмент для перебора, for-each — удобный синтаксис. Любая коллекция — Iterable, так что for-each работает автоматически. <br>
+Senior: Custom классы реализуют Iterable для поддержки for-each. Iterator — core, for-each — syntactic sugar. В Java 14+ records могут реализовывать Iterable. Используйте для lazy evaluation в streams.
+
+#### 2.8.9. Сравните Iterator и ListIterator.
+Iterator: Универсален, только вперед, remove. <br>
+ListIterator: Только для List, вперед/назад (previous), add/set/remove, индексы. <br>
+Для junior: ListIterator — "расширенный" для Lists. Senior: Используйте ListIterator для bidirectional traversal; не для Sets.
+
+Для junior: Iterator — базовый, как прогулка вперед. ListIterator — продвинутый, может идти назад и вставлять. Используйте ListIterator для ArrayList, если нужно редактировать на ходу. <br>
+Senior: ListIterator extends Iterator, добавляет bidirectional. Полезен для текстовых редакторов или undo. Не для Sets; для общего — Iterator. Индексы позволяют random access.
+
+#### 2.8.10. Как поведёт себя коллекция, если вызвать iterator.remove()?
+Если после next() — удалит текущий элемент. Иначе — IllegalStateException. <br>
+Не работает с immutable коллекциями (List.of()). <br>
+Для junior: Удаляет последний next(). Senior: Безопасно в fail-fast; для concurrent — используйте removeIf().
+
+Для junior: Вызовите next(), потом remove() — удалит элемент. Без next() — ошибка. Это безопасный способ удаления во время итерации. <br>
+Senior: Remove() сбрасывает состояние итератора. Для fail-fast коллекций — OK. Для immutable — UnsupportedOperationException. Альтернатива: removeIf(predicate) для bulk.
+
+#### 2.8.11. Чем Set отличается от List?
+Set: Уникальные элементы, без порядка (кроме SortedSet). <br>
+List: Допускает дубликаты, упорядочен по индексу. <br>
+Для junior: Set — "множество", List — "список с повторами". Senior: Set для lookups O(1), List для последовательного доступа.
+
+Для junior: Set — как мешок уникальных вещей, List — список с возможными повторами. Если добавите дубликат в Set, он игнорируется. <br>
+Senior: Set для membership checks, List для positional access. Выбирайте: HashSet для скорости, TreeSet для sorting. В streams Set полезен для distinct().
+
+#### 2.8.12. Расскажите про интерфейс Set
+Set: Расширяет Collection, уникальные элементы. <br>
+Реализации: HashSet (hash), LinkedHashSet (insertion order), TreeSet (sorted). <br>
+Для junior: Set — без дубликатов. Senior: NavigableSet для ranges; в Java 21+ LinkedHashSet insertion-ordered.
+
+Для junior: Set — контейнер без дубликатов. HashSet — быстрый, но без порядка; TreeSet — отсортированный. Начните с HashSet для простоты. <br>
+Senior: NavigableSet (TreeSet) для ranges (subSet). В Java 21+ LinkedHashSet гарантирует insertion order. Используйте для уникальности; для ordered — List.
+
+#### 2.8.13. Что будет если добавлять элементы в TreeSet по возрастанию?
+TreeSet использует красное-черное дерево; добавление по порядку создаст несбалансированное дерево (вырожденное в список), но Java балансирует автоматически. <br>
+Производительность: O(log n), но хуже для sorted input. <br>
+Для junior: Дерево балансируется. Senior: В худшем случае O(n); используйте HashSet для unordered.
+
+Для junior: Дерево само балансируется, так что порядок добавления не сломает его. Но лучше добавлять случайно для лучшей производительности. <br>
+Senior: В худшем случае O(n) для вставки, но rebalancing исправляет. Для sorted data используйте TreeSet с caution; HashSet лучше для unordered. Анализируйте с JMH.
+
+#### 2.8.14. Как устроен HashSet, сложность основных операций
+HashSet: Основа — HashMap (элементы как ключи, dummy value). <br>
+Сложность: add/get/remove O(1) в среднем, O(n) в худшем (коллизии). <br>
+Для junior: Хэш-таблица под капотом. Senior: Load factor 0.75; resize 2x; с Java 8+ treeify при коллизиях.
+
+Для junior: HashSet — как HashMap без значений. Быстрые операции благодаря хэшу. Коллизии редки, но возможны. <br>
+Senior: Load factor 0.75; resize удваивает. С Java 8+ treeify при длинных chains. Mutable keys — риск. Для custom equals/hashCode — тщательно.
+
+#### 2.8.15. Как устроен LinkedHashSet сложность основных операций
+LinkedHashSet: HashSet + LinkedList для порядка вставки. <br>
+Сложность: add/get/remove O(1) amortized. <br>
+Для junior: Сохраняет порядок добавления. Senior: Двойная структура (hash + links); больше памяти; для LRU — LinkedHashMap.
+
+Для junior: Сохраняет порядок добавления, как список, но уникальный. Немного медленнее HashSet из-за ссылок. <br>
+Senior: Двойная структура: hash для скорости, links для order. Больше памяти. Для LRU — LinkedHashMap с accessOrder. Не для sorting.
+
+#### 2.8.16. Как устроен TreeSet сложность основных операций
+TreeSet: Основа — TreeMap (красное-черное дерево). <br>
+Сложность: add/get/remove O(log n). <br>
+Для junior: Сортированное дерево. Senior: Natural order или Comparator; NavigableSet для subSet; медленнее HashSet.
+
+Для junior: Отсортированное множество, как дерево. Медленнее HashSet, но всегда упорядочено. <br>
+Senior: Natural order или Comparator. NavigableSet для ceiling/floor. Медленнее для больших данных; альтернатива — sorted List с binarySearch.
+
+#### 2.8.17. Расскажите про интерфейс List
+List: Упорядоченная Collection с индексами (get(i), add(i)). <br>
+Реализации: ArrayList, LinkedList. <br>
+Для junior: Список с позициями. Senior: RandomAccess для быстрых индексов; в Java 21+ SequencedCollection.
+
+Для junior: List — список с позициями, как массив, но гибкий. Можно вставлять в середину. <br>
+Senior: RandomAccess для быстрых индексов. В Java 21+ SequencedCollection. Для immutable — List.of(). Выбирайте по access pattern.
+
+#### 2.8.18. Как устроен ArrayList сложность основных операций
+ArrayList: Массив Object[], resize 1.5x. <br>
+Сложность: get O(1), add(end) O(1) amortized, add(i) O(n), remove O(n). <br>
+Для junior: Массив, растет динамически. Senior: Initial capacity 10; trimToSize(); для big data — LinkedList; memory overhead низкий.
+
+Для junior: Массив внутри, растет при заполнении. Быстрый доступ по индексу, но вставка в середину дорогая. <br>
+Senior: Initial capacity 10; trimToSize(). SubList shared. Для big data — memory efficient. Concurrent — CopyOnWriteArrayList.
+
+#### 2.8.19. Как устроен LinkedList сложность основных операций
+LinkedList: Двусвязный список (Node с prev/next). <br>
+Сложность: get O(n), addFirst/Last O(1), removeFirst/Last O(1), add(i)/remove(i) O(n). <br>
+Для junior: Ссылки между элементами. Senior: Реализует Deque; для queues лучше; memory overhead высокий (2 pointers).
+
+Для junior: Элементы связаны ссылками. Быстрые добавления на концах, но медленный доступ по индексу. <br>
+Senior: Реализует Deque. Memory overhead (2 pointers). Для queues — ArrayDeque лучше. Не для random access.
+
+#### 2.8.20. Почему LinkedList реализует и List и Deque
+Deque: Двусторонняя очередь (addFirst/addLast). LinkedList подходит, так как эффективны операции на концах. <br>
+Для junior: Для очередей с двух сторон. Senior: В Java 6+; альтернатива ArrayDeque (без legacy).
+
+Для junior: LinkedList — как очередь с двух сторон. Полезно для стеков и очередей. <br>
+Senior: В Java 6+ для compatibility. ArrayDeque — better для Deque (no legacy). Используйте для FIFO/LIFO.
+
+#### 2.8.21. Как перестроить Связанный список в HashTable
+Неправильный термин; вероятно, "LinkedList в HashSet". HashSet использует hash; для конверсии: new HashSet<>(linkedList). <br>
+Или для hashing LinkedList: Переопределить hashCode (но не рекомендуется). <br>
+Для junior: Создать HashSet из List. Senior: Для уникальности; hashCode должен быть consistent; избегайте mutable keys.
+
+Для junior: Создать HashSet из LinkedList для уникальности. HashSet хэширует элементы. <br>
+Senior: Конверсия O(n). Для mutable LinkedList — override hashCode/equals. Но лучше immutable keys. Не хэшируйте сам список.
+
+#### 2.8.22. Существуют ли какие-нибудь требованию к объектам, используемым в качестве ключа в HashMap?
+Ключи должны реализовывать equals и hashCode (consistent: равные объекты — равный hash). <br>
+Идеально: Immutable (String, Integer). <br>
+Для junior: equals и hashCode. Senior: Mutable keys опасны (изменение ломает map); в Java 8+ hash улучшен; для custom — @Override оба.
+
+Для junior: Ключи должны быть "сравнимы" через equals и hashCode. Изменяемые ключи — плохо. <br>
+Senior: Mutable keys ломают map при изменении. @Override оба метода. В Java 8+ hash улучшен. Для custom — final поля.
+
+#### 2.8.23. Как работает HashMap?
+**HashMap** хранит пары ключ-значение в массиве **buckets** (ячеек), где каждый **bucket** — это **linked list** или **red-black tree** узлов **Node<K,V>**. <br>
+**Put** (вставка): Вычисляется **hash(key)**, индекс = **(n-1) & hash** (n — размер таблицы). Если коллизия (ключ уже есть или другой с тем же индексом), элемент добавляется в **list** или **tree**. <br>
+С **Java 8+**: Каждый **bucket** начинается как **linked list**. Если длина списка превышает **TREEIFY_THRESHOLD** (8), проверяется размер таблицы: если **table.length >= MIN_TREEIFY_CAPACITY** (64), **bucket** конвертируется в **red-black tree** для **O(log n)** поиска вместо **O(n)** в худшем случае; иначе выполняется **resize** таблицы для снижения коллизий (таблица удваивается, элементы перехэшируются). Это предотвращает деградацию производительности при многих коллизиях. <br>
+Обратно: Если после удалений дерево сжимается до **UNTREEIFY_THRESHOLD** (6), оно возвращается к **linked list** для экономии памяти. <br>
+**Resize**: Происходит при превышении **load factor** (0.75 по умолчанию) — таблица удваивается в размере. <br>
+**Get** (чтение): По **hash** находим **bucket**, затем проходим по **tree** (быстро) или **list** (линейно). <br>
+Для **junior**: **Хэш** превращает ключ в индекс для быстрого доступа. При коллизиях элементы цепляются в **список**, но если список слишком длинный (больше 8 элементов) и таблица достаточно большая (минимум 64 **buckets**), он превращается в **дерево** для ускорения поиска. Иначе таблица просто расширяется. Это как перестроить беспорядок в организованную структуру, но только когда "места" хватает. **HashMap** быстрая, но не сохраняет порядок элементов. <br>
+**Senior**: Вычисление **hash** улучшено: **hash = key.hashCode() ^ (h >>> 16)** для
+
+#### 2.8.24. Как строиться красное-черное дерево?
+Красное-черное дерево: Самобалансирующее BST (каждый путь ~равен). <br>
+Вставка: Добавить как BST, затем rebalance (rotations, recolor) для соблюдения правил (root black, no 2 reds подряд, black height equal). <br>
+Для TreeMap/TreeSet. <br>
+Для junior: Балансируется автоматически. Senior: Гарантирует O(log n); в Java TreeMap использует; альтернатива AVL, но RB проще для concurrent.
+
+Для junior: Дерево балансируется само при добавлении. Гарантирует быстрый поиск. <br>
+Senior: Гарантирует O(log n). В Java TreeMap. Rotations: left/right. Recolor для balance. Альтернатива AVL.
+
+#### 2.8.25. На чем основана HashSet?
+HashSet основан на HashMap: Элементы — ключи, value — dummy Object. <br>
+Для junior: HashMap без значений. Senior: Делит hash логику; synchronized — LinkedHashSet; null allowed.
+
+Для junior: HashSet — оболочка над HashMap. Делит логику хэширования. <br>
+Senior: Экономит код. Synchronized — LinkedHashSet. Null allowed. Для ordered — TreeSet.
+
+#### 2.8.26. Какая структура подходит для хранения большого количества данных
+Зависит: ArrayList для random access, LinkedList для insertions/deletions, HashSet для уникальных. <br>
+Для большого: ArrayList (low memory), или ConcurrentSkipListSet для sorted concurrent. <br>
+Для junior: ArrayList. Senior: Для миллиардов — off-heap (ByteBuffer); streams для processing.
+
+Для junior: ArrayList для простоты и скорости доступа. <br>
+Senior: Для миллиардов — off-heap (ByteBuffer). Streams для processing. Анализируйте memory/CPU trade-offs.
+
+#### 2.8.27. Что может быть ключем в HashMap?
+Любой Object, но предпочтительно immutable (String, Integer). <br>
+Mutable (ArrayList) — риск, если изменится hash/equals. <br>
+Для junior: Object с equals/hashCode. Senior: Wrapper types; custom keys — final поля; WeakHashMap для weak keys.
+
+Для junior: Любые объекты, но лучше неизменяемые, как String. <br>
+Senior: Wrapper types. Custom keys — final. WeakHashMap для GC keys.
+
+#### 2.8.28. Параметры ArrayList
+Initial capacity: 10. <br>
+Load factor: N/A (manual resize). <br>
+Growth: newCapacity = oldCapacity + (oldCapacity >> 1) (1.5x). <br>
+Methods: add(E) — end, set(int, E) — replace. <br>
+Для junior: Начинается с 10, растет в 1.5 раза. Senior: ensureCapacity() для prealloc; subList() shared backing.
+
+Для junior: Начинается с 10, растет в 1.5 раза. Полезно знать для оптимизации. <br>
+Senior: ensureCapacity() prealloc. SubList shared backing — осторожно с modifications.
+
+#### 2.8.29. Stack
+Stack: Устаревший (extends Vector), LIFO. <br>
+Methods: push/pop/peek. <br>
+Пример:
+```java
+Stack<Card> deck = new Stack<>();
+deck.push(new Card("Рагнарос"));
+deck.push(new Card("Пират Глазастик"));
+
+System.out.println(deck.peek()); // Пират Глазастик
+System.out.println(deck.pop()); // Пират Глазастик
+```
+Для junior: LIFO стек. Senior: Deprecated; используйте Deque (ArrayDeque); thread-safe — ConcurrentLinkedDeque.
+
+Для junior: Стек — как стопка тарелок. Последний добавленный — первый извлекаемый. <br>
+Senior: Deprecated; используйте Deque (ArrayDeque). Thread-safe — ConcurrentLinkedDeque.
+
+#### 2.8.30. Comparator vs Comparable
+Comparable: Интерфейс для natural order (compareTo(T)). Реализуется в классе. <br>
+Comparator: External comparator (compare(T1,T2)). Для custom sorting. <br>
+Пример: Collections.sort(list, comparator). <br>
+Для junior: Comparable — в классе, Comparator — отдельно. Senior: Comparator.thenComparing(); в Java 8+ lambdas; nullsFirst().
+
+Для junior: Comparable — в классе для естественного порядка, Comparator — отдельный для кастомного. <br>
+Senior: Comparator.thenComparing(). Lambdas в Java 8+. NullsFirst().
+
+#### 2.8.31. Какие есть конкурентные коллекции в Java?
+Concurrent collections: ConcurrentHashMap, CopyOnWriteArrayList, ConcurrentLinkedQueue, BlockingQueue (ArrayBlockingQueue). <br>
+Отличия: Thread-safe без synchronized (locks сегментов). <br>
+Для junior: Без блокировок. Senior: ConcurrentHashMap — segmented; для read-heavy — CopyOnWrite; в Java 21+ Sequenced Collections concurrent.
+
+Для junior: Коллекции для многопоточных программ без блокировок. <br>
+Senior: ConcurrentHashMap segmented. CopyOnWrite для read-heavy. Java 21+ sequenced.
+
+#### 2.8.32. Как работает Stream API с коллекциями?
+Stream: Lazy sequence от коллекций (collection.stream()). <br>
+Operations: Intermediate (filter, map) — lazy, Terminal (collect, forEach) — eager. <br>
+Пример: list.stream().filter(x -> x > 0).collect(Collectors.toList()). <br>
+Для junior: Для обработки данных. Senior: Parallel streams (parallelStream()); avoid side-effects; Collectors для grouping; в Java 9+ takeWhile/dropWhile.
+
+Для junior: Streams — для обработки данных, как фильтр и сборка. <br>
+Senior: Parallel streams. Avoid side-effects. Collectors grouping. Java 9+ takeWhile.
+
+### END ---------------- 2.8. Коллекции ----------------
+
 ## END ---------------- 2. Java ----------------
+
+## 3. Memory Management
+
++ [3.1. Garbage Collection](#31-garbage-collection)
+  <details>
+  	<summary>Навигация</summary>
+
+    + [3.1.1. Как устроена память в Java?](#311-как-устроена-память-в-java)
+    + [3.1.2. Что является мусором (garbage) в Java?](#312-что-является-мусором-garbage-в-java)
+    + [3.1.3. Этапы сборки мусора](#313-этапы-сборки-мусора)
+    + [3.1.4. Что означают поколения объектов?](#314-что-означают-поколения-объектов)
+    + [3.1.5. Зачем нужны поколения объектов?](#315-зачем-нужны-поколения-объектов)
+    + [3.1.6. Как происходит заполнение областей памяти?](#316-как-происходит-заполнение-областей-памяти)
+    + [3.1.7. Какие есть сборщики мусора в Java?](#317-какие-есть-сборщики-мусора-в-java)
+    + [3.1.8. Как работает сборщик CMS GC (Concurrent Mark Sweep)?](#318-как-работает-сборщик-cms-gc-concurrent-mark-sweep)
+    + [3.1.9. Как работает G1 GC (Garbage First)?](#319-как-работает-g1-gc-garbage-first)
+    + [3.1.10. Что такое Minor GC и Major GC?](#3110-что-такое-minor-gc-и-major-gc)
+    + [3.1.11. Как настроить параметры сборки мусора?](#3111-как-настроить-параметры-сборки-мусора)
+    + [3.1.12. Какие бывают ссылки в Java и в чем их отличия?](#3112-какие-бывают-ссылки-в-java-и-в-чем-их-отличия)
+    + [3.1.13. Чистит ли GC String Pool?](#3113-чистит-ли-gc-string-pool)
+  </details>
+
++ [3.2. Java Memory Model (JMM)](#32-java-memory-model-jmm)
+  <details>
+  	<summary>Навигация</summary>
+
+    + [3.2.1. Что обозначает JMM?](#321-что-обозначает-jmm)
+    + [3.2.2. Зачем нужен JMM?](#322-зачем-нужен-jmm)
+    + [3.2.3. Ключевые концепции JMM](#323-ключевые-концепции-jmm)
+    + [3.2.4. Что такое happens-before в JMM?](#324-что-такое-happens-before-в-jmm)
+    + [3.2.5. Как избежать race conditions с помощью JMM?](#325-как-избежать-race-conditions-с-помощью-jmm)
+    + [3.2.6. Что такое volatile в контексте JMM?](#326-что-такое-volatile-в-контексте-jmm)
+    + [3.2.7. Как JMM влияет на производительность?](#327-как-jmm-влияет-на-производительность)
+  </details>
+
++ [3.3. Ссылки и Области Памяти](#33-ссылки-и-области-памяти)
+  <details>
+  	<summary>Навигация</summary>
+
+    + [3.3.1. Какие бывают ссылки в Java и в чем их отличия?](#331-какие-бывают-ссылки-в-java-и-в-чем-их-отличия)
+    + [3.3.2. Что такое soft, weak, phantom ссылки?](#332-что-такое-soft-weak-phantom-ссылки)
+    + [3.3.3. Чистит ли GC String Pool?](#333-чистит-ли-gc-string-pool)
+    + [3.3.4. Что такое Heap, Stack и Metaspace?](#334-что-такое-heap-stack-и-metaspace)
+    + [3.3.5. Как происходит переполнение стека (StackOverflowError)?](#335-как-происходит-переполнение-стека-stackoverflowerror)
+    + [3.3.6. Что такое ReferenceQueue и зачем она нужна?](#336-что-такое-referencequeue-и-зачем-она-нужна)
+    + [3.3.7. Как области памяти влияют на производительность и GC?](#337-как-области-памяти-влияют-на-производительность-и-gc)
+  </details>
+
++ [3.4. Профилирование и Мониторинг](#34-профилирование-и-мониторинг)
+  <details>
+  	<summary>Навигация</summary>
+
+    + [3.4.1. Какие инструменты для профилирования памяти в Java?](#341-какие-инструменты-для-профилирования-памяти-в-java)
+    + [3.4.2. Как выявить утечку памяти?](#342-как-выявить-утечку-памяти)
+    + [3.4.3. Что такое heap dump и как его анализировать?](#343-что-такое-heap-dump-и-как-его-анализировать)
+    + [3.4.4. Что такое JFR (Java Flight Recorder) и как его использовать?](#344-что-такое-jfr-java-flight-recorder-и-как-его-использовать)
+    + [3.4.5. Как мониторить JVM с помощью JMX?](#345-как-мониторить-jvm-с-помощью-jmx)
+  </details>
+
+### 3.1. Garbage Collection
+
++ [3.1.1. Как устроена память в Java?](#311-как-устроена-память-в-java)
++ [3.1.2. Что является мусором (garbage) в Java?](#312-что-является-мусором-garbage-в-java)
++ [3.1.3. Этапы сборки мусора](#313-этапы-сборки-мусора)
++ [3.1.4. Что означают поколения объектов?](#314-что-означают-поколения-объектов)
++ [3.1.5. Зачем нужны поколения объектов?](#315-зачем-нужны-поколения-объектов)
++ [3.1.6. Как происходит заполнение областей памяти?](#316-как-происходит-заполнение-областей-памяти)
++ [3.1.7. Какие есть сборщики мусора в Java?](#317-какие-есть-сборщики-мусора-в-java)
++ [3.1.8. Как работает сборщик CMS GC (Concurrent Mark Sweep)?](#318-как-работает-сборщик-cms-gc-concurrent-mark-sweep)
++ [3.1.9. Как работает G1 GC (Garbage First)?](#319-как-работает-g1-gc-garbage-first)
++ [3.1.10. Что такое Minor GC и Major GC?](#3110-что-такое-minor-gc-и-major-gc)
++ [3.1.11. Как настроить параметры сборки мусора?](#3111-как-настроить-параметры-сборки-мусора)
++ [3.1.12. Какие бывают ссылки в Java и в чем их отличия?](#3112-какие-бывают-ссылки-в-java-и-в-чем-их-отличия)
++ [3.1.13. Чистит ли GC String Pool?](#3113-чистит-ли-gc-string-pool)
+
+#### 3.1.1. Как устроена память в Java?
+В Java память управляется JVM и делится на несколько областей для эффективного выполнения программ. Основные компоненты:
+
+- **Native Memory**: Вся доступная системная память, включая память, используемую JVM и приложением.
+- **Heap (куча)**: Основная область для хранения объектов JVM. Это общее пространство для всех потоков приложения. Heap делится на Young Generation и Old Generation для оптимизации сборки мусора.
+- **Stack (стек)**: Используется для хранения локальных переменных, параметров методов и стека вызовов. Каждый поток имеет свой собственный стек, что обеспечивает изоляцию данных.
+- **Metaspace (метаданные)**: Хранит метаданные классов, такие как информация о полях, методах и константах. Ранее назывался PermGen. Это общее пространство, заменяющее PermGen в Java 8+.
+- **CodeCache (кэш кода)**: JIT-компилятор компилирует часто исполняемый байт-код в нативный машинный код и кэширует его для ускорения выполнения. Это повышает производительность, но требует памяти.
+
+Эти области управляются JVM автоматически, но разработчики могут влиять на них через параметры запуска (например, -Xmx для Heap).
+
+#### 3.1.2. Что является мусором (garbage) в Java?
+Мусором (garbage) в Java считаются объекты, которые больше не доступны для использования программой. Объект становится мусором, если на него нет ни одной сильной (strong) ссылки от корневых объектов (root references), таких как локальные переменные, статические поля или объекты в стеке. Сборщик мусора (GC) автоматически находит и удаляет такие объекты, освобождая память.
+
+Важно: GC не удаляет объекты немедленно — он работает асинхронно. Для junior-разработчиков это означает, что утечки памяти могут происходить из-за ненужных ссылок (например, статические коллекции). Senior-разработчики используют инструменты вроде VisualVM для анализа heap dumps и выявления утечек.
+
+#### 3.1.3. Этапы сборки мусора
+Сборка мусора (GC) в Java обычно состоит из трех основных этапов, хотя конкретные шаги зависят от сборщика. Общий алгоритм (например, в Serial GC):
+
+- **Mark (маркировка)**: GC сканирует все объекты и помечает живые (доступные из корней). Это обычно вызывает паузу (Stop-the-World), чтобы избежать изменений во время сканирования.
+- **Sweep (очистка)**: Освобождается память, занятая объектами, не помеченными как живые. Память становится фрагментированной.
+- **Compact (уплотнение)**: Объекты, пережившие очистку, перемещаются в единый непрерывный блок памяти для минимизации фрагментации и улучшения производительности аллокации.
+
+Для junior: Это базовый процесс. Senior: Разные сборщики (например, G1) модифицируют эти этапы для параллельной работы, снижая паузы. Примеры: CMS пропускает compact для скорости, но может фрагментировать память.
+
+#### 3.1.4. Что означают поколения объектов?
+Объекты в Java делятся на поколения для оптимизации GC, основываясь на гипотезе о поколениях: большинство объектов умирают молодыми.
+
+- **Young Generation (молодое поколение)**:
+    - **Eden**: Здесь создаются новые объекты.
+    - **Survivor Spaces (S0 и S1)**: Области для выживших объектов после minor GC.
+- **Old Generation (Tenured)**: Долго живущие объекты, пережившие несколько minor GC.
+
+В Java 8+ Old Generation называется Tenured. Это разделение позволяет GC фокусироваться на областях с высоким оборотом мусора.
+
+#### 3.1.5. Зачем нужны поколения объектов?
+Поколения оптимизируют GC, основываясь на наблюдении, что:
+- Большинство объектов живут недолго (создаются и быстро умирают).
+- Если объект выживает несколько GC, он, вероятно, будет жить долго.
+
+Преимущества:
+- **Быстрая обработка**: Mark и sweep быстрее в Young Generation, где много мусора.
+- **Снижение пауз**: Полная сборка (major GC) происходит реже, только для Old Generation.
+- **Эффективность**: Избегает сканирования всей кучи каждый раз.
+
+Для senior: Это снижает latency в приложениях с высокой аллокацией, но требует настройки (например, -XX:NewRatio).
+
+#### 3.1.6. Как происходит заполнение областей памяти?
+Процесс заполнения памяти в Java связан с аллокацией и GC:
+
+1. Новые объекты создаются в **Eden** (Young Generation).
+2. Когда Eden заполняется, происходит **Minor GC** (быстрая сборка для Young Generation): живые объекты копируются в S0 (Survivor).
+3. При следующем Minor GC: объекты из Eden и S0 копируются в S1, возраст объектов увеличивается. S0 и S1 меняются ролями.
+4. Объекты, пережившие несколько копирований (возраст > порога, обычно 15), перемещаются в **Old Generation**.
+5. Когда Old Generation заполняется, происходит **Major GC** (или Full GC): сборка для всей кучи.
+
+Это предотвращает фрагментацию и оптимизирует память. Senior: Настройка размеров поколений (например, -Xmn) влияет на частоту GC.
+
+#### 3.1.7. Какие есть сборщики мусора в Java?
+JVM предоставляет несколько сборщиков мусора, каждый с преимуществами и недостатками. Основные:
+
+| Сборщик мусора | Описание | Преимущества | Когда использовать | Флаги для включения |
+|----------------|----------|--------------|---------------------|---------------------|
+| **Serial GC** | Однопоточный, использует один поток для GC. | Низкие накладные расходы, эффективен на малых кучах. | Однопроцессорные машины, небольшие приложения, где паузы приемлемы. | -XX:+UseSerialGC |
+| **Parallel GC** | Многопоточный, использует несколько потоков. | Высокая пропускная способность, ускоряет GC. | Многопроцессорные системы, приложения с большими данными, где важна производительность, а паузы до 1 сек приемлемы. | -XX:+UseParallelGC |
+| **CMS (Concurrent Mark Sweep)** | Работает параллельно с приложением, избегает длинных пауз. | Низкая latency, подходит для интерактивных приложений. | Когда важны короткие паузы (до 100 мс), но возможна фрагментация. | -XX:+UseConcMarkSweepGC |
+| **G1 GC** | Региональный, ориентирован на большие кучи, минимизирует паузы. | Баланс пропускной способности и latency, масштабируемый. | Большие кучи (>4GB), многопроцессорные системы, где паузы <1 сек важны. | -XX:+UseG1GC |
+| **ZGC** | Низколатентный, работает параллельно, для очень больших куч. | Минимальные паузы (<10 мс), высокая пропускная способность. | Приложения с требованием низкой задержки, большие кучи (до TB). | -XX:+UseZGC |
+| **Shenandoah** | Аналогично ZGC, но с фокусом на concurrency. | Низкие паузы, компактификация без STW. | Подобно ZGC, для больших систем. | -XX:+UseShenandoahGC |
+
+Выбор зависит от требований: latency vs throughput. Senior-разработчики тестируют с JMH или профилируют.
+
+#### 3.1.8. Как работает сборщик CMS GC (Concurrent Mark Sweep)?
+CMS (Concurrent Mark Sweep) — сборщик для низких пауз, работает параллельно с приложением. Использует ту же организацию памяти (Young/Old), но оптимизирует Old Generation.
+
+Этапы:
+1. **Initial Mark (начальная маркировка)**: STW-пауза, помечает корневые объекты.
+2. **Concurrent Marking**: Параллельно с приложением помечает все живые объекты.
+3. **Remark (финальная маркировка)**: STW-пауза, корректирует маркировку (использует SATB для учета изменений).
+4. **Concurrent Sweep**: Параллельно очищает мертвые объекты, без уплотнения (может фрагментировать память).
+
+Преимущества: Низкие паузы. Недостатки: Плавающий мусор, фрагментация (требует Full GC). Для senior: Подходит для веб-серверов, но устарел в Java 9+ (заменен G1).
+
+#### 3.1.9. Как работает G1 GC (Garbage First)?
+G1 — региональный сборщик для больших куч (>4GB), минимизирует паузы. Куча делится на регионы (~1-32MB).
+
+**Структура**: Регионы логически делятся на Eden, Survivor, Old. Регионы могут менять роли.
+
+**Принцип**:
+1. **Young Collection**: Minor GC копирует выживших в регионы Survivor/Old.
+2. **Mixed Collection**: После цикла маркировки очищает Young + часть Old регионов.
+3. **Цикл маркировки**: Initial Mark (STW), Concurrent Marking, Remark (STW с SATB), Cleanup (STW).
+
+Выбирает регионы с максимальным мусором для очистки. Преимущества: Предсказуемые паузы, масштабируемость. Senior: Настраивается через -XX:MaxGCPauseMillis.
+
+#### 3.1.10. Что такое Minor GC и Major GC?
+- **Minor GC**: Сборка в Young Generation. Быстрая, копирует выживших в Survivor/Old. Происходит часто, вызывает короткие паузы.
+- **Major GC (или Full GC)**: Сборка в Old Generation (и иногда всей кучи). Более медленная, вызывает длинные паузы. Включает mark-sweep-compact.
+
+В G1 Major GC — это mixed collection. Для junior: Minor GC — для молодых объектов, Major — для старых. Senior: Мониторят через JMX, настраивают для избежания OOM.
+
+#### 3.1.11. Как настроить параметры сборки мусора?
+Настройка GC включает JVM-флаги для оптимизации производительности. Основные:
+
+- **Выбор сборщика**: -XX:+UseG1GC, -XX:+UseParallelGC и т.д.
+- **Размеры кучи**: -Xmx (max heap), -Xms (initial heap), -Xmn (Young size).
+- **Паузы**: -XX:MaxGCPauseMillis (для G1), -XX:GCTimeRatio (пропускная способность).
+- **Поколения**: -XX:NewRatio (Old/Young), -XX:SurvivorRatio.
+- **Другие**: -XX:+PrintGCDetails (логи), -XX:+HeapDumpOnOutOfMemoryError.
+
+Пример: java -Xmx4g -Xms2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200 MyApp. Senior: Профилируют с VisualVM, тестируют нагрузку. Неправильная настройка может вызвать OOM или частые паузы.
+
+#### 3.1.12. Какие бывают ссылки в Java и в чем их отличия?
+В Java ссылки — это указатели на объекты, влияющие на GC. Типы:
+
+- **Strong Reference**: Обычная ссылка (`Object obj = new Object();`). GC не удалит объект, пока есть strong ссылка. Самая сильная.
+- **Soft Reference**: `SoftReference<Object> ref = new SoftReference<>(obj);`. Удаляется только при нехватке памяти. Подходит для кэшей (например, картинки).
+- **Weak Reference**: `WeakReference<Object> ref = new WeakReference<>(obj);`. Удаляется при следующем GC, если нет strong/soft. Для метаданных или кэшей с коротким сроком.
+- **Phantom Reference**: `PhantomReference<Object> ref = new PhantomReference<>(obj, queue);`. Не предотвращает удаление, используется для финализации (например, освобождение ресурсов).
+
+Отличия: Сила влияния на GC. Strong — полная защита, Phantom — минимальная. Senior: Используют для управления памятью в кэшах (Guava Cache).
+
+#### 3.1.13. Чистит ли GC String Pool?
+String Pool — область для интернированных строк (статический пул уникальных строк).
+
+- До Java 7: Pool в PermGen, GC не чистил (мог вызвать OOM).
+- С Java 7: Pool в Heap, GC может очистить неиспользуемые строки.
+
+GC очищает, если нет ссылок. Однако, intern() создает strong ссылки, так что pool может расти. Senior: Мониторят с heap dumps, избегают чрезмерного intern() для предотвращения утечек.
+
+### END ---------------- 3.1. Garbage Collection ----------------
+
+### 3.2. Java Memory Model (JMM)
+
++ [3.2.1. Что обозначает JMM?](#321-что-обозначает-jmm)
++ [3.2.2. Зачем нужен JMM?](#322-зачем-нужен-jmm)
++ [3.2.3. Ключевые концепции JMM](#323-ключевые-концепции-jmm)
++ [3.2.4. Что такое happens-before в JMM?](#324-что-такое-happens-before-в-jmm)
++ [3.2.5. Как избежать race conditions с помощью JMM?](#325-как-избежать-race-conditions-с-помощью-jmm)
++ [3.2.6. Что такое volatile в контексте JMM?](#326-что-такое-volatile-в-контексте-jmm)
++ [3.2.7. Как JMM влияет на производительность?](#327-как-jmm-влияет-на-производительность)
+
+#### 3.2.1. Что обозначает JMM?
+JMM (Java Memory Model) — это спецификация, определяющая, как Java-программы взаимодействуют с памятью. <br>
+Она описывает правила видимости и упорядочения операций над переменными в многопоточных приложениях. <br>
+JMM — это абстракция, скрывающая от разработчика сложности взаимодействия с аппаратной памятью и кешами процессоров. <br>
+Для junior-разработчиков: Это как "правила дорожного движения" для потоков — без них хаос. Senior-разработчики знают, что JMM эволюционировал (JSR-133 в Java 5+), устранив проблемы предыдущих версий, как double-checked locking без volatile.
+
+#### 3.2.2. Зачем нужен JMM?
+Без JMM, поведение многопоточных программ на разных платформах было бы непредсказуемым. <br>
+Разные процессоры и операционные системы имеют свои собственные модели памяти, и код, который работает корректно на одном компьютере, может давать сбои на другом. <br>
+JMM предоставляет единую модель памяти для всех платформ, обеспечивая переносимость и предсказуемость Java-приложений. <br>
+Для junior: Гарантирует, что ваш код работает одинаково на Intel и ARM. Senior: JMM предотвращает race conditions, но требует явной синхронизации; без неё оптимизации компилятора (например, reordering) могут сломать логику.
+
+#### 3.2.3. Ключевые концепции JMM
+- Видимость (Visibility): Гарантирует, что изменения, внесенные одним потоком в переменную, будут видны другим потокам. <br>
+  Без этой гарантии, один поток мог бы читать устаревшее значение переменной, даже если другой поток уже его изменил. <br>
+- Упорядочение (Ordering): Определяет порядок выполнения операций над переменными. <br>
+  В однопоточной программе порядок операций обычно интуитивно понятен. <br>
+  Однако, в многопоточной программе, порядок выполнения операций может быть переупорядочен компилятором или процессором для повышения производительности. <br>
+  JMM гарантирует, что определенные операции будут выполняться в заданном порядке, предотвращая race conditions. <br>
+- Операции памяти: JMM определяет абстрактные операции памяти, такие как read, load, use, assign, store, write. Эти операции отражают то, как данные перемещаются между основной памятью и кэшами процессоров. <br>
+- Основные механизмы синхронизации: JMM полагается на механизмы синхронизации, такие как synchronized блоки, volatile переменные и <br>
+  locks (например, из java.util.concurrent.locks пакета), для обеспечения правильной видимости и упорядочения. <br>
+  Эти механизмы обеспечивают межпотоковые барьеры, гарантируя, что некоторые операции будут выполнены до других. <br>
+  Для junior: Видимость — как "обновление экрана" для других потоков. Senior: Упорядочение предотвращает reordering, но final fields имеют особые правила (final freeze).
+
+#### 3.2.4. Что такое happens-before в JMM?
+Happens-before — это частичный порядок выполнения, который определяет, какие операции происходят до других. <br>
+Это ключевой механизм, обеспечивающий видимость и упорядочение. <br>
+Например, запись в переменную happens-before чтение этой же переменной другим потоком, если это чтение происходит после надлежащей синхронизации (например, использование volatile, synchronized или locks). <br>
+Happens-before транзитивен: если A happens-before B, и B happens-before C, то A happens-before C. <br>
+Для junior: Это "цепочка событий" — гарантирует порядок. Senior: Используется для доказательства корректности; инструменты вроде JCStress тестируют happens-before нарушения.
+
+#### 3.2.5. Как избежать race conditions с помощью JMM?
+Race conditions возникают, когда несколько потоков одновременно изменяют общие данные без синхронизации, приводя к непредсказуемым результатам. <br>
+JMM помогает избежать их через гарантии видимости и упорядочения: <br>
+- Используйте synchronized блоки: Обеспечивают эксклюзивный доступ и happens-before. <br>
+- Volatile переменные: Гарантируют видимость изменений, но не атомарность операций (например, ++ не атомарен). <br>
+- Locks (ReentrantLock): Более гибкие, чем synchronized, с явными lock/unlock. <br>
+- Atomic классы (AtomicInteger): Атомарные операции без блокировок. <br>
+  Для junior: Всегда синхронизируйте shared state. Senior: Профилируйте с Thread Sanitizer; избегайте false sharing (padding полей).
+
+#### 3.2.6. Что такое volatile в контексте JMM?
+Volatile — ключевое слово для переменных, обеспечивающее видимость и упорядочение в JMM. <br>
+- Видимость: Запись в volatile переменную сразу видна всем потокам (как будто в main memory). <br>
+- Упорядочение: Операции с volatile создают барьеры, предотвращая reordering. <br>
+  Неатомарно для сложных операций (например, volatile int x; x++ не атомарен). <br>
+  Для junior: Используйте для флагов (boolean running). Senior: Volatile дешевле synchronized, но не заменяет locks; в Java 9+ volatile работает с VarHandles.
+
+#### 3.2.7. Как JMM влияет на производительность?
+JMM добавляет накладные расходы для гарантий, но оптимизирован: <br>
+- Компилятор/процессор могут reordering, но не нарушают happens-before. <br>
+- Volatile/locks добавляют барьеры (memory fences), замедляя доступ к памяти. <br>
+- В высоко конкурентных приложениях (например, с CAS в Atomic) производительность выше, чем с locks. <br>
+  Для junior: Синхронизация медленнее, но необходима. Senior: Настраивайте с -XX:+PrintCompilation; используйте JMH для измерения; JMM эволюционирует (например, relaxed memory в Project Loom).
+
+### END ---------------- 3.2. Java Memory Model (JMM) ----------------
+
+### 3.3. Ссылки и Области Памяти
+
++ [3.3.1. Какие бывают ссылки в Java и в чем их отличия?](#331-какие-бывают-ссылки-в-java-и-в-чем-их-отличия)
++ [3.3.2. Что такое soft, weak, phantom ссылки?](#332-что-такое-soft-weak-phantom-ссылки)
++ [3.3.3. Чистит ли GC String Pool?](#333-чистит-ли-gc-string-pool)
++ [3.3.4. Что такое Heap, Stack и Metaspace?](#334-что-такое-heap-stack-и-metaspace)
++ [3.3.5. Как происходит переполнение стека (StackOverflowError)?](#335-как-происходит-переполнение-стека-stackoverflowerror)
++ [3.3.6. Что такое ReferenceQueue и зачем она нужна?](#336-что-такое-referencequeue-и-зачем-она-нужна)
++ [3.3.7. Как области памяти влияют на производительность и GC?](#337-как-области-памяти-влияют-на-производительность-и-gc)
+
+#### 3.3.1. Какие бывают ссылки в Java и в чем их отличия?
+В Java существуют четыре типа ссылок: Strong (обычные), Soft, Weak и Phantom. <br>
+- Strong Reference: Обычная ссылка (Object obj = new Object()). Предотвращает сборку мусора, пока ссылка существует. <br>
+- Soft Reference: Позволяет GC собирать объект при нехватке памяти (например, для кэшей изображений). <br>
+- Weak Reference: GC может собрать объект в любой момент, даже если памяти достаточно (для слабых кэшей). <br>
+- Phantom Reference: Не предотвращает сборку, используется для отслеживания финализации (с ReferenceQueue). <br>
+  Отличия: Strong — самая сильная (GC игнорирует), Soft — при low memory, Weak — всегда уязвима, Phantom — только для уведомлений. <br>
+  Для junior: Strong — "не трогай", остальные — для оптимизации памяти. Senior: Используйте WeakHashMap для кэшей; в Java 9+ phantom references улучшены для cleanup.
+
+#### 3.3.2. Что такое soft, weak, phantom ссылки?
+Soft Reference (java.lang.ref.SoftReference): Объект собирается только при нехватке памяти (threshold на основе -XX:SoftRefLRUPolicyMS). Идеально для кэшей, где данные можно перезагрузить. <br>
+Weak Reference (WeakReference): GC собирает объект при первой возможности, независимо от памяти. Полезно для избежания утечек в коллекциях (WeakHashMap). <br>
+Phantom Reference (PhantomReference): Самая слабая; объект считается "мертвым" сразу после достижения finalize, но ссылка не дает доступа к объекту. Используется с ReferenceQueue для пост-GC действий (например, cleanup ресурсов). <br>
+Для junior: Soft — "если тесно", Weak — "сразу", Phantom — "уведоми о смерти". Senior: Избегайте finalize (deprecated в Java 9+); используйте Cleaner API; тестируйте с -XX:+ExplicitGCInvokesConcurrent для симуляции.
+
+#### 3.3.3. Чистит ли GC String Pool?
+Да, GC чистит String Pool, но только для interned строк, которые больше не используются. <br>
+String Pool (в Heap, с Java 7+ в main heap) хранит уникальные строки из String.intern(). <br>
+Если на строку нет strong ссылок, она может быть собрана (как любой объект). <br>
+Литералы ("hello") интернированы автоматически, но GC их не трогает, если они в коде. <br>
+Для junior: Pool экономит память, GC его поддерживает. Senior: В Java 7+ pool в heap, так что G1/ZGC чистят его эффективно; мониторьте с jstat -gc; избегайте чрезмерного intern() для предотвращения OOM.
+
+#### 3.3.4. Что такое Heap, Stack и Metaspace?
+- Heap: Основная область для объектов и массивов (young/old gen). Динамическая, управляется GC. Размер: -Xms/-Xmx. <br>
+- Stack: Для локальных переменных, параметров методов и фреймов вызовов. Каждый поток имеет свой stack (по умолчанию 1MB). <br>
+- Metaspace: С Java 8 заменяет PermGen; хранит метаданные классов, константы, статические поля. Неограничен по умолчанию (-XX:MaxMetaspaceSize). <br>
+  Для junior: Heap — "объекты живут", Stack — "временные данные метода", Metaspace — "классы". Senior: Heap делится на Eden/Survivor/Old; StackOverflow от глубокой рекурсии; Metaspace OOM от динамической загрузки классов (например, в Spring); настройте -XX:MetaspaceSize для proactive GC.
+
+#### 3.3.5. Как происходит переполнение стека (StackOverflowError)?
+StackOverflowError возникает, когда стек потока переполняется (по умолчанию 1MB на поток). <br>
+Причины: Глубокая рекурсия без базового случая (например, factorial(10000)), бесконечный цикл вызовов методов или слишком большие локальные массивы в методе. <br>
+JVM увеличивает стек фреймами при каждом вызове; при исчерпании — ошибка. <br>
+Для junior: Рекурсия может "залить" стек. Senior: Увеличьте стек с -Xss (например, 8m), но лучше избегайте глубокой рекурсии (используйте итерацию или tail recursion в новых JVM); мониторьте с ThreadMXBean; в многопоточных apps (ForkJoinPool) стек меньше по умолчанию.
+
+#### 3.3.6. Что такое ReferenceQueue и зачем она нужна?
+ReferenceQueue — очередь для отслеживания ссылок, которые GC пометил для очистки (Soft/Weak/Phantom). <br>
+Когда GC собирает объект, соответствующая ссылка добавляется в очередь (если указана при создании Reference). <br>
+Зачем: Для cleanup действий после сборки (например, закрытие файлов в PhantomReference, обновление кэша в Weak). <br>
+Использование: new WeakReference<>(obj, queue); затем poll() из очереди. <br>
+Для junior: "Список мертвых ссылок" для уведомлений. Senior: Эффективно для resource management (лучше finalize); в Java 9+ интегрируется с Cleaner; тестируйте в unit-тестах с System.gc() для симуляции.
+
+#### 3.3.7. Как области памяти влияют на производительность и GC?
+- Heap: Большой heap замедляет GC (longer pauses), но позволяет больше объектов; tuning (G1/ZGC) минимизирует latency. <br>
+- Stack: Глубокий стек (много методов) увеличивает overhead на вызовы; в reactive apps (Project Loom) виртуальные threads имеют tiny stacks. <br>
+- Metaspace: Переполнение вызывает full GC; динамическая загрузка (JNI/classes) требует tuning для избежания OOM. <br>
+  Общее: GC паузы зависят от поколений (young fast, old slow); false sharing в heap влияет на multi-core. <br>
+  Для junior: Правильный размер — ключ к скорости. Senior: Используйте JFR/JMH для profiling; -XX:+UseZGC для low-latency; в микросервисах минимизируйте heap для быстрого старта; мониторьте с Prometheus/Grafana.
+
+
+### END ---------------- 3.3. Ссылки и Области Памяти ----------------
+
+### 3.4. Профилирование и Мониторинг
+
++ [3.4.1. Какие инструменты для профилирования памяти в Java?](#341-какие-инструменты-для-профилирования-памяти-в-java)
++ [3.4.2. Как выявить утечку памяти?](#342-как-выявить-утечку-памяти)
++ [3.4.3. Что такое heap dump и как его анализировать?](#343-что-такое-heap-dump-и-как-его-анализировать)
++ [3.4.4. Что такое JFR (Java Flight Recorder) и как его использовать?](#344-что-такое-jfr-java-flight-recorder-и-как-его-использовать)
++ [3.4.5. Как мониторить JVM с помощью JMX?](#345-как-мониторить-jvm-с-помощью-jmx)
+
+#### 3.4.1. Какие инструменты для профилирования памяти в Java?
+Основные инструменты: VisualVM (бесплатный, встроен в JDK до 8, теперь отдельно), JProfiler (коммерческий, детальный), YourKit (коммерческий, с плагинами для IDEA). <br>
+Встроенные: jmap (для heap dumps), jstat (статистика GC), jcmd (команды JVM). <br>
+Для junior: VisualVM — простой старт, показывает графики heap/CPU. Senior: JFR (в JDK 11+) для low-overhead profiling; интегрируйте с Micrometer/Prometheus в production; сравнивайте профили перед/после оптимизаций.
+
+#### 3.4.2. Как выявить утечку памяти?
+Признаки: Постоянный рост heap (jstat -gc показывает old gen растет), OOM, частые full GC. <br>
+Шаги: 1) Мониторьте heap с jconsole/jvisualvm. 2) Создайте heap dump (jmap -dump). 3) Анализируйте на retained objects (MAT/Eclipse Memory Analyzer). 4) Ищите static поля, не закрытые ресурсы, listeners. <br>
+Для junior: Если heap не уменьшается после GC — утечка. Senior: Используйте heap histograms (jcmd GC.heap_info); в микросервисах проверяйте с нагрузкой; автоматизируйте с JMH для регрессии; избегайте ThreadLocal без cleanup.
+
+#### 3.4.3. Что такое heap dump и как его анализировать?
+Heap dump — снимок heap в момент времени (hprof формат), показывает объекты, ссылки, размеры. <br>
+Создание: jmap -dump:file=heap.hprof <pid> или jcmd <pid> GC.heap_dump heap.hprof. <br>
+Анализ: Eclipse MAT (find dominators, leak suspects), VisualVM (inspect objects), jhat (устаревший, веб-интерфейс). <br>
+Для junior: Dump — "фото" памяти для поиска "толстых" объектов. Senior: Фокусируйтесь на shallow/deep retained size; в production используйте -XX:+HeapDumpOnOutOfMemoryError; интегрируйте с APM (New Relic/Elastic APM); для больших dumps (GB) используйте sampling.
+
+#### 3.4.4. Что такое JFR (Java Flight Recorder) и как его использовать?
+JFR — инструмент в JDK (с 7, полноценно в 11+) для low-overhead recording событий JVM (GC, locks, I/O, allocations). <br>
+Использование: Запуск с -XX:StartFlightRecording (или jcmd <pid> JFR.start); анализ в JDK Mission Control (JMC) — бесплатный GUI. <br>
+Преимущества: Минимальный overhead (<1%), continuous recording. <br>
+Для junior: JFR — "черный ящик" JVM для поиска bottleneck'ов. Senior: Настройте events (например, только GC); в production используйте для troubleshooting (например, high CPU); интегрируйте с OpenTelemetry; сравнивайте recordings после изменений.
+
+#### 3.4.5. Как мониторить JVM с помощью JMX?
+JMX (Java Management Extensions) — стандарт для мониторинга/управления JVM (MBeans для heap, GC, threads). <br>
+Доступ: jconsole (GUI), jvisualvm, или программно (MBeanServer). <br>
+Примеры: MemoryMXBean для heap usage, GarbageCollectorMXBean для GC stats. <br>
+Для junior: JMX — "панель управления" JVM. Senior: В production используйте JMX с exporters (Prometheus JMX exporter) для dashboards; настройте remote JMX с аутентификацией (-Dcom.sun.management.jmxremote); автоматизируйте alerts на thresholds (например, heap >90%).
+
+### END ---------------- 3.4. Профилирование и Мониторинг ----------------
+
+## END ---------------- 3. Memory Management ----------------
 
 
 + [Garbage collector](#garbage-collector)
 + [JMM](#jmm)
 + [Classloader](#classloader)
 + [ООП](#ооп)
-+ [Сериализация и копирование](#сериализация-и-копирование)
-+ [Дженерики](#дженерики)
 + [Коллекции](#коллекции)
 + [База данных](#база-данных)
 + [Concurrency](#concurrency)
@@ -1911,112 +2708,6 @@ super в wildcards (? super T) означает, что тип — T или ег
 + [JsonB](https://github.com/JuliWolf/Java_Base/blob/main/JsonB/README.md)
 + [Mockito & Junit](https://github.com/JuliWolf/Spring/blob/master/mockito/README.md)
 + [DDD](ddd.md)
-
-## Дженерики
-
-+ [1. Что такое дженерики?](#1-что-такое-дженерики)
-+ [2. Для чего нужны Дженерики?](#2-для-чего-нужны-дженерики)
-+ [3. Что такое сырые типы?](#3-что-такое-сырые-типы)
-+ [4. Что такое `PECS`?](#4-что-такое-pecs)
-+ [5. Можно ли параметризировать статику](#6-расскажите-про-принцы-pecs-)
-+ [6. Расскажите про принцы PECS ***](#6-расскажите-про-принцы-pecs-)
-
-
-### 1. Что такое дженерики?
-Дженерики - это типы с параметром
-
-### 2. Для чего нужны Дженерики?
-Дженерики помогают упростить реализацию принципа ООП - Полиморфизм</br>
-Позволяют на жтапе компиляции узнать о пробелеме типов</br>
-Дженерики в основном инвариантны, но через wildcart можно сделать их коваринтными </br>
-Дают возможность реализовать общее поведение для нескольких реализаций
-
-### 3. Что такое сырые типы?
-Raw type - это класс-дженерик, из которого удалили его тип</br>
-Возможность превратить в Raw type оставили для совмещения со старым кодом
-
-### 4. Что такое `PECS`?
-* Producer-Extends (Производитель-Расширяет):  Если ваш метод *возвращает* генерический тип (является производителем), используйте <? extends T>.  
-Это означает, что метод может вернуть любой тип, который является подтипом T или самим T.
-
-* Consumer-Super (Потребитель-Супер):  Если ваш метод *принимает* генерический тип в качестве аргумента (является потребителем), используйте <? super T>.  
-Это означает, что метод может принять любой тип, который является супертипом T или самим T.
-
-
-Пример:
-Представим метод, который принимает список List и печатает все его элементы:
-```java
-public void printList(List<?> list) {
-  for (Object o : list) {
-    System.out.println(o);
-  }
-}
-```
-Этот метод работает, потому что он только *читает* элементы из списка (потребитель),  и ему не важно, какого конкретного типа эти элементы.  Он может принять List<String>, List<Integer>, или любой другой тип List.
-
-
-Теперь, метод, который добавляет элемент в список:
-```java
-public void addToList(List<? super Integer> list) {
-    list.add(1); // Правильно, Integer является подтипом Number
-    list.add(1.5); // Правильно, Double является супертипом Number, как и Integer.
-    list.add("test"); // Неправильно
-}
-```
-
-В этом случае мы используем <? super Integer>. <br>
-Метод может добавить в список  Integer или любой его супертип (например, Number, Object), <br>
-поскольку добавление элемента  — операция записи (производитель). Если бы мы использовали <? extends Integer>, добавить что-либо, кроме Integer, было бы нельзя.
-
-**? - неограниченный wildcart**
-
-таким образом 
-List<?> = List<? extends Object>
-
-
-**В чём суть PECS:**
-
-PECS помогает избежать ошибок компиляции и делает код более безопасным и читаемым, указывая на намерение: *производить*  или *потреблять*.  Если вы не уверены, какой wildcard использовать, подумайте о том, что ваш метод делает с генерическим типом — *производит* (возвращает) или *потребляет* (принимает).
-
-Вкратце:  extends для возвращаемых значений, super для принимаемых аргументов.  Это помогает предотвратить ошибки и делает код более ясным.
-
-
-Предположим, у нас есть классы: Animal, Mammal, Cat, Dog.  Cat и Dog наследуются от Mammal, а Mammal наследуется от Animal.
-
-**Пример 1: Получение списка животных (Producer-Extends)**<br>
-Представим метод, который возвращает список животных из зоопарка.  Мы не знаем заранее, какие именно животные будут в списке – могут быть кошки, собаки, или другие млекопитающие.  Используем <? extends Animal>:
-```java
-public List<? extends Animal> getAnimalsFromZoo() {
-    List<Animal> animals = new ArrayList<>();
-    animals.add(new Cat());
-    animals.add(new Dog());
-    // ... добавить других животных
-    return animals;
-}
-```
-Этот метод может вернуть List<Cat>, List<Dog>, List<Mammal>, или даже List<Animal>.  <br>
-Важно, что мы можем только *читать* из этого списка,  добавить новых животных в него нельзя.
-
-**Пример 2: Кормление животных (Consumer-Super)**<br>
-Теперь напишем метод, который кормит животных.  Он принимает список животных и кормит каждого из них:
-```java
-public void feedAnimals(List<? super Mammal> animals) {
-    for (Object animal : animals) {
-        // Предположим, что у всех млекопитающих есть метод eat()
-        if (animal instanceof Mammal) {
-            ((Mammal) animal).eat();
-        }
-    }
-}
-```
-Здесь мы используем <? super Mammal>. <br> 
-Это означает, что метод может принять список Mammal, Animal, или любой другой супертип Mammal.  Мы можем кормить млекопитающих, но если нам передадут список Animal, в котором есть животные, не являющиеся млекопитающими, то для них метод eat() не будет вызван.  Однако, добавить новых животных в список мы не можем.
-
-### 5. Можно ли параметризировать статику
-Нет. 
-В java параметризация применяется к экземплярам классов, а не к самом классам. Таким образом, параметры обобщений не могут быть применены к статическим членам класса в java
-
-## END ---------------- Дженерики ----------------
 
 ## Коллекции
 
@@ -2286,205 +2977,6 @@ Comparator - Это интерфейс, который также использ
 Интерфейс не обязательно должен быть реализован в исходном классе
 
 ## END ---------------- Коллекции ----------------
-
-## Garbage collector
-
-+ [1. Как устроена память?](#1-как-устроена-память)
-+ [2. Что является мусором?](#2-что-является-мусором)
-+ [3. Этапы сборки мусора](#3-этапы-сборки-мусора-)
-+ [4. Что означает поколения объектов?](#4-что-означает-поколения-объектов)
-+ [5. Зачем нужны поколения объектов?](#5-зачем-нужны-поколения-объектов)
-+ [6. Как происходит заполнения областей?](#6-как-происходит-заполнения-областей)
-+ [7. Какие есть сборкики мусора?](#7-какие-есть-сборкики-мусора)
-+ [8. Как работает сболрщик CMS GC(Concurrent Mark Sweep)](#8-как-работает-сболрщик-cms-gcconcurrent-mark-sweep)
-+ [9. Как работает G1 GC (Garbage First)?](#9-как-работает-g1-gc-garbage-first)
-+ [10. Какие бывают ссылки и в чем их отличия](#10-какие-бывают-ссылки-и-в-чем-их-отличия)
-+ [11. Чистит ли GB string pool](#10-какие-бывают-ссылки-и-в-чем-их-отличия)
-
-### 1. Как устроена память?
-- Native Memory — вся доступная системная память.
-- Heap (куча) - часть Native Memory. Здесь храняться JVM объекты. Это общее пространство для всех потомок приложения
-- Stack (стек) - используется для хранения локальных переменных и стека вызовов метода. Для каждого потоко выделяется свой стек
-- Metaspace (метаданные) - тут хранятся метаданных классов и статические переменные. Является общим для всех
-- CodeCache (кэш кода) - JIT компилятор компилирует часто исполняемый код, преобразуя его в нативный машинный код и кеширует для более быстрого выполнения
-
-### 2. Что является мусором?
-Мусором является объект, который больше не может быть достигнут по ссылке из какого-либо места
-
-### 3. Этапы сборки мусора
-- Mark (маркировка) (Stop the world) - GC сканирует все объекты и помечает живые. На этом этапе выполнение программы приостанавливается
-- Sweep (очистка) - Освобождается память, занятая объектами, не помечанными на предыдущем шаге
-- Compact (уплотнение) - Объекты, переживщие очистку, перемещаются в единый непрерывных блок памяти
-
-### 4. Что означает поколения объектов?
-Объекты разделяются на 2 типа в зависимости от их типа для оптимизации
-- Young generation
-    - Eden - Здесь создаются новые объекты
-    - S0 и S1 (Survivor Space - область для выживших)
-- Old generation (Tenured) - давно живущие объекты
-
-### 5. Зачем нужны поколения объектов?
-- Большинство объектов живут не долго
-- Если объект выживает, то он, скорее всего, будет жить вечно
-- Этапы mark и sweep занима.т меньше времени при большом количество мусора. </br>
-  То есть маркировка будет происходить быстрее, если анализируемая область небольшая и в ней много метных объектов
-
-### 6. Как происходит заполнения областей?
-1. Новые объекты создаются в Eden
-2. Когда Eden заполняется, происходит минортая сборка мусора
-* Minor GC - это процесс при котором операции mark и sweep выполняются для young generation
-3. После Minor GC выживышие объекты перемещаются в одну из областей S0
-4. По мере работы приложения пространство заполняется новыми объектами. </br>
-   При очередном Minor GC области young generation и S0 очищаются. На этот раз выжившие объекты перемещаются в S1 и их возраст увеличивается
-5. При следующем Minor GC процесс повторяется
-   Однако области Survivor Space меняются местами. Живые объекты перемещаются в S0 и у них увеличивается возраст
-6. Таким образом объекты копируются из области в область несколько раз пока в областях не закончится место или пока они не переживую определенное количество чисток</br>
-   После чего они будут перемещены в Old generation
-7. Major GC. При Major GC этапы mark и sweep выполняются для Old generation
-
-### 7. Какие есть сборкики мусора?
-
-| Сборщик мусора | Описание                                                            | Преимущества                                                                                                                    | Когда использовать                                                                                                                                                                                                            | Флаги для включения |
-|----------------|---------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------|
-| Serial         | Использует 1 поток                                                  | Эффективный, т.к. нет накладных расходов на взаимодействие потоков                                                              | Однопроцессорные машины<br/>Работы с небольшими наборами данных                                                                                                                                                               | -XX:+UseSerialGC    |
-| Parallel       | Использует несколько потоков                                        | Многопоточность усколяет сборку мусора                                                                                          | В приоритете пиковая производительность<br/>Допустимы паузы при GC в одну секунду и более<br/>Работа со средними и большими наборами данных<br/>Для приложений работающих на многопроцессорном или многопоточном оборудовании | -XX:+UseParallelGC  |
-| G1             | Выполняет некоторую тяжелую работу параллельно с работой приложения | Может использоваться как на небольших системах, так и на больших с большим количеством процессором и большим количеством памяти | Когда время отклика важнее пропускной способности<br/>Паущы GC должны быть меньше одной секунды                                                                                                                               | -XX:+UseG1GC        |
-| Z1             | Выполняет всю тяжелую работу параллельно с работой приложения       | Низкая задержка                                                                                                                 | В приоритете время отклика                                                                                                                                                                                                    | +UseZGC             |
-
-
-### 8. Как работает сболрщик CMS GC(Concurrent Mark Sweep)
-- Использует такую же организацию памяти как и Serial/Parallel (пункт 4)
-- Использует такие же принципи по работе с младшими поколениями (пункт 6 - 1-6)
-- Не дожидается полного заполнения блока старшего поколения (Tenured) для того чтобы начать сборку мусора
-- Работает в фоном режиме и постоянно поддерживает Tenured в компактном состоянии
-- Сборщик умеет разносить во времени малые и старшие сборки мусора, чтобы не создавать продолжительных пауз
-
-0. Этапы от 1-6 с пункта 6
-1. Останавливает основные потоки приложения (initial mark pause)
-2. Помечает все объекты, которые доступны из корня
-3. Запускает работу приложения
-4. Сборщик параллельно продлолжает поиск всех живых объектов, доступных по ссылке из помеченных на втором этапе объектов
-- происходит это в одном или нескольких потоках
-5. После завершения поиска сборщик еще раз останавливает приложение (remark pause) и просматривает кучу для поиска живых объектов
-- На данном этапе в живые могут попасть те объекты, которые живыми уже не являются
-- Такие объекты называются _плавающим мусором_ (floating garbage) - они будут удалены в процессе следующей сборки
-- Используется алгоритм Snapshot-At-The-Beginning (SATB) - в список живых попадают все объекты, которые могли быть таковыми на момент начала работы алгоритма
-6. Возобновляется работа основных потоков приложения
-7. Сборщик производит очистку памяти от мертвых объектов в нескольких параллельных потоках
-- После очистки не будет производится упаковка объектов в старшем поколении
-
-### 9. Как работает G1 GC (Garbage First)?
-- Изначально предназначался для приложений с большими кучам (от 4гб и выше)
-- Задача минимизировать паузы в работе основного приложения
-
-**Структура кучи**
-- Память разбита на множество регионом одиннакового размера
-- Для больших объектов может объеденяться несколько регионов
-- По умолчанию регионы разбираются так, чтобы их было не больше 2048 (~ от 1 до 32mb)
-- Разделение регионов на Eden, Survivor и Tenured логическое и регионы могут менять свою принадлежность
-
-**Принцип работы**
-1. Остановка основного процесса приложения
-2. Работа с малыми сборками происходит в несколько потоков
-- Принцип работы с малыми сборками такой же как в пункте 6 (1-6)
-- Но очистка выполняется не на всем поколении, а только на части регионов, которые сборщик может очистить не превышая желаемое время
-- Выбирает для очистки те регионы, в которых, по его мнению, скопилось наибольшее количество мусора (Garbage First)
-4. Начало работы Смешанной сборки (ранее работы со старым поколением)
-5. Остановка приложения (initial mark pause)
-6. Пометка корней с использованием информации, полученной из малых сборок
-7. Concurrent marking - пометка всех живых объектов в куче в нескольких потоках, параллельно с работой приложения
-8. Оставнока приложения (remark pause)
-9. Дополнительный поиск не учтенных ранее живых объектов
-- Использует Snapshot-At-The-Beginning (SATB), то есть может присутсвовать плавающий мусор
-8. Возобновление работы приложения
-9. Остановка приложения
-10. Cleanup - очистка вспомогательных структур учета ссылок на объеты
-11. Возобновление работы приложения
-12. Поиск пустых регионов, которые можно использовать для размещения новых объектов
-
-* После окончания цикла пометки (2) G1 переключается на выполнение смешанных сборок (5)
-    - Каждый раз к набору регионом младшего поколения, подлежащих очистке, добавляется некоторое количество регионов старшего поколения
-    - У сборщика есть статистика по предыдущим сборкам, чтобы не выходить за рамки по времени
-    - После окончания очистки возвращается к работе с младшим поколением
-* Очередной цикл пометки будет запущен тогда, когда заполненность кучи превысит определенный порог
-
-### 10. Какие бывают ссылки и в чем их отличия
-- Ссылка это адрес в памяти
--
-- Weak reference
-- Strong reference
-- Soft reference
-- Phantom reference
-
-- Strong reference - это самая простая ссылка, которую используем чаще всего</br>
-  Данная ссылка запрещена для удаления сборщиком мусора</br>
-  `String s = “abc”`
-
-- Weak reference (больше подходит для метаданных)
-```
-Counter counter = new Counter(); // strong reference
-WeakReference weakCounter = new WeakReference(counter); //weak reference
-counter = null; // now Counter object is eligible for garbage collection
-```
-Когда ссылка больше не имеет strong ссылки, он становится доступным для удаления сборщиком мусора</br></br>
-
-- Soft reference (больше подходит для кешей)
-```
-Counter prime = new Counter();  // prime holds a strong reference
-SoftReference soft = new SoftReference(prime) ; //soft reference variable has SoftReference to Counter Object
-prime = null;  // now Counter object is eligible for garbage collection but only be collected when JVM absolutely needs memory
-```
-Soft ссылка, которая не имеет strong ссылки будет удалена сборщиком мусора тогда, когда JVM будет нуждаться в памяти</br>
-Soft ссылка откладывает процесс удаления сборщиком мусора до момента когда в этом не будет необходимости
-
-- Phantom reference
-```
-DigitalCounter digit = new DigitalCounter(); // digit reference variable has strong reference
-PhantomReference phantom = new PhantomReference(digit); // phantom reference
-digit = null;
-```
-Объект на который указывают только phantom ссылки может быть удален сборщиком в любой момент
-
-### 11. Чистит ли GB string pool
-До java 7 string pool находился в отдельной области памяти, который GB не чистил</br>
-После Java 7 string pool был перенесен в кучу, что соотвественно дает доступ GB
-
-## END ---------------- Garbage collector ----------------
-
-## JMM
-
-+ [1. Что обозначает JMM](#1-что-обозначает-jmm)
-+ [2. Зачем нужен JMM?](#2-зачем-нужен-jmm)
-+ [3. Ключевые концепции JMM](#3-ключевые-концепции-jmm)
-
-### 1. Что обозначает JMM
-JMM (Java Memory Model) — это спецификация, определяющая, как Java-программы взаимодействуют с памятью. <br>
-Она описывает правила видимости и упорядочения операций над переменными в многопоточных приложениях. <br>
-JMM — это абстракция, скрывающая от разработчика сложности взаимодействия с аппаратной памятью и кешами процессоров.
-
-
-### 2. Зачем нужен JMM?
-Без JMM, поведение многопоточных программ на разных платформах было бы непредсказуемым. <br>
-Разные процессоры и операционные системы имеют свои собственные модели памяти, и код, который работает корректно на одном компьютере, может давать сбои на другом. <br>
-JMM предоставляет единую модель памяти для всех платформ, обеспечивая переносимость и предсказуемость Java-приложений.
-
-
-### 3. Ключевые концепции JMM
-- Видимость (Visibility): Гарантирует, что изменения, внесенные одним потоком в переменную, будут видны другим потокам. <br>
-  Без этой гарантии, один поток мог бы читать устаревшее значение переменной, даже если другой поток уже его изменил.
-- Упорядочение (Ordering): Определяет порядок выполнения операций над переменными.  <br>
-  В однопоточной программе порядок операций обычно интуитивно понятен.  <br>
-  Однако, в многопоточной программе, порядок выполнения операций может быть переупорядочен компилятором или процессором для повышения производительности.  <br>
-  JMM гарантирует, что определенные операции будут выполняться в заданном порядке, предотвращая race conditions.
-- Happens-before: Это частичный порядок выполнения, который определяет, какие операции происходят до других. <br>
-  Это ключевой механизм, обеспечивающий видимость и упорядочение. <br>
-  Например, запись в переменную happens-before чтение этой же переменной другим потоком, если это чтение происходит после надлежащей синхронизации (например, использование volatile, synchronized или locks).
-- Операции памяти: JMM определяет абстрактные операции памяти, такие как read, load, use, assign, store, write. Эти операции отражают то, как данные перемещаются между основной памятью и кэшами процессоров.
-- Основные механизмы синхронизации: JMM полагается на механизмы синхронизации, такие как synchronized блоки, volatile переменные и <br>
-  locks (например, из java.util.concurrent.locks пакета), для обеспечения правильной видимости и упорядочения. <br>
-  Эти механизмы обеспечивают межпотоковые барьеры, гарантируя, что некоторые операции будут выполнены до других.
-
-## END ---------------- JMM ----------------
 
 ## Classloader
 
