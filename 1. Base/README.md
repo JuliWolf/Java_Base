@@ -448,6 +448,108 @@ https://github.com/johnivo/job4j/blob/master/interview_questions/Core.md#4-%D0%9
     </details>
   </details>
 
++ [5. Spring](#5-spring)
+  <details>
+    <summary>Навигация</summary>
+
+    + [5.1. Spring Core Concepts](#51-spring-core-concepts)
+      <details>
+        <summary>Навигация</summary>
+
+      + [5.1.1. Ключевые понятия Spring](#511-ключевые-понятия-spring)
+      + [5.1.2. Структура Spring-контейнера](#512-структура-spring-контейнера)
+      + [5.1.3. Структура Spring](#513-структура-spring)
+      + [5.1.4. Автоконфигурация в Spring](#514-автоконфигурация-в-spring)
+      + [5.1.5. Условия создания бина](#515-условия-создания-бина)
+      + [5.1.6. Аннотация @SpringBootApplication](#516-аннотация-springbootapplication)
+      + [5.1.7. Метод SpringApplication.run()](#517-метод-springapplicationrun)
+      + [5.1.8. AnnotationConfigEmbeddedWebApplicationContext](#518-annotationconfigembeddedwebapplicationcontext)
+      + [5.1.9. Аннотация @EnableAutoConfiguration](#519-аннотация-enableautoconfiguration)
+      + [5.1.10. Этапы инициализации](#5110-этапы-инициализации)
+      + [5.1.11. Парсирование конфигурации и создание BeanDefinition](#5111-парсирование-конфигурации-и-создание-beandefinition)
+      + [5.1.12. Настройка созданных BeanDefinition](#5112-настройка-созданных-beandefinition)
+      + [5.1.13. BeanFactoryPostProcessor](#5113-beanfactorypostprocessor)
+      + [5.1.14. Создание кастомных FactoryBean](#5114-создание-кастомных-factorybean)
+      + [5.1.15. Создание экземпляров бинов](#5115-создание-экземпляров-бинов)
+      + [5.1.16. Настройка созданных бинов](#5116-настройка-созданных-бинов)
+      + [5.1.17. Флоу создания контекста и бинов](#5117-флоу-создания-контекста-и-бинов)
+      + [5.1.18. Жизненный цикл бина](#5118-жизненный-цикл-бина)
+      + [5.1.19. Жизненный цикл Spring](#5119-жизненный-цикл-spring)
+      + [5.1.20. Типы наследования для расширения бина](#5120-типы-наследования-для-расширения-бина)
+      + [5.1.21. Типы расширения бинов](#5121-типы-расширения-бинов)
+
+      </details>
+
+    + [5.2. Dependency Injection and Bean Management](#51-spring-core-concepts)
+      <details>
+        <summary>Навигация</summary>
+
+      + [5.2.1. Что такое автовиринг и как он работает](#521-что-такое-автовиринг-и-как-он-работает)
+      + [5.2.2. Плюсы и минусы @Autowired](#522-плюсы-и-минусы-autowired)
+      + [5.2.3. Различия между @Component, @Service и @Repository](#523-различия-между-component-service-и-repository)
+      + [5.2.4. Активация/деактивация бинов](#524-активациядеактивация-бинов)
+      + [5.2.5. Spring фильтры](#525-spring-фильтры)
+      + [5.2.6. Аннотация @PreDestroy](#526-аннотация-predestroy)
+      + [5.2.7. Уничтожение prototype бина](#527-уничтожение-prototype-бина)
+      + [5.2.8. Аннотация @Primary](#528-аннотация-primary)
+      + [5.2.9. Аннотация @Qualifier](#529-аннотация-qualifier)
+      + [5.2.10. Инъекция singleton в prototype](#5210-инъекция-singleton-в-prototype)
+
+      </details>
+
+    + [5.3. Aspect-Oriented Programming (AOP)](#51-spring-core-concepts)
+      <details>
+        <summary>Навигация</summary>
+
+        + [5.3.1. Что такое AOP](#531-что-такое-aop)
+        + [5.3.2. Аннотация @Async](#532-аннотация-async)
+      </details>
+
+    + [5.4. Spring Boot Fundamentals](#51-spring-core-concepts)
+      <details>
+        <summary>Навигация</summary>
+
+        + [5.4.1. Что такое Spring Boot](#541-что-такое-spring-boot)
+        + [5.4.2. Как настроить embedded сервер в Spring Boot](#542-как-настроить-embedded-сервер-в-spring-boot)
+        + [5.4.3. Что такое Spring Boot Starter](#543-что-такое-spring-boot-starter)
+      </details>
+
+    + [5.5. Spring Security and Configuration](#51-spring-core-concepts)
+      <details>
+        <summary>Навигация</summary>
+
+        + [5.5.1. Типы репозиториев](#551-типы-репозиториев)
+        + [5.5.2. Модули Spring Session](#552-модули-spring-session)
+        + [5.5.3. Аннотация для включения сессии](#553-аннотация-для-включения-сессии)
+        + [5.5.4. Пример кастомной WebSecurityConfig](#554-пример-кастомной-websecurityconfig)
+      </details>
+
+    + [5.6. Caching in Spring](#51-spring-core-concepts)
+      <details>
+        <summary>Навигация</summary>
+
+        + [5.6.1. Как активировать кеширование в Spring](#561-как-активировать-кеширование-в-spring)
+        + [5.6.2. Как отметить данные для кеширования](#562-как-отметить-данные-для-кеширования)
+        + [5.6.3. Как обновить данные в кеше](#563-как-обновить-данные-в-кеше)
+        + [5.6.4. Стандартная структура кеша в Spring](#564-стандартная-структура-кеша-в-spring)
+      </details>
+
+    + [5.7. Transactions in Spring](#51-spring-core-concepts)
+      <details>
+        <summary>Навигация</summary>
+
+        + [5.7.1. Как включить транзакции](#571-как-включить-транзакции)
+        + [5.7.2. Настройки аннотации @EnableTransactionManager](#572-настройки-аннотации-enabletransactionmanager)
+        + [5.7.3. Что делает аннотация @Transactional](#573-что-делает-аннотация-transactional)
+        + [5.7.4. Настройки @Transactional](#574-настройки-transactional)
+        + [5.7.5. Как создать транзакцию без Spring](#575-как-создать-транзакцию-без-spring)
+        + [5.7.6. Как TransactionInterceptor обрабатывает транзакционный метод](#576-как-transactioninterceptor-обрабатывает-транзакционный-метод)
+        + [5.7.7. Что такое TransactionManager](#577-что-такое-transactionmanager)
+        + [5.7.8. Как реализовать optimistic locking](#578-как-реализовать-optimistic-locking)
+      </details>
+
+  </details>
+
 ## 1. Протоколы
 
 + [1.1. REST vs SOAP](#11-rest-vs-soap)
@@ -4196,8 +4298,560 @@ WITH для читаемости и рекурсии.
 
 ## END ---------------- 4. База данных ----------------
 
+## 5. Spring
+
++ [5.1. Spring Core Concepts](#51-spring-core-concepts)
+  <details>
+    <summary>Навигация</summary>
+
+    + [5.1.1. Ключевые понятия Spring](#511-ключевые-понятия-spring)
+    + [5.1.2. Структура Spring-контейнера](#512-структура-spring-контейнера)
+    + [5.1.3. Структура Spring](#513-структура-spring)
+    + [5.1.4. Автоконфигурация в Spring](#514-автоконфигурация-в-spring)
+    + [5.1.5. Условия создания бина](#515-условия-создания-бина)
+    + [5.1.6. Аннотация @SpringBootApplication](#516-аннотация-springbootapplication)
+    + [5.1.7. Метод SpringApplication.run()](#517-метод-springapplicationrun)
+    + [5.1.8. AnnotationConfigEmbeddedWebApplicationContext](#518-annotationconfigembeddedwebapplicationcontext)
+    + [5.1.9. Аннотация @EnableAutoConfiguration](#519-аннотация-enableautoconfiguration)
+    + [5.1.10. Этапы инициализации](#5110-этапы-инициализации)
+    + [5.1.11. Парсирование конфигурации и создание BeanDefinition](#5111-парсирование-конфигурации-и-создание-beandefinition)
+    + [5.1.12. Настройка созданных BeanDefinition](#5112-настройка-созданных-beandefinition)
+    + [5.1.13. BeanFactoryPostProcessor](#5113-beanfactorypostprocessor)
+    + [5.1.14. Создание кастомных FactoryBean](#5114-создание-кастомных-factorybean)
+    + [5.1.15. Создание экземпляров бинов](#5115-создание-экземпляров-бинов)
+    + [5.1.16. Настройка созданных бинов](#5116-настройка-созданных-бинов)
+    + [5.1.17. Флоу создания контекста и бинов](#5117-флоу-создания-контекста-и-бинов)
+    + [5.1.18. Жизненный цикл бина](#5118-жизненный-цикл-бина)
+    + [5.1.19. Жизненный цикл Spring](#5119-жизненный-цикл-spring)
+    + [5.1.20. Типы наследования для расширения бина](#5120-типы-наследования-для-расширения-бина)
+    + [5.1.21. Типы расширения бинов](#5121-типы-расширения-бинов)
+
+  </details>
+
++ [5.2. Dependency Injection and Bean Management](#51-spring-core-concepts)
+  <details>
+    <summary>Навигация</summary>
+
+    + [5.2.1. Что такое автовиринг и как он работает](#521-что-такое-автовиринг-и-как-он-работает)
+    + [5.2.2. Плюсы и минусы @Autowired](#522-плюсы-и-минусы-autowired)
+    + [5.2.3. Различия между @Component, @Service и @Repository](#523-различия-между-component-service-и-repository)
+    + [5.2.4. Активация/деактивация бинов](#524-активациядеактивация-бинов)
+    + [5.2.5. Spring фильтры](#525-spring-фильтры)
+    + [5.2.6. Аннотация @PreDestroy](#526-аннотация-predestroy)
+    + [5.2.7. Уничтожение prototype бина](#527-уничтожение-prototype-бина)
+    + [5.2.8. Аннотация @Primary](#528-аннотация-primary)
+    + [5.2.9. Аннотация @Qualifier](#529-аннотация-qualifier)
+    + [5.2.10. Инъекция singleton в prototype](#5210-инъекция-singleton-в-prototype)
+
+  </details>
+
++ [5.3. Aspect-Oriented Programming (AOP)](#51-spring-core-concepts)
+  <details>
+    <summary>Навигация</summary>
+
+    + [5.3.1. Что такое AOP](#531-что-такое-aop)
+    + [5.3.2. Аннотация @Async](#532-аннотация-async)
+  </details>
+
++ [5.4. Spring Boot Fundamentals](#51-spring-core-concepts)
+  <details>
+    <summary>Навигация</summary>
+
+    + [5.4.1. Что такое Spring Boot](#541-что-такое-spring-boot)
+    + [5.4.2. Как настроить embedded сервер в Spring Boot](#542-как-настроить-embedded-сервер-в-spring-boot)
+    + [5.4.3. Что такое Spring Boot Starter](#543-что-такое-spring-boot-starter)
+  </details>
+
++ [5.5. Spring Security and Configuration](#51-spring-core-concepts)
+  <details>
+    <summary>Навигация</summary>
+
+    + [5.5.1. Типы репозиториев](#551-типы-репозиториев)
+    + [5.5.2. Модули Spring Session](#552-модули-spring-session)
+    + [5.5.3. Аннотация для включения сессии](#553-аннотация-для-включения-сессии)
+    + [5.5.4. Пример кастомной WebSecurityConfig](#554-пример-кастомной-websecurityconfig)
+  </details>
+
++ [5.6. Caching in Spring](#51-spring-core-concepts)
+  <details>
+    <summary>Навигация</summary>
+
+    + [5.6.1. Как активировать кеширование в Spring](#561-как-активировать-кеширование-в-spring)
+    + [5.6.2. Как отметить данные для кеширования](#562-как-отметить-данные-для-кеширования)
+    + [5.6.3. Как обновить данные в кеше](#563-как-обновить-данные-в-кеше)
+    + [5.6.4. Стандартная структура кеша в Spring](#564-стандартная-структура-кеша-в-spring)
+  </details>
+
++ [5.7. Transactions in Spring](#51-spring-core-concepts)
+  <details>
+    <summary>Навигация</summary>
+
+    + [5.7.1. Как включить транзакции](#571-как-включить-транзакции)
+    + [5.7.2. Настройки аннотации @EnableTransactionManager](#572-настройки-аннотации-enabletransactionmanager)
+    + [5.7.3. Что делает аннотация @Transactional](#573-что-делает-аннотация-transactional)
+    + [5.7.4. Настройки @Transactional](#574-настройки-transactional)
+    + [5.7.5. Как создать транзакцию без Spring](#575-как-создать-транзакцию-без-spring)
+    + [5.7.6. Как TransactionInterceptor обрабатывает транзакционный метод](#576-как-transactioninterceptor-обрабатывает-транзакционный-метод)
+    + [5.7.7. Что такое TransactionManager](#577-что-такое-transactionmanager)
+    + [5.7.8. Как реализовать optimistic locking](#578-как-реализовать-optimistic-locking)
+  </details>
+
+### 5.1. Spring Core Concepts
+
++ [5.1.1. Ключевые понятия Spring](#511-ключевые-понятия-spring)
++ [5.1.2. Структура Spring-контейнера](#512-структура-spring-контейнера)
++ [5.1.3. Структура Spring](#513-структура-spring)
++ [5.1.4. Автоконфигурация в Spring](#514-автоконфигурация-в-spring)
++ [5.1.5. Условия создания бина](#515-условия-создания-бина)
++ [5.1.6. Аннотация @SpringBootApplication](#516-аннотация-springbootapplication)
++ [5.1.7. Метод SpringApplication.run()](#517-метод-springapplicationrun)
++ [5.1.8. AnnotationConfigEmbeddedWebApplicationContext](#518-annotationconfigembeddedwebapplicationcontext)
++ [5.1.9. Аннотация @EnableAutoConfiguration](#519-аннотация-enableautoconfiguration)
++ [5.1.10. Этапы инициализации](#5110-этапы-инициализации)
++ [5.1.11. Парсирование конфигурации и создание BeanDefinition](#5111-парсирование-конфигурации-и-создание-beandefinition)
++ [5.1.12. Настройка созданных BeanDefinition](#5112-настройка-созданных-beandefinition)
++ [5.1.13. BeanFactoryPostProcessor](#5113-beanfactorypostprocessor)
++ [5.1.14. Создание кастомных FactoryBean](#5114-создание-кастомных-factorybean)
++ [5.1.15. Создание экземпляров бинов](#5115-создание-экземпляров-бинов)
++ [5.1.16. Настройка созданных бинов](#5116-настройка-созданных-бинов)
++ [5.1.17. Флоу создания контекста и бинов](#5117-флоу-создания-контекста-и-бинов)
++ [5.1.18. Жизненный цикл бина](#5118-жизненный-цикл-бина)
++ [5.1.19. Жизненный цикл Spring](#5119-жизненный-цикл-spring)
++ [5.1.20. Типы наследования для расширения бина](#5120-типы-наследования-для-расширения-бина)
++ [5.1.21. Типы расширения бинов](#5121-типы-расширения-бинов)
+
+#### 5.1.1. Ключевые понятия Spring
+Бины - обычные объекты, управляемые DI-контейнером. Они представляют компоненты приложения (сервисы, репозитории, контроллеры) и создаются контейнером. DI-контейнер - фундаментальный механизм Spring, обеспечивающий инверсию управления (IoC), управление жизненным циклом бинов, зависимостями и слабую связанность.
+
+Spring - набор связанных бинов, где контейнер абстрагирует от создания объектов. Пример: OAuth2RestTemplate бин автоматически настраивается для токенов. Контейнер - посредник между кодом и библиотеками.
+
+Инъекции зависимостей не требуют интерфейсов, но рекомендуются для тестируемости. Контекст (ApplicationContext) расширяет BeanFactory, реагирует на события, управляет жизненным циклом. Конфигурация - метаданные бинов (XML, Java, аннотации).
+
+Сканирование компонентов (@ComponentScan) автоматически регистрирует бины с @Component и т.д., неявно.
+
+**Расширение для junior-senior:** Контейнер использует рефлексию, влияющую на производительность. Биды имеют scopes (singleton, prototype, request и т.д.), влияющие на lifecycle. Пример: Prototype создается при каждом запросе. Новый вопрос: Как влияет рефлексия на производительность Spring-приложений? - Рефлексия медленнее прямых вызовов, но Spring оптимизирует через кеширование и прокси.
+
+#### 5.1.2. Структура Spring-контейнера
+Представляет древовидную структуру: узлы - бины, корень - контекст.
+
+- ApplicationContext: Основной класс, содержит ссылки на бины, расширяет BeanFactory для событий, интернационализации.
+- BeanDefinition: Метаданные бина (класс, зависимости, scope).
+- BeanFactory: Интерфейс для создания, хранения, доступа к бинам.
+- DefaultListableBeanFactory: Реализация с HashMaps для хранения.
+- HierarchicalBeanFactory: Поддержка иерархических контекстов.
+
+**Расширение для junior-senior:** Контейнер использует Factory pattern. BeanPostProcessor'ы модифицируют бины после создания. Структура: ApplicationContext -> DefaultListableBeanFactory -> Map<BeanName, BeanDefinition> -> Map<BeanName, Bean>. Новый вопрос: Как работает HierarchicalBeanFactory в многомодульных приложениях? - Позволяет наследовать бины от родительского контекста, полезно для разделения конфигураций.
+
+#### 5.1.3. Структура Spring
+1. Бины: Объекты, управляемые контейнером, представляющие компоненты (сервисы, репозитории, контроллеры).
+2. Конфигурационные метаданные: Информация для настройки бинов.
+3. Контекст: Среда для создания, настройки, жизненного цикла; может быть иерархическим.
+4. Контролеры: Обрабатывают HTTP-запросы, возвращают ответы (views или JSON).
+5. Сервисы: Содержат бизнес-логику.
+6. Репозитории: Абстрагируют доступ к данным (БД, API).
+
+**Расширение для junior-senior:** Структура следует IoC и DI паттернам. Spring Boot упрощает конфигурацию. Пример: @Autowired инжектирует из контекста. Новый вопрос: Как интегрировать Spring с PostgreSQL? - Через Spring Data JPA: добавить зависимость, настроить application.properties с JDBC URL (например, jdbc:postgresql://localhost:5432/mydb), использовать @Entity и репозитории.
+
+#### 5.1.4. Автоконфигурация в Spring
+Набор конфигурационных классов, создающих бины на основе classpath и свойств. Embedded Servlet Container - тоже бин.
+
+Включается @EnableAutoConfiguration, работает после пользовательских бинов, дает приоритет им. Пример: JDBC-драйвер создает DataSource-бин.
+
+**Расширение для junior-senior:** Spring Boot сканирует META-INF/spring.factories. Конфликты разрешаются @ConditionalOnMissingBean. Новый вопрос: Как отключить автоконфигурацию? - @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class}). Новый вопрос: Как создать кастомную автоконфигурацию для PostgreSQL? - Создать класс с @Configuration, @ConditionalOnClass(PostgreSQLDriver.class), и @Bean для DataSource.
+
+#### 5.1.5. Условия создания бина
+Управляется @ConditionalOn* аннотациями: @ConditionalOnClass (наличие класса), @ConditionalOnBean (бин), @ConditionalOnMissingBean (отсутствие), @ConditionalOnProperty (свойство).
+
+Пример:
+
+```java
+@SpringBootApplication
+public class DemoApplication {
+  public static void main(String[] args) {
+    SpringApplication.run(DemoApplication.class, args);
+  }
+}
+```
+
+**Расширение для junior-senior:** Условная конфигурация. Пример: @ConditionalOnExpression("'${env}'=='prod'"). Новый вопрос: Что такое @Conditional? - Базовая аннотация для кастомных условий, реализующая Condition. Новый вопрос: Как использовать @Conditional для PostgreSQL? - @ConditionalOnProperty(name = "spring.datasource.url", havingValue = "jdbc:postgresql:*") для активации только при PostgreSQL.
+
+#### 5.1.6. Аннотация @SpringBootApplication
+Мета-аннотация: @SpringBootConfiguration, @EnableAutoConfiguration, @ComponentScan.
+
+**Расширение для junior-senior:** @SpringBootConfiguration заменяет @Configuration. Позволяет кастомизацию сканирования пакетов. Новый вопрос: Как кастомизировать @ComponentScan для больших приложений? - Использовать basePackages или excludeFilters для фильтрации.
+
+#### 5.1.7. Метод SpringApplication.run()
+Создает ApplicationContext, конфигурирует, выводит баннер, засекает время старта.
+
+**Расширение для junior-senior:** Можно добавить слушателей via SpringApplication.addListeners(). Пример: ApplicationStartedEvent, ApplicationReadyEvent. Новый вопрос: Как добавить кастомный баннер в Spring Boot? - Поместить banner.txt в src/main/resources.
+
+#### 5.1.8. AnnotationConfigEmbeddedWebApplicationContext
+Наследник Spring Boot, знает о embedded servlet-контейнерах (Tomcat, Jetty), запускает их автоматически. Для веб-приложений.
+
+**Расширение для junior-senior:** В отличие от AnnotationConfigApplicationContext, интегрирует веб-функциональность. Новый вопрос: Как заменить Tomcat на Jetty в Spring Boot? - Исключить spring-boot-starter-tomcat, добавить spring-boot-starter-jetty.
+
+#### 5.1.9. Аннотация @EnableAutoConfiguration
+Включает автоконфигурацию via @Import(EnableAutoConfigurationImportSelector.class). Селектор загружает из spring.factories.
+
+**Расширение для junior-senior:** Список фильтруется по условиям. Пример: HibernateJpaAutoConfiguration. Новый вопрос: Как работает spring.factories для PostgreSQL? - Определяет автоконфигурации, такие как PostgreSQLDataSourceAutoConfiguration.
+
+#### 5.1.10. Этапы инициализации
+1. Парсирование конфигурации и создание BeanDefinition.
+2. Настройка созданных BeanDefinition.
+3. Создание кастомных FactoryBean.
+4. Создание экземпляров бинов.
+5. Настройка созданных бинов.
+
+**Расширение для junior-senior:** Каждый этап использует пост-процессоры. Новый вопрос: Что такое BeanDefinitionReader? - Компонент, читающий метаданные из XML, аннотаций и т.д. Новый вопрос: Как этапы инициализации влияют на PostgreSQL-подключение? - DataSource-бин создается на этапе создания экземпляров, после чтения свойств.
+
+#### 5.1.11. Парсирование конфигурации и создание BeanDefinition
+Создает BeanDefinition из конфигураций. BeanDefinition - интерфейс для метаданных (класс, свойства, зависимости).
+
+**Расширение для junior-senior:** Использует AnnotatedBeanDefinitionReader для аннотаций. Пример: @Bean методы создают BeanDefinition. Новый вопрос: Как парсить кастомные аннотации для BeanDefinition? - Через custom BeanDefinitionReader.
+
+#### 5.1.12. Настройка созданных BeanDefinition
+BeanFactoryPostProcessor модифицируют метаданные до создания бинов. Пример: @PropertySource добавляет свойства.
+
+**Расширение для junior-senior:** ConfigurationClassPostProcessor обрабатывает @Configuration. Новый вопрос: Разница между BeanFactoryPostProcessor и BeanPostProcessor? - Первый меняет метаданные, второй - экземпляры. Новый вопрос: Как использовать BeanFactoryPostProcessor для PostgreSQL? - Для настройки DataSource свойств из внешних источников.
+
+#### 5.1.13. BeanFactoryPostProcessor
+Методы: getBeanDefinitionNames() для имен, getBeanDefinition() для метаданных. Позволяет модифицировать перед созданием.
+
+**Расширение для junior-senior:** Пример: PropertyPlaceholderConfigurer заменяет плейсхолдеры. Новый вопрос: Как реализовать кастомный BeanFactoryPostProcessor? - Реализовать интерфейс и зарегистрировать в контексте.
+
+#### 5.1.14. Создание кастомных FactoryBean
+Для создания бинов via фабрики, особенно в XML. FactoryBean реализует getObject() для возврата бина.
+
+**Расширение для junior-senior:** Полезно для сложных объектов. Пример: ProxyFactoryBean для AOP. Новый вопрос: Как создать FactoryBean для PostgreSQL connection pool? - Реализовать getObject() возвращающий HikariDataSource.
+
+#### 5.1.15. Создание экземпляров бинов
+BeanFactory создает экземпляры из BeanDefinition. Добавляются в Map<BeanName, Bean>.
+
+**Расширение для junior-senior:** Использует рефлексию или фабрики. Новый вопрос: Как создать бин без конструктора? - Via фабричный метод. Новый вопрос: Как инстанцировать бины с PostgreSQL зависимостями? - Через constructor injection с @Autowired DataSource.
+
+#### 5.1.16. Настройка созданных бинов
+BeanPostProcessor модифицируют бины до/после инициализации. Пример: @PostConstruct вызывается в postProcessBeforeInitialization.
+
+**Расширение для junior-senior:** AOP использует для прокси. Новый вопрос: Порядок выполнения BeanPostProcessor? - По порядку регистрации. Новый вопрос: Как использовать BeanPostProcessor для логирования PostgreSQL запросов? - Через custom post-processor, оборачивающий DataSource.
+
+#### 5.1.17. Флоу создания контекста и бинов
+1. Application -> StartingEvent: Запуск.
+2. Application -> EnvironmentPreparedEvent: Настройка Environment.
+3. Application -> PreparedEvent: Инициализация контекста, вызов Initializer'ов.
+4. Context -> RefreshEvent: Обработка PostProcessor'ов, создание бинов.
+5. EmbeddedServlet -> ContainerInitializedEvent.
+6. Application -> ReadyEvent.
+
+**Расширение для junior-senior:** Refresh() вызывает registerBeanPostProcessors(), finishBeanFactoryInitialization(). Новый вопрос: Что такое ApplicationContextInitializer? - Интерфейс для кастомной инициализации контекста. Новый вопрос: Как инициализировать PostgreSQL schema при старте? - Через ApplicationContextInitializer с Flyway или Liquibase.
+
+#### 5.1.18. Жизненный цикл бина
+1. Создание экземпляра.
+2. Внедрение зависимостей.
+3. Вызов afterPropertiesSet() (InitializingBean).
+4. Вызов @PostConstruct.
+5. Бин готов.
+6. При остановке: @PreDestroy, destroy() (DisposableBean).
+
+**Расширение для junior-senior:** Для prototype destroy не вызывается автоматически. Новый вопрос: Как управлять жизненным циклом prototype? - Via CustomBeanPostProcessor. Новый вопрос: Как lifecycle влияет на PostgreSQL connections? - DisposableBean может закрывать connection pool.
+
+#### 5.1.19. Жизненный цикл Spring
+1. Загрузка контекста.
+2. Создание бинов (рефлексия, DI).
+3. Внедрение зависимостей.
+4. Инициализация (@PostConstruct).
+5. Работа приложения.
+6. Уничтожение (@PreDestroy).
+
+**Расширение для junior-senior:** Контекст управляет бинами, вызывая destroy-methods. Новый вопрос: Что такое DisposableBean? - Интерфейс для кастомного destroy. Новый вопрос: Как lifecycle помогает в управлении PostgreSQL транзакциями? - Через @Transactional lifecycle.
+
+#### 5.1.20. Типы наследования для расширения бина
+JDK Dynamic Proxies (для интерфейсов) или CGLIB (для классов). Spring выбирает автоматически, CGLIB по умолчанию в Boot.
+
+**Расширение для junior-senior:** Proxies оборачивают вызовы для AOP. Новый вопрос: Как отключить прокси? - @EnableAspectJAutoProxy(proxyTargetClass=false). Новый вопрос: Как прокси влияют на PostgreSQL DAO? - Позволяют AOP для транзакций вокруг репозиториев.
+
+#### 5.1.21. Типы расширения бинов
+- BeanPostProcessor: Модификация до/после инициализации.
+- BeanFactoryPostProcessor: Изменение метаданных.
+- FactoryBean: Кастомное создание.
+- BeanDefinitionRegistryPostProcessor: Изменение регистра бинов.
+- ApplicationListener: Реакция на события.
+- InitializingBean/DisposableBean: Кастомная инициализация/уничтожение.
+
+**Расширение для junior-senior:** Примеры в AOP, транзакциях. Новый вопрос: Что такое SmartInitializingSingleton? - Для действий после всех бинов. Новый вопрос: Как использовать ApplicationListener для PostgreSQL events? - Слушать события подключения к БД.
+
+### END ---------------- 5.1. Spring Core Concepts ----------------
+
+### 5.2. Dependency Injection and Bean Management
+
++ [5.2.1. Что такое автовиринг и как он работает](#521-что-такое-автовиринг-и-как-он-работает)
++ [5.2.2. Плюсы и минусы @Autowired](#522-плюсы-и-минусы-autowired)
++ [5.2.3. Различия между @Component, @Service и @Repository](#523-различия-между-component-service-и-repository)
++ [5.2.4. Активация/деактивация бинов](#524-активациядеактивация-бинов)
++ [5.2.5. Spring фильтры](#525-spring-фильтры)
++ [5.2.6. Аннотация @PreDestroy](#526-аннотация-predestroy)
++ [5.2.7. Уничтожение prototype бина](#527-уничтожение-prototype-бина)
++ [5.2.8. Аннотация @Primary](#528-аннотация-primary)
++ [5.2.9. Аннотация @Qualifier](#529-аннотация-qualifier)
++ [5.2.10. Инъекция singleton в prototype](#5210-инъекция-singleton-в-prototype)
+
+#### 5.2.1. Что такое автовиринг и как он работает
+IoC - делегирование обязанностей внешнему компоненту. Бин - объект, управляемый Spring. ApplicationContext - сердце Spring, создает бины при старте.
+
+Работа: Сканирование @Component, @Autowired ищет подходящий бин. Для нескольких - @Qualifier или List<>.
+
+Пример:
+```java
+@Autowired
+private Service service;
+```
+
+**Расширение для junior-senior:** Autowiring byName, byType, constructor. Конфликты разрешаются @Primary. Новый вопрос: Что такое @Resource vs @Autowired? - @Resource (JSR-250) byName, @Autowired byType.
+
+#### 5.2.2. Плюсы и минусы @Autowired
+
+| + | - |
+|---|----|
+| Меньше кода, быстрее разработка | Менее экспрессивно, сложнее рефакторинг |
+| | Множественные инъекции могут пересекаться с названием конструктора |
+
+Ограничения: Переписывает примитивы, не может на свойства.
+
+**Расширение для junior-senior:** Лучше использовать constructor injection для тестируемости. Новый вопрос: Почему constructor injection предпочтительнее? - Гарантирует неизменность зависимостей.
+
+#### 5.2.3. Различия между @Component, @Service и @Repository
+@Component - универсальный. @Service - бизнес-логика. @Repository - данные, с exception translation. @Controller - веб, @RestController - REST.
+
+**Расширение для junior-senior:** @Repository проксируется для PersistenceExceptionTranslation. Новый вопрос: Что такое @Configuration? - Для Java-config, методы @Bean.
+
+#### 5.2.4. Активация/деактивация бинов
+@Profile("dev"). В application.properties: spring.profiles.active=dev.
+
+**Расширение для junior-senior:** @Profile на методах @Bean. Новый вопрос: Что такое @ConditionalOnProfile? - Условное создание по профилю.
+
+#### 5.2.5. Spring фильтры
+@Component @Order(1) implements Filter. doFilter() для логики.
+
+Регистрация: FilterRegistrationBean.
+
+**Расширение для junior-senior:** Для CORS, security. Новый вопрос: Разница между Filter и Interceptor? - Filter на сервлет-уровне, Interceptor на Spring MVC.
+
+#### 5.2.6. Аннотация @PreDestroy
+Вызывается перед уничтожением бина для cleanup.
+
+**Расширение для junior-senior:** Альтернатива DisposableBean.destroy(). Новый вопрос: Когда вызывается @PostConstruct? - После DI, перед использованием.
+
+#### 5.2.7. Уничтожение prototype бина
+GC после потери ссылок. Совет: явное уничтожение через пост-процессор.
+
+**Расширение для junior-senior:** Singleton живет весь контекст. Новый вопрос: Какие scopes в Spring? - Singleton, prototype, request, session, application, websocket.
+
+#### 5.2.8. Аннотация @Primary
+Указывает предпочтительный бин при нескольких.
+
+**Расширение для junior-senior:** Переопределяет byType.
+
+#### 5.2.9. Аннотация @Qualifier
+Уточняет какой бин инжектировать.
+
+**Расширение для junior-senior:** Работает с именами.
+
+#### 5.2.10. Инъекция singleton в prototype
+Нет напрямую, из-за жизненного цикла. Решение: Provider<PrototypeBean>.
+
+**Расширение для junior-senior:** Singleton получает новый prototype каждый раз. Новый вопрос: Что такое ObjectFactory? - Альтернатива Provider.
+
+### END ---------------- 5.2. Dependency Injection and Bean Management ----------------
+
+### 5.3. Aspect-Oriented Programming (AOP)
+
++ [5.3.1. Что такое AOP](#531-что-такое-aop)
++ [5.3.2. Аннотация @Async](#532-аннотация-async)
+
+#### 5.3.1. Что такое AOP
+AOP - парадигма для сквозной функциональности. Join Point - точки присоединения. Pointcut - выражение (execution(* com..*.*(..))). Advice - действия (Before, After, Around). Aspect - модуль.
+
+**Расширение для junior-senior:** @Aspect, @EnableAspectJAutoProxy. Пример Around для логирования. Новый вопрос: Как работает прокси в AOP? - Оборачивает вызовы.
+
+#### 5.3.2. Аннотация @Async
+Выполняет метод в фоне. @EnableAsync, возвращает CompletableFuture.
+
+**Расширение для junior-senior:** Использует ThreadPoolTaskExecutor. Новый вопрос: Как настроить пул потоков для @Async? - @Bean TaskExecutor.
+
+### END ---------------- 5.3. Aspect-Oriented Programming (AOP) ----------------
+
+### 5.4. Spring Boot Fundamentals
+
++ [5.4.1. Что такое Spring Boot](#541-что-такое-spring-boot)
++ [5.4.2. Как настроить embedded сервер в Spring Boot](#542-как-настроить-embedded-сервер-в-spring-boot)
++ [5.4.3. Что такое Spring Boot Starter](#543-что-такое-spring-boot-starter)
+
+#### 5.4.1. Что такое Spring Boot
+Основан на Tomcat. Стартеры упрощают зависимости, автоконфигурация, embedded серверы.
+
+@SpringBootApplication включает @Configuration, @EnableAutoConfiguration, @ComponentScan.
+
+**Расширение для junior-senior:** Application.properties для конфигурации. Новый вопрос: Что такое Spring Boot Actuator? - Для мониторинга, endpoints /health, /metrics.
+
+#### 5.4.2. Как настроить embedded сервер в Spring Boot
+В application.properties: server.port=8081, server.servlet.context-path=/api. Для SSL: server.ssl.key-store, etc.
+
+**Расширение для junior-senior:** Можно заменить на Jetty via starter. Новый вопрос: Как добавить кастомный фильтр в Boot? - @Component или FilterRegistrationBean.
+
+#### 5.4.3. Что такое Spring Boot Starter
+Набор зависимостей для быстрого старта. Пример: spring-boot-starter-web включает Tomcat, Jackson.
+
+**Расширение для junior-senior:** Упрощает управление версиями. Новый вопрос: Как создать кастомный starter? - Создать auto-configuration и META-INF/spring.factories.
+
+
+### END ---------------- 5.4. Spring Boot Fundamentals ----------------
+
+
+### 5.5. Spring Security and Configuration
+
++ [5.5.1. Типы репозиториев](#551-типы-репозиториев)
++ [5.5.2. Модули Spring Session](#552-модули-spring-session)
++ [5.5.3. Аннотация для включения сессии](#553-аннотация-для-включения-сессии)
++ [5.5.4. Пример кастомной WebSecurityConfig](#554-пример-кастомной-websecurityconfig)
+
+#### 5.5.1. Типы репозиториев
+CrudRepository, PagingAndSortingRepository, JpaRepository, JpaSpecificationExecutor, ReactiveCrudRepository.
+
+**Расширение для junior-senior:** JpaRepository добавляет flush(), saveAndFlush(). Новый вопрос: Что такое @Query? - Кастомные запросы. Новый вопрос: Как использовать JpaRepository с PostgreSQL? - Наследовать от JpaRepository<Entity, ID>, Spring Data генерирует запросы автоматически.
+
+#### 5.5.2. Модули Spring Session
+Core, Data Redis, JDBC, Hazelcast, MongoDB.
+
+**Расширение для junior-senior:** Для кластеров. Новый вопрос: Как хранить сессии в PostgreSQL? - Использовать JDBC модуль с @EnableJdbcHttpSession.
+
+#### 5.5.3. Аннотация для включения сессии
+@EnableJdbcHttpSession.
+
+**Расширение для junior-senior:** Для Redis - @EnableRedisHttpSession.
+
+#### 5.5.4. Пример кастомной WebSecurityConfig
+```java
+@Configuration
+@EnableWebSecurity
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+  @Override
+  protected void configure (HttpSecurity http) throws Exception {
+    http
+      .authorizeRequests()
+      .antMatchers("/", "/home").permitAll()
+      .anyRequest().authenticated()
+      .and()
+      .formLogin()
+      .loginPage("/login")
+      .permitAll()
+      .and()
+      .logout()
+      .permitAll();
+  }
+
+  @Bean
+  @Override
+  public UserDetailsService userDetailsService () {
+    UserDetails user =
+      User.withDefaultPasswordEncoder()
+        .username("user")
+        .password("password")
+        .roles("USER")
+        .build();
+
+    return new InMemoryUserDetailsManager(user);
+  }
+}
+```
+**Расширение для junior-senior:** Использует Spring Security. Новый вопрос: Что такое AuthenticationManager? - Для аутентификации. Новый вопрос: Как интегрировать PostgreSQL с Spring Security? - Использовать JdbcUserDetailsManager для хранения пользователей в БД.
+
+### END ---------------- 5.5. Spring Security and Configuration ----------------
+
+### 5.6. Caching in Spring
+
++ [5.6.1. Как активировать кеширование в Spring](#561-как-активировать-кеширование-в-spring)
++ [5.6.2. Как отметить данные для кеширования](#562-как-отметить-данные-для-кеширования)
++ [5.6.3. Как обновить данные в кеше](#563-как-обновить-данные-в-кеше)
++ [5.6.4. Стандартная структура кеша в Spring](#564-стандартная-структура-кеша-в-spring)
+
+#### 5.6.1. Как активировать кеширование в Spring
+@EnableCaching над классом.
+
+**Расширение для junior-senior:** Настраивает CacheManager. Новый вопрос: Какие реализации CacheManager? - ConcurrentMapCacheManager, RedisCacheManager. Новый вопрос: Как интегрировать кеширование с PostgreSQL? - Использовать Ehcache или Redis для кеширования результатов запросов.
+
+#### 5.6.2. Как отметить данные для кеширования
+@Cacheable(cacheNames="cache", key="#param").
+
+**Расширение для junior-senior:** Условное кеширование condition="#param != null". Новый вопрос: Что такое @CacheKey? - Для генерации ключа.
+
+#### 5.6.3. Как обновить данные в кеше
+@CachePut - обновляет, @CacheEvict - удаляет.
+
+**Расширение для junior-senior:** @CacheEvict(allEntries=true) очищает весь кеш. Новый вопрос: Как инвалидировать кеш по расписанию? - @Scheduled с @CacheEvict.
+
+#### 5.6.4. Стандартная структура кеша в Spring
+ConcurrentMapCache, основан на ConcurrentHashMap.
+
+**Расширение для junior-senior:** Thread-safe. Новый вопрос: Как настроить TTL для кеша? - Через CacheManager с Caffeine или Redis. Новый вопрос: Как кешировать PostgreSQL запросы? - @Cacheable над методами репозиториев.
+
+### END ---------------- 5.6. Caching in Spring ----------------
+
+
+### 5.7. Transactions in Spring
+
++ [5.7.1. Как включить транзакции](#571-как-включить-транзакции)
++ [5.7.2. Настройки аннотации @EnableTransactionManager](#572-настройки-аннотации-enabletransactionmanager)
++ [5.7.3. Что делает аннотация @Transactional](#573-что-делает-аннотация-transactional)
++ [5.7.4. Настройки @Transactional](#574-настройки-transactional)
++ [5.7.5. Как создать транзакцию без Spring](#575-как-создать-транзакцию-без-spring)
++ [5.7.6. Как TransactionInterceptor обрабатывает транзакционный метод](#576-как-transactioninterceptor-обрабатывает-транзакционный-метод)
++ [5.7.7. Что такое TransactionManager](#577-что-такое-transactionmanager)
++ [5.7.8. Как реализовать optimistic locking](#578-как-реализовать-optimistic-locking)
+
+#### 5.7.1. Как включить транзакции
+@EnableTransactionManagement.
+
+**Расширение для junior-senior:** Настраивает TransactionInterceptor. Новый вопрос: Что такое @TransactionalEventListener? - Для событий в транзакциях.
+
+#### 5.7.2. Настройки аннотации @EnableTransactionManager
+proxyTargetClass, mode (PROXY/ASPECTJ), order.
+
+**Расширение для junior-senior:** ASPECTJ для compile-time weaving. Новый вопрос: Что такое weaving в AOP? - Применение аспектов.
+
+#### 5.7.3. Что делает аннотация @Transactional
+Включает транзакционность метода.
+
+**Расширение для junior-senior:** Использует AOP proxy. Новый вопрос: Как работает propagation REQUIRED? - Присоединяется к существующей или создает новую.
+
+#### 5.7.4. Настройки @Transactional
+propagation, rollbackFor/noRollbackFor, isolation, timeout, readOnly.
+
+**Расширение для junior-senior:** Isolation levels: READ_UNCOMMITTED, etc. Новый вопрос: Что такое dirty read? - Чтение незакоммиченных данных.
+
+#### 5.7.5. Как создать транзакцию без Spring
+Connection.setAutoCommit(false), commit/rollback.
+
+**Расширение для junior-senior:** Ручное управление. Новый вопрос: Преимущества Spring транзакций? - Декларативность, автоматический rollback.
+
+#### 5.7.6. Как TransactionInterceptor обрабатывает транзакционный метод
+Создает транзакцию, вызывает proceed(), commit или rollback.
+
+**Расширение для junior-senior:** Использует PlatformTransactionManager. Новый вопрос: Что такое TransactionSynchronizationManager? - Для синхронизации ресурсов.
+
+#### 5.7.7. Что такое TransactionManager
+Интерфейс для управления транзакциями.
+
+**Расширение для junior-senior:** Реализации: DataSourceTransactionManager, JpaTransactionManager. Новый вопрос: Как интегрировать с JTA? - JtaTransactionManager.
+
+#### 5.7.8. Как реализовать optimistic locking
+@Version над полем.
+
+**Расширение для junior-senior:** JPA проверяет версию при update. Новый вопрос: Что такое pessimistic locking? - SELECT FOR UPDATE. Новый вопрос: Как optimistic locking работает с PostgreSQL? - Использует MVCC, версия инкрементируется автоматически.
+
+### END ---------------- 5.7. Transactions in Spring ----------------
+
+## END ---------------- 5. Spring ----------------
+
 + [ООП](#ооп)
-+ [Concurrency](#concurrency)
 + [Способы выполнения запросов к другим источникам](#способы-выполнения-запросов-к-другим-источникам)
 + [Spring изнутри](#spring-изнутри)
 + [Spring](#spring)
@@ -4316,526 +4970,6 @@ Diamond problem это Когда классы B и C наследуют А, а 
 В java запрещено множественное наследование
 
 ## END ---------------- ООП ----------------
-
-## Concurrency
-
-+ [1. В чем разница между sleep() и wait()?](#1-в-чем-разница-между-sleep-и-wait)
-+ [2. От какого количества начинается многопоточность?](#2-от-какого-количества-начинается-многопоточность)
-+ [3. Какие есть издержки у многопоточности?](#3-какие-есть-издержки-у-многопоточности)
-+ [4. Какие потоки создает JVM при запуске?](#4-какие-потоки-создает-jvm-при-запуске)
-+ [5. Какой класс является потокобезопасным?](#5-какой-класс-является-потокобезопасным)
-+ [6. Какие операции являются атомарными](#6-какие-операции-являются-атомарными)
-+ [7. Что может являться монитором?](#7-что-может-являться-монитором)
-+ [8. Как обезопасить использование объектов](#8-как-обезопасить-использование-объектов)
-+ [9. Как создать потокобезопасный класс](#9-как-создать-потокобезопасный-класс)
-+ [10. Что происходит при использовании synchronized](#10-что-происходит-при-использовании-synchronized)
-+ [11. Как работает неблокирующая read блокировка](#11-как-работает-неблокирующая-read-блокировка)
-+ [12. Как работает Оптимистическая блокировка](#12-как-работает-оптимистическая-блокировка)
-+ [13. Как работают классы Atomic из пакета java.util.concurrent.atomic](#13-как-работают-классы-atomic-из-пакета-javautilconcurrentatomic)
-+ [14. Чем отличается Runnable от Callable](#14-чем-отличается-runnable-от-callable)
-+ [15. Конкурентные коллекции - классы для работы с коллекциями внутри потоков](#15-конкурентные-коллекции---классы-для-работы-с-коллекциями-внутри-потоков)
-+ [16. `ConcurrentHashMap`](#16-concurrenthashmap)
-+ [17. `CopyOnWriteArrayList`](#17-copyonwritearraylist)
-+ [18. Блокирующие очереди](#18-блокирующие-очереди)
-+ [19. Паттерн "Производитель-потребитель"](#19-паттерн-производитель-потребитель)
-+ [20. Паттерн "Кража работ"](#20-паттерн-кража-работ)
-+ [21. Блокирующие и прерываемые методы](#21-блокирующие-и-прерываемые-методы)
-+ [22. Синхронизаторы - Классы для создания синхронизирующих точек](#22-синхронизаторы---классы-для-создания-синхронизирующих-точек)
-+ [23. Синхронизатор - Защелки - latch](#23-синхронизатор---защелки---latch)
-+ [24. `CountDawnLatch`](#24-countdawnlatch)
-+ [25. `ReentrantLock`](#25-reentrantlock)
-+ [26. `ReentrantReadWriteLock`](#26-reentrantreadwritelock)
-+ [27. Синхронизаторы - FutureTask](#27-синхронизаторы---futuretask)
-+ [28. Синхронизаторы - Семафоры](#28-синхронизаторы---семафоры)
-+ [29. `Semaphore`](#29-semaphore)
-+ [30. Синхронизаторы - Барьеры](#30-синхронизаторы---барьеры)
-+ [31. `CyclicBarrier`](#31-cyclicbarrier)
-+ [32. Какие недостатки у неограниченного количества потоков](#32-какие-недостатки-у-неограниченного-количества-потоков)
-+ [33. Executors](#33-executors)
-+ [34. Методы Executors](#34-методы-executors)
-+ [35. Методы жизненного цикла Executors](#35-методы-жизненного-цикла-executors)
-+ [36. Что такое "утечка потока"](#36-что-такое-утечка-потока)
-+ [37. Жизненный цикл задачи, выполняемой исполнителем](#37-жизненный-цикл-задачи-выполняемой-исполнителем)
-+ [38. Что такое `CompletionService`](#38-что-такое-completionservice)
-+ [39. `ExecutorCompletionService`](#39-executorcompletionservice)
-+ [40. Сколько куч будет при множественных потоках](#40-сколько-куч-будет-при-множественных-потоках)
-+ [41. Что такое shutdown hook](#41-что-такое-shutdown-hook)
-
-### 1. В чем разница между sleep() и wait()?
-wait - освобождает монитор</br>
-sleep- не освобождает монитор
-
-### 2. От какого количества начинается многопоточность?
-- от двух
-
-### 3. Какие есть издержки у многопоточности?
-- Context switches - контекстные переключения</br>
-Приостановка работы активных потоков для работы других потоков</br>
-Они сохраняют и восстанавливают контекст выполнения, но приводят к потере локальности и процессорного времени
-
-### 4. Какие потоки создает JVM при запуске?
-- Главный поток main
-- Потоки для служебных задач (например сбора мусора)
-
-### 5. Какой класс является потокобезопасным?</br>
-Если он ведет себя правильно во время допуска из многочисленных потоков, независимо от того, как выполнение этих потоков планируется или перемещается рабочей средой</br>
-и без дополнительной синхронизации или другой координации со стороны вызывающего</br>
-Инкапсулируют любую логику необходимую для синхронизации сами и не нуждаются в помощи клиента
-
-### 6. Какие операции являются атомарными</br>
-Операции являются атомарными если с точки зрения потока, выполняющего операцию А, операция В либо была выполнена целиком другим потоком, </br>
-либо не выполнена даже частично
-
-### 7. Что может являться монитором?</br>
-Каждый объект Java может неявно действовать как замок для целей синхронизации, то есть внутренним замком (intrinsic lock)</br>
-или мониторным замком (monitor locks)</br></br>
-
-Внутренние замки действуют как взаимоисключающие замки - мьютексы(mutual exclusion locks)
-
-### 8. Как обезопасить использование объектов
-- Ограничение одним потоком
-- Совместный доступ только для чтения
-- Совместная потокобезопасность - объект выполняет синхронизацию внутренне, поэтому потоки свободно обращаются к нему через его публичный интерфейс
-- Защищенность - с удержанием конкретного замка можно обращаться к объекту, инкапсулированному в другие потокобезопасные объекты, а также к опубликованному объекту, защищенному замком
-
-### 9. Как создать потокобезопасный класс
-- Ограничение одним экземпляром - объект инкапсулируется в другой объект, к коорому имеют доступ только некоторые известные ветки кода (Collections.synchronizedList)
-- Мониторный шаблон Java (HashTable) - состояние под защитой внутреннего замка
-
-### 10. Что происходит при использовании `synchronized`
-- Попытка блокирования монитора
-- Блокировка потока
-- Разблокировка монитора
-- Разблокировка потока
-
-### 11. Как работает неблокирующая read блокировка
-- Не ожидает пока данные будут готовы для чтения
-- Если данные не готовы в момент обращения, то возвращается пустой ответ или код ошибки
-- Операция является асинхронной
-
-### 12. Как работает Оптимистическая блокировка
-- Основана на идее, что два потока могут изменить один и тот же ресурс
-
-1. Поток сначала делает копию ресурса в локальный буффер
-2. Изменяет ресурс
-3. Сравнивает с оригинальным ресурсом
-4. Если никакой другой поток не изменил ресурс, то изменения применяются
-5. Если ресурс был изменен, то поток сбрасывает свои изменения и потовряет все с пункта 1
-
-### 13. Как работают классы Atomic из пакета `java.util.concurrent.atomic`
-- Использует "Оптимистическую блокировку"
-
-### 14. Чем отличается Runnable от Callable
-| Runnable                                                                                 | Callable                                                                         |
-|------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
-| Возвращает значение                                                                      | Может вернуть результат вычисления                                               |
-| Содержит только 1 метод run(), который не принимает аргументов и не возвращает результат | Содержит метод call(), который может выбразывать исключения, не требуя обработки |
-| Для выполнения можно использовать   ExecutorService и Thread лассы                       | Для выполнения можно использовать ExecutorService и FutureTask классы            |
-
-### 15. Конкурентные коллекции - классы для работы с коллекциями внутри потоков
-- `ConcurrentHashMap`
-    - При записи блокируется только часть (сегмент)
-- `CopyOnWriteArrayList`
-    - Блокирующий на запись
-    - Не блокирующий на запись
-- `CopyOnWriteArraySet`
-    - CopyOnWriteArrayList без значений
-- `ConcurrentSkipListMap`
-- `ConcurrentSkipListSet`
-    - ConcurrentSkipListMap без значений
-- `Queue`
-  - Для временногого хранений множества элементов во время ожидания ими обработки
-  - `ConcurrentLinkedQueue` - традиционная очередь с дисциплиной доступа FIFO
-  - `PriorityQueue` - неконкурентная упорядоченная очередь с приоритетом
-- `DelayQueue`
-    - PriorityBlockingQueue разрешающая получить элемент только после определенной задержки
-- `LinkedTransferQueue`
-
-### 16. `ConcurrentHashMap`
-- Это хешировання ассоциациативный массив Map
-- Не использует синхронизацию каждого метода на общем замке и ограничение доступа одним потоком за раз
-- Использует **замковое расщепление на полосы (lock striping)**
-- Обеспечивает конкурентность между читающими потоками, между читателями и писателями
-- Предоставляет итераторы, которые не выдают исключение `ConcurrentModificationException`
-
-### 17. `CopyOnWriteArrayList`
-- Принцип "Копировать при записи"
-- При создании и публикации копии коллекции после каждого ее изменения реализуется мутируемость
-- Итераторы сохраняют ссылку на резервный массив, который был актуальным в начале итератичного обхода
-
-### 18. Блокирующие очереди
-- `BlockingQueue`
-    - Если очередь пустая, то операция извлечения заблокирована
-    - Если ограниченная очередь заполнена, то операция вставки будет заблокирована
-- `LinkedBlockingQueue`
-  - Однонаправленный BlockingQueue
-- `ArrayBlockingQueue`
-    - четкая очередь для передачи сообщений из одного потока в другой
-    - Запрещает null значения
-    - Емкость очереди указывается при создании
-- `LinkedBlockingQueue`
-    - Однонаправленный BlockingQueue
-- `PriorityBlockingQueue`
-- `SynchronousQueue`
-  - не содержит места для хранения элементов
-  - поддерживает список потоков, ожидающих постановки элемента в очередь или его удаления
-( Двухсторонные очереди )
-- `LinkedBlockingDeque`
-    - Двунаправленный BlockingQueue
-- `BlockingDeque`
-
-### 19. Паттерн "Производитель-потребитель"
-- Производители помещают данные в очередь, ничего не зная о потребителях, которые будут извлекать эти данные
-- Потребитель не должны знать откуда берется работа
-- Паттерн поддерживает **серийное ограничение одним потоком (serial thread confinement)** мутируемых объектов
-  - Если пул содержит внутреннюю синхронизацию, 
-  - а кликенты не собираются публиковать принадлежащий пулу объект или использовать его после возвращения в пул
-  - владение может безопасно передаваться из потока в поток
-
-```
-public class FileCrawler implements Runnable {
-    private final BlockingQueue<File> fileQueue;
-    private final FileFilter fileFilter;
-    private final File root;
-    ...
-    public void run () {
-        try {
-            crawl(root);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-    }
-    
-    private void crawl (File root) throws InterruptedException {
-        File[] entries = root.listFiles(fileFilter);
-        if (entries != null) {
-            for (File entry : entries) {
-                if (entry.isDirectory()) {
-                    crawl(entry);
-                } else if (!alreadyIndexed(entry)) {
-                    fileQueue.put(entry);
-                }
-            }
-        } 
-    }
-}
-
-public class Indexer implements Runnable {
-    private final BlockingQueue<File> queue;
-    
-    public Indexer (BlockingQueu<File> queue) {
-        this.queue = queue;
-    }
-    
-    public void run () {
-        try {
-            while (true) {
-                indexFile(queue.take());
-            }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-    }
-
-}
-
-public static void startIndexing (File[] roots) {
-    BlockingQueue<File> queue = new LinkedblockingQueue<File>(BOUND);
-    FileFilter filter = new FileFilter(){
-        public boolean accept (File file) { return true; }
-    };
-    
-    for (File root : roots) {
-        new Thread (new FileCrawler(queue, filter, root)).start();
-    }
-    
-    for (int i = 0; i < N_CONSUMERS, i++) {
-        new Thread (new Indexer(queue)).start();
-    }
-}
-```
-
-### 20. Паттерн "Кража работ"
-- Двухсторонняя очередь позволяет эффективно вставлять и удалять как голову очередь так и ее хвост
-- Каждый потребитель исчерпывает работу в своей очередь
-- Может украсть работу из чужой очереди
-- Просмотр чужой очереди начинается с конца
-( Используется )
-- В алгоритмах разведывания графов - маркировка кучи во время сборки мусора
-
-### 21. Блокирующие и прерываемые методы
-- Прерывание представляет собой кооперативный механизм
-  - Когда поток А пытается прерывать поток В, то просто просит поток В прекратить это делать
-- При вызове метода interrupt нужно учитывать
-1. **Распространить исключение** InterruptedException
-   - неотлавливание исключение
-   - или отлавливание и его повторная выдача после обработки
-2. **Восстановить прерывание**
-   - Когда невозможно распространить исключение необходимо перехватить исключение и восстановить статус прерванности (например в Runnable)
-
-### 22. Синхронизаторы - Классы для создания синхронизирующих точек
-- Это любой объект, координирующий поток управления в остальных потоках, основываясь на их состоянии
-- Синхронизаторы инкапсулируют состояние, которое определяет пропускать или отправлять в ожидание поступающие потоки
-
-### 23. Синхронизатор - Защелки - latch
-- Синхронизатор, который может зардерживать продвижение потоков до достижения своего конечного состояния
-- Предназначены для ожидания событий
-
-- `CountDownLatch`
-- `ReentrantLock`
-- `ReentrantReadWriteLock`
-
-1. Состояние защелки состоит из счетчика, инициализируемого положительным числом ожидаемых событий 
-2. Метод `countDown` уменьшает счетчик, сигнализируя о том, что произошло событие
-3. Метод `await` ожидают до тех пор, пока счетчик не достигнет нуля
-
-### 24. `CountDawnLatch`
-- Позволяет ожидать завершения других потоков
-- При инициализации указывается количество блокирующих операций
-- Как только CountDawnLatch.countDown будет вызван указанное количество раз и счетчик станет равен 0, тогда поток разблокируется
-- Не зависимо от того, сколько раз будет вызван `await` в рамках одного потока, достаточно одного вызова `countDown` для освобождения счетчика
-
-```
-public class TestHarness {
-    public long timeTasks (int nThreads, final Runnable task) throws InterruptedException {
-        final CountDownLatch startGate = new CountDownLatch(1);
-        final CountDownLatch endGate = new CountDownLatch(nThreads);
-        
-        for (int i = 0; i < nThreads; i++) {
-            Thread t = new Thread () {
-                public void run () {
-                    try {
-                        startGate.await();
-                        try {
-                            task.run();
-                        } finally {
-                            endGate.countDown();
-                        }
-                    } catch (InterruptedException ignored) { }
-                }
-            };
-            
-            t.start();
-        }
-        
-        long start = System.nanotTime();
-        startGate.countDown();
-        endGate.await();
-        long end = System.nanoTime();
-        return end-start;
-    }
-}
-```
-
-### 25. `ReentrantLock`
-- Блокировка
-    - Может блокировать доступ к ресурсу на нескольких уровнях
-    - При использовании метода `lockInterruptibly` блокировка может быть прервана
-- Свободный доступ
-    - Метод tryLock позволяет проверить свободен ли ресурс и попытаться захватить если он свободен
-- Инкремент счетчика блокировок
-    - Создержит внутренний счеткик блокировок, что позволяет увеличивать его каэдый раз, когда поток пытается захватить блокировку
-    - Таким образом может блокировать доступ к ресурсу только тому же потоку, который блокировал его ранее
-    - Если другой поток запросит доступ к ресурсу, пока он заблокирован, он будет заброкирован, пока первый поток не освободит блокировку
-
-```
-import java.util.concurrent.locks.ReentrantLock;
-
-public class SharedResource {
-  private final ReentrantLock reentrantLock = new ReentrantLock();
-
-  public void accessResource() {
-    reentrantLock.lock();
-    try {
-      // Доступ к общему ресурсу
-    } finally {
-      reentrantLock.unlock();
-    }
-  }
-}
-```
-
-```
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
-
-public class SharedResource {
-  private final ReentrantLock lock = new ReentrantLock();
-  private final Condition condition = lock.newCondition();
-
-  public void accessResource() throws InterruptedException {
-    lock.lock();
-    try {
-      while (!conditionIsMet()) {
-        condition.await();
-      }
-      // Доступ к общему ресурсу
-    } finally {
-      lock.unlock();
-    }
-  }
-
-  public void notifyCondition() {
-    lock.lock();
-    try {
-      // Изменение состояния условия
-      condition.signalAll();
-    } finally {
-      lock.unlock();
-    }
-  }
-
-  private boolean conditionIsMet() {
-    // Проверка условия
-  }
-}
-```
-
-### 26. `ReentrantReadWriteLock`
-- Read lock - Если ни один поток не пишет, то любое число потоков может читать
-- Write Lock - Если ни один поток не читает, то один поток может писать
-
-### 27. Синхронизаторы - FutureTask
-- Реализует `Future`, описывающий абстрактные вычсисления, приносящие результат, котоыре реализуется с помощью интерфейса `Callable`
-- Могут находиться в состоянии ожидания выполнения
-* Не рекомендуется запускать поток из конструктора или статического инициализатора
-```
-public class Preloader {
-    private final FutureTask<ProductInfo> future = 
-        new FutureTask<ProductInfo>(new Callable<ProductInfo>() {
-            public ProductInfo call() throws DataLoadException {
-                return loadProductInfo();
-            }
-        });
-    
-    private final Thread thread = new Thread(future);
-    
-    public void start () { thread.start(); }
-    
-    public ProductInfo get () throws DataLoadException, InterruptedException {
-        try {
-            return future.get();
-        } catch (ExecutionException e) {
-            Throwable cause = e.getCause();
-            if (cause instanceof DataLoadException) {
-                throw (DataLoadException) cause;
-            } else {
-                throw launderThrowable(cause);
-            }
-        }
-    }
-}
-```
-
-### 28. Синхронизаторы - Семафоры
-- Регулируют число действий, способных обращаться к определенному ресурсу или выполнять одну и ту же задачу в одной и то же время
-
-- `Semaphore`
-
-### 29. `Semaphore`
-- ограничивает количество потоков, которые могут получить доступ до секции
-- Управляет набором вируальных разрешений (permits)
-- Начальное число значений передается конструктору
-- Действия могут приобретать разрешения (`acquire`)
-- Действия могут освобождать разрешения (`release`)
-- Превращает любую коллекцию в блокирубющуя связанную коллекцию
-
-### 30. Синхронизаторы - Барьеры
-- Блокируют группу потоков до наступления какого-то события
-- Заствялют потоки вместе проходить барьерную точку в одно и то же время
-- Предназначены для ожидания других потоков
-
-- `CyclicBarrier`
-- `Exchanger` - двухсторонний барьер
-- `Phaser` - расширяет функциональность `CyclicBarrier`
-
-### 31. `CyclicBarrier`
-- Выполняет синхронизацию заданного количества потоков в одной точке
-
-### 32. Какие недостатки у неограниченного количества потоков
-- создание каждого потока занимает время и требует некоторой обрабатывающей деятельности
-- Ресурсопотребление - Потоки потребляют системные ресурсы, в особенности память
-- Стабильность - есь лимит на число создаваемых потоков
-
-### 33. Executors
-Использование Executor является одним из способов реализации паттерна "производитель-потребитель"</br>
-
-- Помогает повторно использовать освободившиеся потоки
-- Помогает организовывать очереди из пула потоков
-- Помогает подписываться на результат выполнения задачи
-
-1. `ThreadPoolExecutor` - пул потоков с возможностью указывать рабочее и максимальное кол-во потоков в пуле
-2. `ScheduledThreadPoolExecutor` - расширяет фунционал `ThreadPoolExecutor` возможностью выполнять задачи отложенно или регулярно
-3. `ThreadPoolExecutor` - Более легкий пул потоков для "самовоспроизводящихся" задач
-
-### 34. Методы Executors
-- newFixedThreadPool - пул потоков фиксированного размера создает определенного число потоков по мере предоставления задач, а зачем стараетсяч держать размер пула
-- newCachedThreadPool - кэшированный пул потоков убирает простаивающие потоки и при необходимости добавляет новые
-- newSingleThreadExecutor - Создает один поток для последовательной обработки задач
-- newScheduledThreadPool - пул потоков фиксированного размера, который поддерживает отложенное и переодическое выполнение задач
-
-### 35. Методы жизненного цикла Executors
-- Жизненный цикл имеет три состояния
-  - работает
-  - выключается
-  - терминирован
-```
-public interface ExecutorService extends Executor {
-    void shutdown();
-    List<Runnable> shutdownNow(); // Возвращает список задач, которые не были начаты
-    boolean isShutdown();
-    boolean isTerminated();
-    boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException;
-    ...
-}
-```
-
-### 36. Что такое "утечка потока"
-Timer - Поток не может отлавливать непроверяемое исключение, выдаваемое из задачи TimeTask, которое его терминирует
-
-### 37. Жизненный цикл задачи, выполняемой исполнителем
-- создана
-- предоставлена
-- запущена
-- завершена
-```
-public interface Callable<V> {
-    V call() throws Exception;
-}
-
-public interface Future<V> {
-    boolean cancel(boolean mayInterruptIfRunning);
-    boolean isCancelled();
-    boolean isDone();
-    V get() throws InterruptedException, ExecutionException, CancellationException;
-    V get(long timeout, TimeUnit unit) thows InterruptedException, ExecutionException, CancellationException, TimeoutException;
-}
-```
-
-### 38. Что такое `CompletionService`
-- Сочетает в себе функционал исполнителя `Executor` и блокирующей очереди `BlockingQueue`
-- Можно передавать ей задачи `Callable` на выполнение и использовать методы `take` и `poll`
-
-### 39. `ExecutorCompletionService`
-- может использовать один исполнитель `Executor` совместно
-- В данном кейсе `CompletionService` действует как дескриптор для пакета вычислений.
-  - Запоминает число задач
-  - Подсчитывает число извлеченных завершенных результатов
-- Можно узнать когда все результаты для данного пакеты были извлечены благодаря работе `CompletionService`
-
-### 40. Сколько куч будет при множественных потоках
-Куча всегда общая для всех потоков и все потоки имеют к ней доступ
-
-### 41. Что такое Shutdown hook
-Shutdown hook — это специальная конструкция в Java, которая позволяет зарегистрировать поток, который будет выполняться при выключении виртуальной машины Java (JVM).
-
-Shutdown hooks подходят для таких задач, как:
-
- - закрытие файлов или сетевых соединений;
- - освобождение ресурсов или памяти;
- - сохранение состояния приложения в файл или базу данных.
-
-## END ---------------- Concurrency ----------------
 
 ## Способы выполнения запросов к другим источникам
 
